@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">PARDUOTA</string>
+    <string name="facebook_app_id">715186105349256</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="network_unavailable">Can\'t connect internet!</string>
+    <string name="Please_turn_on_network_connection">Please turn on network connection!</string>
+    <string name="turn_on">Turn On</string>
+    <string name="tv_name">Name</string>
+    <string name="tv_des">Description</string>
+    <string name="tv_address">Address</string>
+    <string name="web">http://pardouta.com</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="action_sign_in_facebook">Login via Facebook</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="enter_number">Enter...(EURO)</string>
+    <string name="empty">Empty</string>
+    <string name="buy_credit">Buy Credit</string>
+    <string name="notify_email_not_active">Pls verify your email!</string>
+    <string name="log_out">Log out</string>
+    <string name="title_item">Item</string>
+    <string name="btn_requestVIP">Request VIP</string>
+    <string name="what_is_vip">What is VIP?</string>
+    <string name="notify_wrong_password">Wrong  password.Pls check again!</string>
+    <string name="tv_total">Total items</string>
+    <string name="tv_email">Email</string>
+    <string name="tv_credit">Credit</string>
+    <string name="add_item">Add item</string>
+    <string name="notify_out_of_session">Out of session.Please log in again!</string>
+    <string name="action_sign_up"><u>Click to sign up</u></string>
+    <string name="notify_internet_connection">No internet connection!</string>
+    <string name="notify_sign_up_ok">Sign up successful!
+        \n Pls check email to active your account</string>
+    <string name="action_check_email">Check Email</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="notify_input">Fill item\'s information</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_price">Price</string>
+    <string name="hint_quantity">Quantity</string>
+    <string name="hint_category">Category</string>
+    <string name="action_add_item">ADD</string>
+    <string name="action_upload_image">Upload Image</string>
+    <string name="select_photo">Select Picture</string>
+    <string name="btn_next">Next</string>
+    <string name="btn_upload">Upload</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+
+    <!--status item-->
+
+    <string name="draft">Draft</string>
+    <string name="pending">Pending</string>
+    <string name="sold">Sold</string>
+    <string name="reject">Reject</string>
+    <string name="btn_close">Close</string>
+    <string name="loading">Loading</string>
+    <string name="title_add_title">Type item\'s title</string>
+    <string name="title_too_short">Title is too short!</string>
+</resources>

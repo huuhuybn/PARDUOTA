@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "723220166615",
+    "firebase_url": "https://parduota-4ad3d.firebaseio.com",
+    "project_id": "parduota-4ad3d",
+    "storage_bucket": "parduota-4ad3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:723220166615:android:d5d3a3eb33c68311",
+        "android_client_info": {
+          "package_name": "com.parduota.parduota"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "723220166615-929qk2icib6aq512d6rotou4hn8bqkq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.parduota.parduota",
+            "certificate_hash": "d07292a994bc3341ef0e9f3e1a8c895ed924b5f1"
+          }
+        },
+        {
+          "client_id": "723220166615-b9kcgoo1o32olmgebrua38if1tb83fv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBsGkrIuWyjpJ-Y918N8KRBxLY3UQ_qxw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "723220166615-b9kcgoo1o32olmgebrua38if1tb83fv9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
