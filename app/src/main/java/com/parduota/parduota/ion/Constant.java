@@ -53,6 +53,7 @@ public interface Constant {
 
 
     String ACTION_NEXT = "action_next";
+    String INDEX = "index";
 
 
     int INPUT_TITLE = 1;

@@ -38,6 +38,7 @@ public class TitleFra extends MFragment implements Constant {
                 }
                 Intent intent = new Intent(ACTION_NEXT);
                 intent.putExtra(DATA, title);
+                intent.putExtra(INDEX,INPUT_TITLE);
             }
         });
     }

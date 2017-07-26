@@ -53,7 +53,17 @@ public class UploadAC extends MActivity implements Constant {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
+                pagers.setCurrentItem(pagers.getCurrentItem() + 1);
+                int index = intent.getIntExtra(INDEX, -1);
+                String content = intent.getStringExtra(DATA);
+                if (index > 0) {
+                    switch (index) {
+                        case INPUT_TITLE:
+                            title = content;
+                        case INPUT_DES:
+                            description = content;
+                    }
+                }
             }
         };
         IntentFilter intentFilter = new IntentFilter(ACTION_NEXT);
