@@ -55,6 +55,12 @@
             android:name=".SignUpAC"
             android:label="@string/title_activity_sign_up"></activity>
 
+
+        <activity
+            android:name=".UploadAC"
+            android:theme="@style/AppTheme_NoActionBar"
+          />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

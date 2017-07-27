@@ -75,4 +75,17 @@
     <string name="loading">Loading</string>
     <string name="title_add_title">Type item\'s title</string>
     <string name="title_too_short">Title is too short!</string>
+    <string name="other">Price - Quantiy - Condition - Address - Category</string>
+    <string name="hint_condition">Condition</string>
+    <string name="btn_submit">Submit</string>
+    <string name="new_">New</string>
+    <string name="new_other">New other (see details)</string>
+    <string name="new_with">New with defects</string>
+    <string name="manufacturer">Manufacturer refurbished</string>
+    <string name="seller">Seller refurbished</string>
+    <string name="used">Used</string>
+    <string name="very_good">Very Good</string>
+    <string name="good">Good</string>
+    <string name="acceptable">Acceptable</string>
+    <string name="working">For parts or not working</string>
 </resources>

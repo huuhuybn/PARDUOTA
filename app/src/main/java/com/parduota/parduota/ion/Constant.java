@@ -58,5 +58,6 @@ public interface Constant {
 
     int INPUT_TITLE = 1;
     int INPUT_DES = 2;
+    int INPUT_OTHER = 3;
 
 }

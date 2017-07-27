@@ -58,7 +58,7 @@ public class PaypalAct extends MActivity implements Constant {
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
 
     // note that these credentials will differ between live & sandbox environments.
-    private static final String CONFIG_CLIENT_ID = "AaCXrVdJ_yymIbQAtmCuhwiAXglZ5N7cUtKBEgl7b91Aw694XfDybFW3vR41dsY-20wbmTT1pFc9C6z0";
+    private static final String CONFIG_CLIENT_ID = "AZh7l13WTTy3QDa2PHsvYMo3DQ1sKqSgMuV9Tm6PXnCfe5a_QwYDv-GOtbMP3onN2fLRKI0ZiH5Tunqj";
 
     private static final int REQUEST_CODE_PAYMENT = 1;
     private static final int REQUEST_CODE_FUTURE_PAYMENT = 2;
