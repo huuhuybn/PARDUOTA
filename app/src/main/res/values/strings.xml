@@ -88,4 +88,5 @@
     <string name="good">Good</string>
     <string name="acceptable">Acceptable</string>
     <string name="working">For parts or not working</string>
+    <string name="check_box_terms">In Clicking \"Log in\" you are agreeing to the Terms and Condition.</string>
 </resources>

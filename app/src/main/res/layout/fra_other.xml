@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <include layout="@layout/my_bar"></include>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableRow>
+
+            <EditText
+                android:layout_weight="1"
+                android:hint="@string/hint_price"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:padding="8dp" />
+
+            <EditText
+                android:layout_weight="1"
+                android:hint="@string/hint_quantity"
+                android:imeOptions="actionNext"
+                android:padding="8dp" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <Spinner
+                android:id="@+id/spinner_condition"
+                android:layout_weight="1">
+
+            </Spinner>
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_country"
+                android:layout_weight="1" />
+
+
+        </TableRow>
+
+
+        <EditText android:id="@+id/edt_address"/>
+
+
+    </TableLayout>
+
+</LinearLayout>

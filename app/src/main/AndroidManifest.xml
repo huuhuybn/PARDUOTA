@@ -48,7 +48,8 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme_NoActionBar"></activity>
 
 
         <activity
@@ -58,8 +59,7 @@
 
         <activity
             android:name=".UploadAC"
-            android:theme="@style/AppTheme_NoActionBar"
-          />
+            android:theme="@style/AppTheme_NoActionBar" />
 
         <activity
             android:name="com.facebook.FacebookActivity"

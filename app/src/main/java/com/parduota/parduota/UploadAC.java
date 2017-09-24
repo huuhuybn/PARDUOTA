@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.upload.DesFra;
+import com.parduota.parduota.upload.OtherFra;
 import com.parduota.parduota.upload.TitleFra;
 import com.parduota.parduota.view.UploadDialog;
 
@@ -49,6 +50,7 @@ public class UploadAC extends MActivity implements Constant {
     private BroadcastReceiver broadcastReceiver;
 
     private UpItemAdapter upItemAdapter;
+
     @Override
     protected void initView() {
 
@@ -59,7 +61,7 @@ public class UploadAC extends MActivity implements Constant {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.e("ANC","Next");
+                Log.e("ANC", "Next");
                 pagers.setCurrentItem(pagers.getCurrentItem() + 1);
                 int index = intent.getIntExtra(INDEX, -1);
                 String content = intent.getStringExtra(DATA);
@@ -70,8 +72,6 @@ public class UploadAC extends MActivity implements Constant {
                         case INPUT_DES:
                             description = content;
                         case INPUT_OTHER:
-
-
 
                     }
                 }
@@ -103,7 +103,7 @@ public class UploadAC extends MActivity implements Constant {
                 case 1:
                     return new DesFra();
                 case 2:
-                    return new DesFra();
+                    return new OtherFra();
                 case 3:
                     return new DesFra();
                 case 4:
