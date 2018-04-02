@@ -20,6 +20,8 @@ public class SharePrefManager {
     private final String WAS_LOGIN = "_was_log_in_123";
     private final String USER = "user___";
 
+    private final String FCM = "FCM__";
+
 
     private static SharePrefManager instance = null;
     private Context context;
@@ -271,4 +273,11 @@ public class SharePrefManager {
         editor.commit();
     }
 
+    public void saveFCMToken(String refreshedToken) {
+        putStringValue(FCM, refreshedToken);
+    }
+
+    public String getFCMToken() {
+        return getStringValue(FCM, null);
+    }
 }

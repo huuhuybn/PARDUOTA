@@ -33,7 +33,7 @@ public class SplashAC extends MActivity {
                         // Proceed with initialization
                         final String token = sharePrefManager.getAccessToken();
                         if (token != null)
-                            startNewActivity(MainAC.class);
+                            startNewActivity(HomeActivity.class);
                         else
                             startNewActivity(LoginActivity.class);
                         finish();

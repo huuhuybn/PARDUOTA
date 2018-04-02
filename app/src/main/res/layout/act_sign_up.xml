@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_dialog"
     android:orientation="vertical">
 
 
     <EditText
+        android:layout_marginTop="10dp"
         android:id="@+id/et_name"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -31,10 +33,26 @@
         android:imeOptions="actionDone"
         android:inputType="textPassword" />
 
+    <EditText
+        android:id="@+id/et_password_2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/re_password"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword" />
+
+
+    <CheckBox
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkbox"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/check_box_terms" />
 
     <Button
         android:id="@+id/sign_up"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/action_sign_up" />
 

@@ -85,23 +85,19 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                         }
                         Item item = (Item) result;
                         if (item.getError() != null) {
-                            if (item.getError().equals(TOKEN_EXPIRED)) {
-                                showToast(getString(R.string.notify_out_of_session));
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
-                                SharePrefManager.getInstance(getActivity()).removeAll();
-                                getActivity().finish();
-                                return;
-                            }
+                            showToast(getString(R.string.notify_out_of_session));
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            SharePrefManager.getInstance(getActivity()).removeAll();
+                            getActivity().finish();
+                            return;
                         }
+
                         Log.e("DATA", new Gson().toJson(result));
                         if (result != null) {
                             if (item.getData() != null) {
                                 if (items.size() > 0) items = new ArrayList<>();
                                 items.addAll(item.getData());
                                 itemAdap.notifyDataSetChanged();
-                                Intent intent = new Intent(UPDATE_TOTAL);
-                                intent.putExtra(DATA, item.getData().size() + "");
-                                getActivity().sendBroadcast(intent);
                             }
                         }
                     }
@@ -160,29 +156,26 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                 for (int i = 0; i < result.getData().size(); i++) {
                     switch (result.getData().get(i).getStatus()) {
                         case DRAFT:
-                            result.getData().get(i).setStatus_text(getString(R.string.draft));
-                            result.getData().get(i).setColor_status(getResources().getColor(R.color.draft));
+                            result.getData().get(i).setStatusText(getString(R.string.draft));
+                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.draft));
                             break;
                         case PENDING:
-                            result.getData().get(i).setStatus_text(getString(R.string.pending));
-                            result.getData().get(i).setColor_status(getResources().getColor(R.color.pending));
+                            result.getData().get(i).setStatusText(getString(R.string.pending));
+                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.pending));
                             break;
                         case SOLD:
-                            result.getData().get(i).setStatus_text(getString(R.string.sold));
-                            result.getData().get(i).setColor_status(getResources().getColor(R.color.sold));
+                            result.getData().get(i).setStatusText(getString(R.string.sold));
+                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.sold));
                             break;
                         case REJECT:
-                            result.getData().get(i).setStatus_text(getString(R.string.reject));
-                            result.getData().get(i).setColor_status(getResources().getColor(R.color.reject));
+                            result.getData().get(i).setStatusText(getString(R.string.reject));
+                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.reject));
                             break;
 
                     }
                 }
                 items.addAll(result.getData());
                 itemAdap.notifyDataSetChanged();
-                Intent intent = new Intent(UPDATE_TOTAL);
-                intent.putExtra(DATA, result.getData().size() + "");
-                getActivity().sendBroadcast(intent);
             }
         }
     }
@@ -219,10 +212,9 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
             holder.tv_price.setText(getString(R.string.hint_price) + ": " + datum.getPrice());
             holder.tv_quality.setText(datum.getQuantity() + "");
             holder.tv_time.setText(datum.getCreatedAt());
-            holder.tv_status.setText(datum.getStatus_text());
-            holder.tv_status.setBackgroundColor(datum.getColor_status());
+            holder.tv_status.setText(datum.getStatus());
+            holder.tv_status.setBackgroundColor(datum.getColorStatus());
             Glide.with(context).load(PHOTO_URL + datum.getMedia().get(0).getLink()).into(holder.img_avatar);
-
             holder.itemView.setOnClickListener(holder.onClickListener);
         }
 

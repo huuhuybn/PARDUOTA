@@ -53,10 +53,10 @@ public class User {
     private String viber;
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
     @SerializedName("other")
     @Expose
-    private Object other;
+    private String other;
     @SerializedName("parent_user")
     @Expose
     private Integer parentUser;
@@ -71,7 +71,7 @@ public class User {
     private String credit;
     @SerializedName("bank_account")
     @Expose
-    private Object bankAccount;
+    private String bankAccount;
     @SerializedName("token_FCM")
     @Expose
     private Object tokenFCM;
@@ -202,19 +202,19 @@ public class User {
         this.viber = viber;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public Object getOther() {
+    public String getOther() {
         return other;
     }
 
-    public void setOther(Object other) {
+    public void setOther(String other) {
         this.other = other;
     }
 
@@ -250,11 +250,11 @@ public class User {
         this.credit = credit;
     }
 
-    public Object getBankAccount() {
+    public String getBankAccount() {
         return bankAccount;
     }
 
-    public void setBankAccount(Object bankAccount) {
+    public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
     }
 

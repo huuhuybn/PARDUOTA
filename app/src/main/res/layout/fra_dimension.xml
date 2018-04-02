@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/cb_sell_for_charity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sell_for_charity" />
+
+    <!--  Pick up Only
+      Freight
+      KG and dimentions-->
+
+    <RadioGroup
+        android:id="@+id/rg_shipping"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/rb_pick_up_only"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pick_up_only" />
+
+        <RadioButton
+            android:id="@+id/rb_freight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/freight" />
+
+        <RadioButton
+            android:id="@+id/rb_kg_dimension"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kg_dimension" />
+
+    </RadioGroup>
+
+
+    <TableRow>
+
+        <EditText
+            android:id="@+id/et_width"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_cm"
+            android:hint="@string/width" />
+
+        <EditText
+            android:id="@+id/et_height"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_cm"
+            android:hint="@string/height" />
+
+    </TableRow>
+
+    <TableRow>
+
+
+        <EditText
+            android:id="@+id/et_weight"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_kg"
+            android:hint="@string/weight" />
+
+        <EditText
+            android:id="@+id/length"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_cm"
+            android:hint="@string/length" />
+
+    </TableRow>
+
+
+</TableLayout>

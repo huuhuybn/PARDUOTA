@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/nav_all"
+        android:title="@string/menu_items" />
+
+    <item android:title="@string/menu_other">
+        <menu>
+            <item
+                android:id="@+id/nav_order"
+                android:title="@string/order" />
+
+            <item
+                android:id="@+id/nav_charge"
+                android:title="@string/action_charger" />
+
+
+            <item
+                android:id="@+id/nav_setting"
+                android:title="@string/action_settings" />
+
+
+            <item
+                android:id="@+id/nav_log_out"
+                android:title="@string/action_log_out" />
+        </menu>
+    </item>
+
+</menu>

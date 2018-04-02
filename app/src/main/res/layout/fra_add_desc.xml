@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/enter_information" />
+
+
+    <TableRow>
+
+        <EditText
+            android:id="@+id/tv_price"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_euro"
+            android:hint="@string/hint_price"
+            android:imeOptions="actionNext"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/tv_quality"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_quantity"
+            android:hint="@string/hint_quantity"
+            android:imeOptions="actionNext"
+            android:inputType="number" />
+
+    </TableRow>
+
+    <TableRow>
+
+    </TableRow>
+
+
+    <Spinner
+        android:id="@+id/tv_condition"
+        android:layout_height="38dp"
+        android:entries="@array/condition" />
+
+
+    <View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/black"
+        android:orientation="vertical" />
+
+
+    <Spinner
+        android:id="@+id/tv_country"
+        android:layout_height="38dp"
+        android:entries="@array/country" />
+
+    <View xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@android:color/black"
+        android:orientation="vertical" />
+
+
+    <EditText
+        android:id="@+id/tv_address"
+        android:drawableLeft="@drawable/ic_location"
+        android:hint="@string/hint_address" />
+</TableLayout>

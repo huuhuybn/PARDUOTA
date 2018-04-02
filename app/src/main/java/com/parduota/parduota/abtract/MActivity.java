@@ -15,21 +15,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
+import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.R;
+import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.utils.SharePrefManager;
+
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 
 
-public abstract class MActivity extends AppCompatActivity implements FutureCallback {
+public abstract class MActivity extends AppCompatActivity implements FutureCallback, Constant {
 
     protected SharePrefManager sharePrefManager;
     private ProgressDialog progressDialog;
@@ -73,6 +80,12 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
     protected Activity context;
     private Dialog networkDialog;
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (progressDialog != null) progressDialog.dismiss();
+    }
 
     public void addFragment(Fragment fragment, boolean addToBackStack,
                             int transition, boolean animation) {
@@ -187,8 +200,28 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
     @Override
     public void onCompleted(Exception e, Object result) {
         if (e != null) {
+            Log.e("ERROR", e.toString());
             showToast(getString(R.string.notify_internet_connection));
             return;
         }
+        try {
+            Log.e("DATA_SUPER", new Gson().toJson(result));
+            JSONObject jsonObject = new JSONObject(new Gson().toJson(result));
+            String error = jsonObject.getString(ERROR);
+            if (error != null) {
+                showToast(getString(R.string.notify_out_of_session));
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                SharePrefManager.getInstance(this).removeAll();
+                finish();
+                return;
+            }
+
+        } catch (Exception e1) {
+
+        }
+
+
     }
 }

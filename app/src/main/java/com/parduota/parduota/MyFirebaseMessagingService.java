@@ -9,12 +9,14 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.parduota.parduota.ion.Constant;
 
 /**
  * Created by huy_quynh on 6/27/17.
  */
 
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
+public class MyFirebaseMessagingService extends FirebaseMessagingService implements Constant {
     private static final String TAG = "MESSAGE_FIRE";
 
     @Override
@@ -32,7 +34,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            showNotification(remoteMessage.getFrom(),remoteMessage.getNotification().getBody());
+            showNotification(remoteMessage.getFrom(), remoteMessage.getNotification().getBody());
+            Intent intent = new Intent(COMMING_MESSAGE);
+            //intent.putExtra(DATA, remoteMessage);
+            sendBroadcast(intent);
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -43,7 +48,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void showNotification(String from, String message) {
 
         // Open NotificationView Class on Notification Click
-        Intent intent = new Intent(this, MainAC.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         // Send data to NotificationView Class
         intent.putExtra("title", from);
         intent.putExtra("text", message);

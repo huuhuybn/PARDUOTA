@@ -9,13 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class Item {
 
 
-    public String getError() {
-        return error;
-    }
 
-    public void setError(String error) {
-        this.error = error;
-    }
 
     @SerializedName("error")
     @Expose
@@ -132,4 +126,7 @@ public class Item {
         this.total = total;
     }
 
+    public String getError() {
+        return error;
+    }
 }

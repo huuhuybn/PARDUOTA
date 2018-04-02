@@ -1,8 +1,12 @@
 package com.parduota.parduota;
 
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.koushikdutta.async.Util;
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
@@ -22,8 +26,10 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
     }
 
 
-    private EditText et_name, et_email, et_password;
+    private EditText et_name, et_email, et_password, et_password_2;
     private FutureCallback futureCallback;
+
+    private CheckBox checkBox;
 
     @Override
     protected void initView() {
@@ -34,17 +40,31 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
         et_email = (EditText) findViewById(R.id.et_email);
 
         et_password = (EditText) findViewById(R.id.et_password);
+        et_password_2 = (EditText) findViewById(R.id.et_password_2);
+        checkBox = (CheckBox) findViewById(R.id.checkbox);
 
         findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!checkBox.isChecked()) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.notify_check_box), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String name = et_name.getText().toString().trim();
                 String email = et_email.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
-                ION.postData(SignUpAC.this, Constant.URL_SIGN_UP, ION.signUP(name, email, password), SignUp.class, futureCallback);
+                String password_2 = et_password_2.getText().toString().trim();
+                if (name.matches("") | email.matches("") | password.matches("") | password_2.matches("")) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.notify_input), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!password.equals(password_2)) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.notify_wrong_password), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ION.postData(SignUpAC.this, Constant.URL_SIGN_UP, ION.signUP(email, name, password), SignUp.class, futureCallback);
             }
         });
-
     }
 
     @Override
@@ -61,5 +81,6 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
         if (signUp.getStatus().equals(OK)) {
 
         }
+
     }
 }

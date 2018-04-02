@@ -118,7 +118,6 @@ public class MainAC extends MActivity implements Constant {
                 uploadDialog.show();
 
                 return true;
-
         }
         return false;
     }
