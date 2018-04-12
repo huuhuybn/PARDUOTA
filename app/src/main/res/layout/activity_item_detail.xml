@@ -7,10 +7,28 @@
     tools:context="com.parduota.parduota.ItemDetailAC">
 
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pagers"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp" />
+        android:layout_height="150dp">
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pagers"
+            android:layout_width="match_parent"
+            android:layout_height="150dp" />
+
+
+        <TextView
+            android:layout_margin="2dp"
+            android:id="@+id/tvIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tv_bg"
+            android:padding="5dp"
+            android:textColor="@android:color/white" />
+
+
+    </FrameLayout>
 
 
     <TableLayout
@@ -42,7 +60,7 @@
                 android:id="@+id/tv_price"
                 android:text="Price: 1000 $" />
 
-            <TextView android:text="       " />
+            <TextView android:text="" />
 
             <TextView
                 android:id="@+id/tv_quality"

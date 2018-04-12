@@ -2,6 +2,7 @@ package com.parduota.parduota;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+import com.parduota.parduota.abtract.BaseActivity;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.face.OnNotificationClick;
 import com.parduota.parduota.ion.Constant;
@@ -34,18 +36,12 @@ import java.util.ArrayList;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class NotificationAC extends MActivity implements FutureCallback, Constant {
+public class NotificationAC extends BaseActivity implements FutureCallback, Constant {
 
     String token;
     int page_ = 1;
 
     private FutureCallback<Notification> notificationFutureCallback;
-
-    @Override
-    protected int setLayoutId() {
-        return R.layout.activity_notification;
-    }
-
 
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView lvList;
@@ -53,13 +49,14 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
     private ArrayList<Datum> data;
     private OnNotificationClick onNotificationClick;
 
+
     @Override
-    protected void initView() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_notification);
+
         notificationFutureCallback = this;
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
         token = SharePrefManager.getInstance(this).getAccessToken();
 
         onNotificationClick = new OnNotificationClick() {
@@ -83,7 +80,7 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
             }
         };
         ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page_, Notification.class, notificationFutureCallback);
-        lvList = (RecyclerView) findViewById(R.id.lv_list);
+        lvList = findViewById(R.id.lv_list);
         data = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
         notificationAdapter = new NotificationAdapter(this, data, onNotificationClick);
@@ -98,7 +95,11 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
 //            }
 //        });
 
+
+        //Set nav drawer selected to first item in list
+        mNavigationView.getMenu().getItem(1).setChecked(true);
     }
+
 
     @Override
     public void onCompleted(Exception e, Object result) {
@@ -155,7 +156,10 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
                 }
             });
             if (datum.getReaded() == READED) {
-                holder.cardView.setBackgroundColor(getResources().getColor(R.color.black_overlay));
+
+                holder.tvTitle.setTextColor(getResources().getColor(R.color.grey_strong));
+                holder.tvDateTime.setTextColor(getResources().getColor(R.color.grey_strong));
+
             }
         }
 
@@ -171,13 +175,11 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
 
         final TextView tvTitle;
         final TextView tvDateTime;
-        final CardView cardView;
 
         public NotificationHolder(View convertView) {
 
             super(convertView);
 
-            cardView = (CardView) convertView.findViewById(R.id.card_view);
             tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             tvDateTime = (TextView) convertView.findViewById(R.id.tv_date_time);
 

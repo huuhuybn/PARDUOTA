@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -93,25 +92,23 @@ public class HomeActivity extends MActivity
         showLoading();
         updateFCM();
 
-        Log.e("TOKEN", token);
-
         futureCallback = this;
         //ION.getDataWithToken(this, token, getUrl(page), Item.class, this);
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
 
         View header_view = navigationView.getHeaderView(0);
 
-        TextView tv_email = (TextView) header_view.findViewById(R.id.tvEmail);
-        TextView tvName = (TextView) header_view.findViewById(R.id.tvFullName);
-        TextView tvCredit = (TextView) header_view.findViewById(R.id.tv_credit);
+        TextView tv_email = header_view.findViewById(R.id.tvEmail);
+        TextView tvName = header_view.findViewById(R.id.tvFullName);
+        TextView tvCredit = header_view.findViewById(R.id.tv_credit);
         User user = sharePrefManager.getUser();
 
         tv_email.setText(user.getEmail());
         tvName.setText(user.getName());
         tvCredit.setText(getString(R.string.tv_credit) + " : " + user.getCredit());
 
-        lv_list = (RecyclerView) findViewById(R.id.lv_list);
+        lv_list = findViewById(R.id.lv_list);
 
         items = new ArrayList<>();
 
@@ -122,7 +119,7 @@ public class HomeActivity extends MActivity
 
         lv_list.addItemDecoration(new MyDivider(this));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +127,7 @@ public class HomeActivity extends MActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -139,61 +136,61 @@ public class HomeActivity extends MActivity
         navigationView.setCheckedItem(R.id.nav_all);
         //navigationView.getMenu().getItem(0).getSubMenu().getItem(0).setChecked(true);
 
-        spinner_type_item = (Spinner) findViewById(R.id.spinner_type);
-
-        spinner_type_item.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String type = adapterView.getAdapter().getItem(i).toString();
-                Log.e("TYPE", type + " " + i);
-                page = 1;
-
-                switch (i) {
-
-                    case ALL_:
-
-                        ION.getDataWithToken(HomeActivity.this, token, getUrl(page), Item.class, futureCallback);
-                        break;
-
-                    case ACTIVE_:
-
-                        currentType = ACTIVE;
-                        getDataWithType(ACTIVE);
-                        break;
-
-                    case SOLD_:
-
-                        currentType = SOLD;
-                        getDataWithType(SOLD);
-                        break;
-
-                    case PENDING_:
-
-                        currentType = PENDING;
-                        getDataWithType(PENDING);
-                        break;
-
-                    case DRAFT_:
-
-                        currentType = DRAFT;
-                        getDataWithType(DRAFT);
-                        break;
-
-                    case REJECT_:
-
-                        currentType = REJECT;
-                        getDataWithType(REJECT);
-                        break;
-
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        spinner_type_item = (Spinner) findViewById(R.id.spinner_type);
+//
+//        spinner_type_item.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                String type = adapterView.getAdapter().getItem(i).toString();
+//                Log.e("TYPE", type + " " + i);
+//                page = 1;
+//
+//                switch (i) {
+//
+//                    case ALL_:
+//
+//                        ION.getDataWithToken(HomeActivity.this, token, getUrl(page), Item.class, futureCallback);
+//                        break;
+//
+//                    case ACTIVE_:
+//
+//                        currentType = ACTIVE;
+//                        getDataWithType(ACTIVE);
+//                        break;
+//
+//                    case SOLD_:
+//
+//                        currentType = SOLD;
+//                        getDataWithType(SOLD);
+//                        break;
+//
+//                    case PENDING_:
+//
+//                        currentType = PENDING;
+//                        getDataWithType(PENDING);
+//                        break;
+//
+//                    case DRAFT_:
+//
+//                        currentType = DRAFT;
+//                        getDataWithType(DRAFT);
+//                        break;
+//
+//                    case REJECT_:
+//
+//                        currentType = REJECT;
+//                        getDataWithType(REJECT);
+//                        break;
+//
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
     }
 
 
@@ -343,7 +340,6 @@ public class HomeActivity extends MActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -366,9 +362,10 @@ public class HomeActivity extends MActivity
             startActivity(intent);
             finish();
 
+        } else if (id == R.id.nav_charge) {
+            startNewActivity(ChargerAC.class);
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -390,7 +387,7 @@ public class HomeActivity extends MActivity
         String fcm = FirebaseInstanceId.getInstance().getToken();
         Log.e("fcm", fcm);
         if (fcm != null) {
-            ION.postDataWithToken(this, URL_SET_FCM_TOKEN, token, ION.fcmUpdate(fcm), String.class, new FutureCallback<String>() {
+            ION.postFormDataWithToken(this, URL_SET_FCM_TOKEN, token, ION.fcmUpdate(fcm), new FutureCallback<String>() {
                 @Override
                 public void onCompleted(Exception e, String result) {
                     Log.e("AAA", e.toString());

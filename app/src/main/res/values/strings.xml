@@ -702,7 +702,7 @@
         <item>Zimbabwe.</item>
     </string-array>
 
-    <string name="title_activity_charger">ChargerActivity</string>
+    <string name="title_activity_charger">History Charger</string>
 
     <string name="title_activity_change_password_ac">Password</string>
 
@@ -712,6 +712,46 @@
     <string name="btn_male">Male</string>
     <string name="btn_female">Female</string>
     <string name="btn_ok">OK</string>
+    <string name="notify_update_profile_succsessful">Update Profile Succsessful!</string>
+    <string name="full_name">Your Name</string>
+    <string name="bank">Bank</string>
+    <string name="company">Company</string>
+    <string name="phone">Phone</string>
+
+    <string name="title_activity_history_charge_ac">HistoryChargeAC</string>
+    <string name="username">UserName</string>
+    <string name="new_to_parduota">New to Parduota?</string>
+    <string name="you_have_no_item">You have no item here</string>
+    <string name="add_order_title">Create an Order</string>
+    <string name="create_order">Create</string>
+    <string name="tv_title">Title</string>
+    <string name="tv_ebay_id">Ebay Id</string>
+    <string name="notify_order_succseccful">Create Order Successful!</string>
+    <string name="order_title">Title</string>
+    <string name="notify_confirm_email">In the meantime, we will look some of the functionality until you confirm the email</string>
+    <string name="we_need_email_confirm">We need email verification</string>
+    <string name="btn_get_verify">Get Verify</string>
+    <string name="notify_get_verify">If you want more functions, information..., please click "Get verified" and contact me at "info@parduota.com"</string>
+    <string name="notify_get_verify_done">Thank you for your request. We will contact you soon.</string>
+
+    <string name="notify_click_agree_term">You need to accept this Term and Conditions to continue use all function</string>
+    <string name="notify_your_account_is_block">Your account is blocked by Admin</string>
+
+    <string name="title_activity_fullscreen">Get Verify</string>
+    <string name="sure_name">Sure Name</string>
+    <string name="bank_account">Bank Account</string>
+    <string name="post_code">Post Code</string>
+    <string name="create_business_account">Create business account</string>
+    <string name="gender">Gender</string>
+    <string name="vat_number">Registration number/VAT number</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="notify_choose_gender">Please choose Gender!</string>
+    <string name="notify_verify_email">We need email verification. Please check your email and log in again !</string>
+    <string name="notify_error_sign_up">These credentials do not match our records.</string>
+    <string name="notify_empty">No Data</string>
+    <string name="notify_you_sent_verify">You already sent verify form!</string>
+
 
     <!--'conditions'=> [-->
     <!--1000 => 'New',-->

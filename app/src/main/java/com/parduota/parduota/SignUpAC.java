@@ -1,5 +1,7 @@
 package com.parduota.parduota;
 
+import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -33,6 +35,11 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
 
     @Override
     protected void initView() {
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         futureCallback = this;
 
         et_name = (EditText) findViewById(R.id.et_name);
@@ -46,10 +53,8 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
         findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkBox.isChecked()) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.notify_check_box), Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                showLoading();
+
                 String name = et_name.getText().toString().trim();
                 String email = et_email.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
@@ -70,17 +75,22 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
     @Override
     public void onCompleted(Exception e, Object result) {
         super.onCompleted(e, result);
+        hideLoading();
         SignUp signUp = (SignUp) result;
         if (signUp.getError() != null) {
-            if (signUp.getError().getErrors() != null) {
-                String message = signUp.getError().getErrors().getEmail().get(0);
-                showToast(message);
-                return;
-            }
-        }
-        if (signUp.getStatus().equals(OK)) {
+            Toast.makeText(this, getString(R.string.notify_error_sign_up), Toast.LENGTH_SHORT).show();
+          /*  if (signUp.getError().getErrors() != null) {
+                String message_email = signUp.getError().getErrors().getEmail().get(0);
+                if (message_email != null) {
 
+                }
+            }*/
+        } else if (signUp.getStatus().equals(OK)) {
+            Intent intent = new Intent();
+            intent.putExtra(DATA, et_email.getText().toString().trim());
+            setResult(999, intent);
+            Toast.makeText(this, getString(R.string.notify_verify_email), Toast.LENGTH_LONG).show();
+            finish();
         }
-
     }
 }

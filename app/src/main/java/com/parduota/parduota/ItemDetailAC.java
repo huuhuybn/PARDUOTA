@@ -58,6 +58,8 @@ public class ItemDetailAC extends MActivity implements Constant {
     private TextView tvAddress;
     private TextView tvCondition;
 
+    private TextView tvIndicator;
+
     @Override
     protected void initView() {
         ActionBar actionBar = getSupportActionBar();
@@ -66,17 +68,19 @@ public class ItemDetailAC extends MActivity implements Constant {
         }
 
 
-        pagers = (ViewPager) findViewById(R.id.pagers);
-        tvTitle = (TextView) findViewById(R.id.tv_title);
-        tvDateTime = (TextView) findViewById(R.id.tv_date_time);
-        tvPrice = (TextView) findViewById(R.id.tv_price);
-        tvQuality = (TextView) findViewById(R.id.tv_quality);
-        tvDetail = (TextView) findViewById(R.id.tv_detail);
-        tvAddress = (TextView) findViewById(R.id.tv_address);
-        tvCondition = (TextView) findViewById(R.id.tv_condition);
+        pagers = findViewById(R.id.pagers);
+        tvTitle = findViewById(R.id.tv_title);
+        tvDateTime = findViewById(R.id.tv_date_time);
+        tvPrice = findViewById(R.id.tv_price);
+        tvQuality = findViewById(R.id.tv_quality);
+        tvDetail = findViewById(R.id.tv_detail);
+        tvAddress = findViewById(R.id.tv_address);
+        tvCondition = findViewById(R.id.tv_condition);
+        tvIndicator = findViewById(R.id.tvIndicator);
 
         String from = getIntent().getStringExtra(FROM);
         type_from = from;
+        int size = 0;
         if (from.equals(ITEM_SCREEN)) {
             datum = new Gson().fromJson(getIntent().getStringExtra(DATA), Datum.class);
             if (actionBar != null) actionBar.setTitle(datum.getTitle());
@@ -87,6 +91,7 @@ public class ItemDetailAC extends MActivity implements Constant {
             PhotoItemAdapter photoAdapter = new PhotoItemAdapter(getSupportFragmentManager(), datum.getMedia());
             pagers.setAdapter(photoAdapter);
 
+            size = datum.getMedia().size();
 
         }
         if (from.equals(NOTIFICATION_SCREEN)) {
@@ -100,7 +105,33 @@ public class ItemDetailAC extends MActivity implements Constant {
             PhotoNotiAdapter photoNotiAdapter = new PhotoNotiAdapter(getSupportFragmentManager(), metaData.getMedia());
             pagers.setAdapter(photoNotiAdapter);
 
+            size = metaData.getMedia().size();
+
         }
+
+
+        final int finalSize = size;
+
+        tvIndicator.setText("1/" + finalSize);
+
+        pagers.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                tvIndicator.setText((position + 1) + "/" + finalSize);
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -157,8 +188,10 @@ public class ItemDetailAC extends MActivity implements Constant {
         public List<Medium> mediums;
 
         public PhotoItemAdapter(FragmentManager fm, List<Medium> mediums) {
+
             super(fm);
             this.mediums = mediums;
+
         }
 
         @Override

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
+import com.parduota.parduota.HomeActivity;
 import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
@@ -45,8 +46,25 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
 
     private View view;
 
+    private View no_item;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private FutureCallback futureCallback;
+
+
+    public static FraItem newInstance(int idItem) {
+
+        FraItem fraItem = new FraItem();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(DATA, idItem);
+        fraItem.setArguments(bundle);
+
+        return fraItem;
+    }
+
+
+    private int TYPE = -1;
 
     @Override
     protected int setLayoutId() {
@@ -55,11 +73,16 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
 
     @Override
     protected void initView(View view) {
+
+        TYPE = getArguments().getInt(DATA);
+
         futureCallback = this;
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_to_refresh);
+        no_item = view.findViewById(R.id.tv_no_item);
+
+        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
         token = SharePrefManager.getInstance(getActivity()).getAccessToken();
-        recyclerView = (RecyclerView) view.findViewById(R.id.lv_list);
+        recyclerView = view.findViewById(R.id.lv_list);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -69,9 +92,11 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
         progress_bar = view.findViewById(R.id.progress_bar);
         progress_bar.setVisibility(View.VISIBLE);
 
-        ION.getData(getActivity(), getUrl(page), Item.class, this);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        getDataWithType(TYPE);
+
+
+    /*    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
@@ -103,13 +128,13 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                     }
                 });
             }
-        });
+        });*/
 
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 page++;
-                ION.getData(getActivity(), getUrl(page), Item.class, futureCallback);
+                //ION.getData(getActivity(), getUrl(page), Item.class, futureCallback);
             }
         });
         recyclerView.addItemDecoration(new MyDivider(getActivity()));
@@ -120,11 +145,18 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
 
     }
 
-    public String getUrl(int page) {
-        String url = Constant.URL_ALL_ITEM + "&token=" + token + "&page=" + page;
-        Log.e("URL", url);
+    public void getDataWithType(int type) {
+
+        ION.getDataWithToken(getActivity(), token, getItemByStatus(type, page), Item.class, futureCallback);
+    }
+
+
+    public String getItemByStatus(int type, int page) {
+        String url = Constant.URL_GET_ITEM_BY_STATUS + type + "?page=" + page;
+        Log.e("getItemByStatus", url);
         return url;
     }
+
 
     @Override
     public void onCompleted(Exception e, Item result) {
@@ -141,10 +173,10 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                 return;
             }
         }
-
-        Log.e("DATA", new Gson().toJson(result));
+        //Log.e("DATA", new Gson().toJson(result));
         if (result != null) {
             if (result.getData() != null & result.getData().size() > 0) {
+                no_item.setVisibility(View.GONE);
                 if (result.getData().size() < 5) {
                     recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
                         @Override
@@ -153,7 +185,7 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                         }
                     });
                 }
-                for (int i = 0; i < result.getData().size(); i++) {
+             /*   for (int i = 0; i < result.getData().size(); i++) {
                     switch (result.getData().get(i).getStatus()) {
                         case DRAFT:
                             result.getData().get(i).setStatusText(getString(R.string.draft));
@@ -173,10 +205,10 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                             break;
 
                     }
-                }
+                }*/
                 items.addAll(result.getData());
                 itemAdap.notifyDataSetChanged();
-            }
+            } else no_item.setVisibility(View.VISIBLE);
         }
     }
 
@@ -212,7 +244,7 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
             holder.tv_price.setText(getString(R.string.hint_price) + ": " + datum.getPrice());
             holder.tv_quality.setText(datum.getQuantity() + "");
             holder.tv_time.setText(datum.getCreatedAt());
-            holder.tv_status.setText(datum.getStatus());
+            holder.tv_status.setText("" + datum.getStatus());
             holder.tv_status.setBackgroundColor(datum.getColorStatus());
             Glide.with(context).load(PHOTO_URL + datum.getMedia().get(0).getLink()).into(holder.img_avatar);
             holder.itemView.setOnClickListener(holder.onClickListener);

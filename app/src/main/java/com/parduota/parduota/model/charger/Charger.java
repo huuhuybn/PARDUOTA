@@ -1,5 +1,5 @@
 
-package com.example;
+package com.parduota.parduota.model.charger;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

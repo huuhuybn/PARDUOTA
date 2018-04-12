@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
+
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -19,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="huuhuybn@gmail.com"
         android:textStyle="bold" />
 
 
@@ -27,16 +27,14 @@
         android:id="@+id/tvFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Huy Nguyen Huu" />
+        android:layout_marginTop="5dp" />
 
 
     <TextView
         android:id="@+id/tv_credit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Credit : 100" />
+        android:layout_marginTop="5dp" />
 
 
 </LinearLayout>

@@ -1,31 +1,24 @@
 package com.parduota.parduota;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.parduota.parduota.abtract.MActivity;
-import com.parduota.parduota.abtract.MFragment;
 import com.parduota.parduota.add.FraAddDescription;
 import com.parduota.parduota.add.FraAddDetail;
 import com.parduota.parduota.add.FraAddDimension;
 import com.parduota.parduota.add.FraAddPhoto;
 import com.parduota.parduota.add.FraAddTitle;
 import com.parduota.parduota.model.UploadItem;
-import com.parduota.parduota.model.item.Item;
 import com.parduota.parduota.view.NonSwipeableViewPager;
 
 /**
@@ -36,6 +29,7 @@ public class AddAC extends MActivity {
 
 
     private int PICK_IMAGE = 999;
+
     private NonSwipeableViewPager viewPager;
     private AddPagerAdapter addPagerAdapter;
     private UploadItem uploadItem;

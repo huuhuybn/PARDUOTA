@@ -3,8 +3,6 @@ package com.parduota.parduota.ion;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.JsonObject;
-import com.google.gson.internal.LinkedHashTreeMap;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
@@ -45,8 +43,8 @@ public class ION implements Constant {
     }
 
 
-    public static void getDataWithToken(Context context, String token, String url, Class class_
-            , FutureCallback futureCallback) {
+    public static <T> void getDataWithToken(Context context, String token, String url, Class class_
+            , FutureCallback<T> futureCallback) {
         if (Constant.isDEBUG)
             Log.e("getDataWithToken", url);
         Ion.with(context)
@@ -66,6 +64,20 @@ public class ION implements Constant {
             Ion.with(context)
                     .load(url).setHeader("Authorization", "Bearer" + " " + token).setBodyParameters(parameters)
                     .as(class_)
+                    .setCallback(futureCallback);
+    }
+
+    public static void postFormDataWithToken(Context context, String url, String token, Map<String, List<String>> parameters
+            , FutureCallback futureCallback) {
+        if (parameters == null) {
+            Ion.with(context)
+                    .load(url).setHeader("Authorization", "Bearer" + " " + token)
+                    .asJsonObject()
+                    .setCallback(futureCallback);
+        } else
+            Ion.with(context)
+                    .load(url).setHeader("Authorization", "Bearer" + " " + token).setMultipartParameters(parameters)
+                    .asJsonObject()
                     .setCallback(futureCallback);
     }
 
@@ -124,7 +136,7 @@ public class ION implements Constant {
         params.put(BANK_ACCOUNT, Arrays.asList(bank_account));
         params.put(GENDER, Arrays.asList(gender));
         params.put(FULL_NAME, Arrays.asList(full_name));
-        params.put(PHONE,Arrays.asList(phone));
+        params.put(PHONE, Arrays.asList(phone));
         params.put(COMPANY, Arrays.asList(company));
         params.put(ADDRESS, Arrays.asList(address));
         params.put(DESCRIPTION, Arrays.asList(description));
@@ -143,4 +155,71 @@ public class ION implements Constant {
         return params;
     }
 
+
+    public static Map<String, List<String>> createOrder(String title, String ebay_id, String des) {
+        Map<String, List<String>> params = new HashMap<String, List<String>>();
+        params.put(TITLE, Arrays.asList(title));
+        params.put(EBAY_ID, Arrays.asList(ebay_id));
+        params.put(NOTICE, Arrays.asList(des));
+        Log.e("PARAM", params.toString());
+        return params;
+    }
+
+
+    public static Map<String, List<String>> createMessage(String message) {
+        Map<String, List<String>> params = new HashMap<String, List<String>>();
+        params.put(MESSAGE, Arrays.asList(message));
+        Log.e("PARAM", params.toString());
+        return params;
+    }
+
+//    full_name:Tên đầy đủ
+//    address:Địa chỉ
+//    phone:0978281836
+//    bank_account:121313
+//    gender:male
+//    country:VN
+//    zip_code:
+//    business:off
+//    company:
+//    company_zip_code:
+//    registered_number:
+//    company_address:
+//    company_zip_code:
+//    company_country:
+//    p_name:
+//    p_surname:
+//    p_phone:
+//    other:
+
+    public static Map<String, List<String>> getVerify(String full_name, String address, String phone, String bank_account, String gender, String country, String zip_code, String business, String company, String company_zip_code, String registered_number, String company_address, String company_country, String p_name, String p_surname, String p_phone, String other) {
+
+        Map<String, List<String>> params = new HashMap<>();
+
+        params.put(FULL_NAME, Arrays.asList(full_name));
+        params.put(ADDRESS, Arrays.asList(address));
+        params.put(PHONE, Arrays.asList(phone));
+        params.put(BANK_ACCOUNT, Arrays.asList(bank_account));
+        params.put(GENDER, Arrays.asList(gender));
+        params.put(COUNTRY, Arrays.asList(country));
+        params.put(ZIP_CODE, Arrays.asList(zip_code));
+        params.put(BUSINESS, Arrays.asList(business));
+
+        if (business.equals("on")) {
+            params.put(COMPANY, Arrays.asList(company));
+            params.put(COMPANY_ZIP_CODE, Arrays.asList(company_zip_code));
+            params.put(REGISTERED_NUMBER, Arrays.asList(registered_number));
+            params.put(COMPANY_ADDRESS, Arrays.asList(company_address));
+            params.put(COMPANY_ZIP_CODE, Arrays.asList(company_zip_code));
+            params.put(COMPANY_COUNTRY, Arrays.asList(company_country));
+            params.put(P_NAME, Arrays.asList(p_name));
+            params.put(P_SURNAME, Arrays.asList(p_surname));
+            params.put(P_PHONE, Arrays.asList(p_phone));
+            params.put(OTHER, Arrays.asList(other));
+        }
+
+        Log.e("PARAM", params.toString());
+
+        return params;
+    }
 }

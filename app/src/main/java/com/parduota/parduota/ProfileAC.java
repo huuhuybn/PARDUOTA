@@ -10,9 +10,12 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
@@ -27,7 +30,7 @@ import com.parduota.parduota.view.EditDialog;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class ProfileAC extends MActivity implements FutureCallback {
+public class ProfileAC extends MActivity implements FutureCallback, Constant {
 
 
     @Override
@@ -36,6 +39,7 @@ public class ProfileAC extends MActivity implements FutureCallback {
     }
 
     private TextView tvEmail;
+    private RadioGroup gender;
     private RadioButton male;
     private RadioButton female;
     private TextView tvAddress;
@@ -85,6 +89,16 @@ public class ProfileAC extends MActivity implements FutureCallback {
         String company = user.getCompany();
         String full_name = user.getFullName();
 
+        String gender = user.getGender();
+
+        if (gender.equals(MALE)) {
+            this.gender.check(R.id.male);
+        } else {
+            this.gender.check(R.id.female);
+        }
+
+        Log.e("USER", new Gson().toJson(user));
+
 
         if (full_name != null) tvFullName.setText(full_name);
 
@@ -104,15 +118,13 @@ public class ProfileAC extends MActivity implements FutureCallback {
 
         if (other != null) tvOther.setText(other);
 
-
-        setActionEdit(tvFullName, btnEditFullName);
-        setActionEdit(tvAddress, btnEditAddress);
-        setActionEdit(tvBank, btnEditBank);
-        setActionEdit(tvCompany, btnEditCompany);
-        setActionEdit(tvPhone, btnEditPhone);
-        setActionEdit(tvDescription, btnEditDescription);
-
-
+        setActionEdit(tvFullName, btnEditFullName, false);
+        setActionEdit(tvAddress, btnEditAddress, false);
+        setActionEdit(tvBank, btnEditBank, true);
+        setActionEdit(tvCompany, btnEditCompany, false);
+        setActionEdit(tvPhone, btnEditPhone, true);
+        setActionEdit(tvDescription, btnEditDescription, false);
+        setActionEdit(tvOther, btnEditOther, false);
     }
 
 
@@ -123,7 +135,7 @@ public class ProfileAC extends MActivity implements FutureCallback {
         return true;
     }
 
-    public void setActionEdit(final TextView textView, ImageView button) {
+    public void setActionEdit(final TextView textView, ImageView button, final boolean isNumberInput) {
 
 
         final String text = textView.getText().toString().trim();
@@ -133,6 +145,7 @@ public class ProfileAC extends MActivity implements FutureCallback {
             public void onClick(View view) {
 
                 EditDialog newFragment = new EditDialog();
+                newFragment.isNumberInput = isNumberInput;
                 newFragment.tvContainer = text;
                 newFragment.show(getFragmentManager(), "missiles");
                 newFragment.setOnEditFinishListener(new EditDialog.OnEditFinishListener() {
@@ -169,7 +182,14 @@ public class ProfileAC extends MActivity implements FutureCallback {
         String other = tvOther.getText().toString().trim();
         String gender = "male";
 
-        ION.postDataWithToken(this, Constant.URL_UPDATE_PROFILE, token, ION.updateProfile(bank, gender, full_name, company, address, phone, description, other), ProfileResponse.class, this);
+        int id = this.gender.getCheckedRadioButtonId();
+        if (id == R.id.male) gender = MALE;
+        else gender = FEMALE;
+
+        Log.e("ABC", gender + "  ");
+
+
+        ION.postFormDataWithToken(this, Constant.URL_UPDATE_PROFILE, token, ION.updateProfile(bank, gender, full_name, company, address, phone, description, other), this);
 
 
     }
@@ -178,35 +198,39 @@ public class ProfileAC extends MActivity implements FutureCallback {
     public void onCompleted(Exception e, Object result) {
         super.onCompleted(e, result);
         hideLoading();
-        ProfileResponse profileResponse = (ProfileResponse) result;
+
+        ProfileResponse profileResponse = new Gson().fromJson((JsonObject) result, ProfileResponse.class);
 
         if (profileResponse != null) {
             if (profileResponse.getStatus().equals("ok"))
                 sharePrefManager.saveUser(profileResponse.getUser());
+            Toast.makeText(this, getString(R.string.notify_update_profile_succsessful), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
     public void init() {
-        tvEmail = (TextView) findViewById(R.id.tvEmail);
-        male = (RadioButton) findViewById(R.id.male);
-        female = (RadioButton) findViewById(R.id.female);
-        tvAddress = (TextView) findViewById(R.id.tv_address);
-        btnEditAddress = (ImageView) findViewById(R.id.btn_edit_address);
-        tvBank = (TextView) findViewById(R.id.tv_bank);
-        btnEditBank = (ImageView) findViewById(R.id.btn_edit_bank);
-        tvCompany = (TextView) findViewById(R.id.tvCompany);
-        btnEditCompany = (ImageView) findViewById(R.id.btn_edit_company);
-        tvPhone = (TextView) findViewById(R.id.tvPhone);
-        btnEditPhone = (ImageView) findViewById(R.id.btn_edit_phone);
-        tvDescription = (TextView) findViewById(R.id.tvDescription);
-        btnEditDescription = (ImageView) findViewById(R.id.btn_edit_description);
-        tvCredit = (TextView) findViewById(R.id.tv_credit);
-        tvFullName = (TextView) findViewById(R.id.tvFullName);
-        btnEditFullName = (ImageView) findViewById(R.id.btn_edit_full_name);
-        tvOther = (TextView) findViewById(R.id.tvOther);
-        btnEditOther = (ImageView) findViewById(R.id.btn_edit_other);
 
+        gender = findViewById(R.id.gender);
+        tvEmail = findViewById(R.id.tvEmail);
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);
+        tvAddress = findViewById(R.id.tv_address);
+        btnEditAddress = findViewById(R.id.btn_edit_address);
+        tvBank = findViewById(R.id.tv_bank);
+        btnEditBank = findViewById(R.id.btn_edit_bank);
+        tvCompany = findViewById(R.id.tvCompany);
+        btnEditCompany = findViewById(R.id.btn_edit_company);
+        tvPhone = findViewById(R.id.tvPhone);
+        btnEditPhone = findViewById(R.id.btn_edit_phone);
+        tvDescription = findViewById(R.id.tvDescription);
+        btnEditDescription = findViewById(R.id.btn_edit_description);
+        tvCredit = findViewById(R.id.tv_credit);
+        tvFullName = findViewById(R.id.tvFullName);
+        btnEditFullName = findViewById(R.id.btn_edit_full_name);
+        tvOther = findViewById(R.id.tvOther);
+        btnEditOther = findViewById(R.id.btn_edit_other);
 
     }
 

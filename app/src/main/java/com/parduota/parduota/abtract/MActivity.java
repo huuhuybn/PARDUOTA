@@ -68,7 +68,6 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         if (progressDialog != null) {
             progressDialog.hide();
         }
-
     }
 
     protected abstract int setLayoutId();
@@ -116,6 +115,7 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         if (addToBackStack)
             ft.addToBackStack(name);
         ft.commitAllowingStateLoss();
+
     }
 
 
@@ -129,6 +129,11 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
     protected void startNewActivity(Class aClass) {
         Intent intent = new Intent(this, aClass);
         startActivity(intent);
+    }
+
+    protected void startNewActivityForResult(Class aClass,int code) {
+        Intent intent = new Intent(this, aClass);
+        startActivityForResult(intent,code);
     }
 
     protected void showToast(String message) {

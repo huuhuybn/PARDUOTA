@@ -20,6 +20,7 @@
 
 
         <RadioGroup
+            android:id="@+id/gender"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -29,13 +30,13 @@
                 android:id="@+id/male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/ic_email" />
+                android:button="@drawable/ic_male_selector" />
 
             <RadioButton
                 android:id="@+id/female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/ic_email" />
+                android:button="@drawable/ic_fe_male_selector" />
 
         </RadioGroup>
 
@@ -96,6 +97,12 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:text="@string/full_name" />
+
             <TableRow android:padding="5dp">
 
                 <TextView
@@ -104,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
 
-                    android:drawableLeft="@drawable/ic_location"
+                    android:drawableLeft="@drawable/ic_name"
                     android:gravity="center_vertical" />
 
                 <ImageView
@@ -119,6 +126,10 @@
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
 
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/hint_address" />
 
             <TableRow android:padding="5dp">
 
@@ -143,6 +154,10 @@
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
 
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/bank" />
+
             <TableRow android:padding="5dp">
 
                 <TextView
@@ -150,9 +165,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
                     android:drawableLeft="@drawable/ic_bank"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:inputType="number" />
 
                 <ImageView
                     android:id="@+id/btn_edit_bank"
@@ -164,6 +179,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/company" />
 
             <TableRow android:padding="5dp">
 
@@ -188,16 +207,20 @@
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
 
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/phone" />
+
             <TableRow android:padding="5dp">
 
                 <TextView
                     android:id="@+id/tvPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_phone"
-                    android:gravity="center_vertical" />
+                    android:gravity="center_vertical"
+                    android:inputType="number" />
 
                 <ImageView
                     android:id="@+id/btn_edit_phone"
@@ -211,6 +234,10 @@
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
 
+
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/hint_description" />
 
             <TableRow android:padding="5dp">
 
@@ -236,6 +263,10 @@
                 android:layout_height="0.2dp"
                 android:background="@color/colorAccent" />
 
+            <TextView
+                android:paddingLeft="5dp"
+                android:text="@string/menu_other" />
+
 
             <TableRow android:padding="5dp">
 
@@ -251,7 +282,6 @@
                 <ImageView
                     android:id="@+id/btn_edit_other"
                     android:src="@drawable/ic_edit_grey" />
-
 
             </TableRow>
 

@@ -7,7 +7,46 @@ package com.parduota.parduota.ion;
 
 public interface Constant {
 
+    int GET_VERIFY_CODE = 123344;
 
+
+    int VERIFY_EMAIL = 2;
+    int VERIFY_ADMIN = 1;
+    int VERIFY_NOTHING = 0;
+
+
+    int USER_NOT_APPROVED = 0;
+    int USER_APPROVED = 1;
+
+
+    String REQUEST_VIP = "1";
+
+
+    String REQUEST_NO_VIP = "0";
+
+    String UPDATE_COUNTER = "update_counter";
+
+
+    String TITLE = "title";
+    String EBAY_ID = "ebay_id";
+    String NOTICE = "notice";
+    String MESSAGE = "message";
+    String COMPANY_ZIP_CODE = "company_zip_code";
+    String REGISTERED_NUMBER = "registered_number";
+    String COMPANY_ADDRESS = "registered_number";
+    String COMPANY_COUNTRY = "company_country";
+    String P_NAME = "p_name";
+    String P_SURNAME = "p_surname";
+    String P_PHONE = "p_phone";
+
+    String STATUS = "status";
+
+
+    String BUSINESS = "business";
+    String ZIP_CODE = "zip_code";
+    String COUNTRY = "country";
+    String MALE = "male";
+    String FEMALE = "female";
 
     String BANK_ACCOUNT = "bank_account";
     String GENDER = "gender";
@@ -58,10 +97,13 @@ public interface Constant {
 
     String TOKEN_EXPIRED = "token_expired";
 
-    //String BASE_URL = "http://test.500anhemcode.com/";
+    String BASE_URL = "http://dev.ductranxuan.com/";
 
 
-    String BASE_URL = "http://parduota.com/";
+    //String BASE_URL = "http://parduota.com/";
+
+
+    String URL_GET_MESSAGE = BASE_URL + "api/orders/ping_messages/";
 
 
     String URL_UPDATE_PASSWORD = BASE_URL + "api/update/password";
@@ -93,6 +135,17 @@ public interface Constant {
 
 
     String URL_UPDATE_PROFILE = BASE_URL + "api/update_profile";
+
+    String URL_GET_CHARGER_HISTORY = BASE_URL + "api/history_charges?page=";
+
+
+    String URL_CREATE_ORDER = BASE_URL + "api/orders/add";
+
+
+    String URL_ADD_MESSAGE = BASE_URL + "api/orders/add_messages/";
+
+
+    String URL_GET_VERIFY = BASE_URL + "api/request_vip";
 
     String AMOUNT = "amount";
 

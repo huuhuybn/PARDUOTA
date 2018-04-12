@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
     android:orientation="vertical"
     tools:context="com.parduota.parduota.SettingAC">
 
@@ -11,30 +10,31 @@
         android:id="@+id/tvProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_detail"
+        android:drawableLeft="@drawable/ic_view_list_black_24px"
         android:gravity="center_vertical"
         android:onClick="onProfileClick"
         android:padding="10dp"
-        android:text="@string/profile"
-        android:textColor="@android:color/white" />
+        android:text="@string/profile" />
 
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_overlay" />
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@color/grey" />
 
 
     <TextView
         android:id="@+id/tvPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_detail"
+
+        android:drawableLeft="@drawable/ic_view_list_black_24px"
         android:gravity="center_vertical"
         android:onClick="onPasswordClick"
         android:padding="10dp"
-        android:text="@string/password"
-        android:textColor="@android:color/white" />
+        android:text="@string/password" />
 
 
 </LinearLayout>

@@ -54,10 +54,12 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        btnAddOrder = (FloatingActionButton) findViewById(R.id.fab);
+        btnAddOrder = findViewById(R.id.fab);
         btnAddOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                startNewActivity(AddOrderAC.class);
 
             }
         });
@@ -68,7 +70,7 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
         ION.getDataWithToken(this, token, URL_GET_ORDER + page_, Order.class, this);
 
         orderFutureCallback = this;
-        lv_list = (RecyclerView) findViewById(R.id.lv_list);
+        lv_list = findViewById(R.id.lv_list);
         orders = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
 
@@ -99,11 +101,23 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
     public void onCompleted(Exception e, Object result) {
         super.onCompleted(e, result);
         hideLoading();
+
+
         if (result != null) {
             Order order = (Order) result;
             Log.e("AAA", new Gson().toJson(order));
-            orders.addAll(order.getData());
-            orderAdapter.notifyDataSetChanged();
+
+
+            if (order != null) {
+                if (order.getData() != null) {
+                    orders.addAll(order.getData());
+                    orderAdapter.notifyDataSetChanged();
+                }
+
+            } else {
+                findViewById(R.id.tv_no_item).setVisibility(View.VISIBLE);
+
+            }
         }
 
     }

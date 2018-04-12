@@ -7,11 +7,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.Selection;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
 import com.parduota.parduota.R;
 
 /**
@@ -19,6 +21,8 @@ import com.parduota.parduota.R;
  */
 
 public class EditDialog extends DialogFragment {
+
+    public boolean isNumberInput = false;
 
     public interface OnEditFinishListener {
         void onFinish(String text);
@@ -67,6 +71,8 @@ public class EditDialog extends DialogFragment {
 
         etContent = (EditText) view.findViewById(R.id.etContent);
         etContent.setText(tvContainer);
+
+        if (isNumberInput) etContent.setInputType(InputType.TYPE_CLASS_NUMBER);
 
 
         Editable editable = etContent.getText();

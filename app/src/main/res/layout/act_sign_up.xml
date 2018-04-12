@@ -1,60 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:background="@drawable/bg_dialog"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
 
-    <EditText
-        android:layout_marginTop="10dp"
-        android:id="@+id/et_name"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/name"
-        android:imeOptions="actionNext"
-        android:inputType="text" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
 
-    <EditText
-        android:id="@+id/et_email"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/email"
-        android:imeOptions="actionNext"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword" />
-
-    <EditText
-        android:id="@+id/et_password_2"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/re_password"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="@string/username"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
 
 
-    <CheckBox
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkbox"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/check_box_terms" />
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" />
 
-    <Button
-        android:id="@+id/sign_up"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:text="@string/action_sign_up" />
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/et_password_2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/re_password"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/sign_up"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/action_sign_up" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

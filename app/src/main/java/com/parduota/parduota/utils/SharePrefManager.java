@@ -20,6 +20,8 @@ public class SharePrefManager {
     private final String WAS_LOGIN = "_was_log_in_123";
     private final String USER = "user___";
 
+    private final String VERIFY = "verify__";
+    private final String ACCOUNT_LOGIN = "login___";
     private final String FCM = "FCM__";
 
 
@@ -280,4 +282,21 @@ public class SharePrefManager {
     public String getFCMToken() {
         return getStringValue(FCM, null);
     }
+
+    public void saveAccountLogin(String email) {
+        putStringValue(ACCOUNT_LOGIN, email);
+    }
+
+    public String getAccountLogin() {
+        return getStringValue(ACCOUNT_LOGIN, null);
+    }
+
+    public void setVerifyStatus(int verifyStatus) {
+        putIntValue(VERIFY, verifyStatus);
+    }
+
+    public int getVerifyStatus() {
+        return getIntValue(VERIFY, -1);
+    }
 }
+

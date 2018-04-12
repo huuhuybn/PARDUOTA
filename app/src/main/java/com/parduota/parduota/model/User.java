@@ -82,6 +82,34 @@ public class User {
     @Expose
     private String updatedAt;
 
+
+
+
+
+    public int getTerm_accept() {
+        return term_accept;
+    }
+
+    public void setTerm_accept(int term_accept) {
+        this.term_accept = term_accept;
+    }
+
+    @SerializedName("term_accept")
+    @Expose
+    private int term_accept;
+
+    public String getRequest_vip() {
+        return request_vip;
+    }
+
+    public void setRequest_vip(String request_vip) {
+        this.request_vip = request_vip;
+    }
+
+    @SerializedName("request_vip")
+    @Expose
+    private String request_vip;
+
     public Integer getId() {
         return id;
     }

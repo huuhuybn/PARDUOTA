@@ -10,17 +10,56 @@
     tools:showIn="@layout/app_bar_home">
 
 
-    <Spinner
-        android:id="@+id/spinner_type"
+    <LinearLayout
+        android:id="@+id/layout_confirm_email"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:entries="@array/item_type" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lv_list"
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:text="@string/we_need_email_confirm"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/notify_comfirm_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/notify_confirm_email" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layout_request_verify"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/black_overlay" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_notify_get_verify"
+            android:text="@string/notify_get_verify"
+            android:layout_width="match_parent"
+            android:textColor="@color/black"
+            android:layout_height="wrap_content"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btnGetVerify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/btn_get_verify" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

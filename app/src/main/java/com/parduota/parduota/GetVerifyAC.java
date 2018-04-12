@@ -1,180 +1,225 @@
 package com.parduota.parduota;
 
-import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
+import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.parduota.parduota.abtract.MActivity;
+import com.parduota.parduota.ion.Constant;
+import com.parduota.parduota.ion.ION;
+import com.parduota.parduota.model.User;
+import com.parduota.parduota.model.Verify;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
+
+import org.w3c.dom.Text;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
+public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
-    private View mContentView;
-    private final Runnable mHidePart2Runnable = new Runnable() {
-        @SuppressLint("InlinedApi")
-        @Override
-        public void run() {
-            // Delayed removal of status and navigation bar
+    private EditText etSureName;
+    private RadioGroup radioGender;
+    private EditText etBankAccount;
+    private EditText etPhone;
+    private EditText etAddress;
+    private EditText etPostCode;
+    private SearchableSpinner tvCountry;
+    private CheckBox checkbox;
+    private LinearLayout layoutVip;
+    private EditText etCompany;
+    private EditText etVATNumber;
+    private EditText etAddressCompany;
+    private SearchableSpinner tvCountryBusiness;
+    private EditText etFistName;
+    private EditText etLastName;
+    private EditText etPhoneCompany;
+    private EditText etOther;
+    private EditText etPostCodeCompany;
 
-            // Note that some of these constants are new as of API 16 (Jelly Bean)
-            // and API 19 (KitKat). It is safe to use them, as they are inlined
-            // at compile-time and do nothing on earlier devices.
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
-    };
-    private View mControlsView;
-    private final Runnable mShowPart2Runnable = new Runnable() {
-        @Override
-        public void run() {
-            // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            mControlsView.setVisibility(View.VISIBLE);
-        }
-    };
-    private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    private String token;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int setLayoutId() {
+        return R.layout.activity_get_verify;
+    }
 
-        setContentView(R.layout.activity_get_verify);
+    @Override
+    protected void initView() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        token = sharePrefManager.getAccessToken();
 
-        mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        etSureName = findViewById(R.id.etSureName);
+        radioGender = findViewById(R.id.radioGender);
+
+        etBankAccount = findViewById(R.id.etBankAccount);
+        etPhone = findViewById(R.id.etPhone);
+        etAddress = findViewById(R.id.etAddress);
+        etPostCode = findViewById(R.id.etPostCode);
+        tvCountry = findViewById(R.id.tv_country);
+        checkbox = findViewById(R.id.checkbox);
 
 
-        // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
+        // layout for Business User
+        layoutVip = findViewById(R.id.layout_vip);
+        etCompany = findViewById(R.id.etCompany);
+        etPostCodeCompany = findViewById(R.id.etPostCodeCompany);
+        etVATNumber = findViewById(R.id.etVATNumber);
+        etAddressCompany = findViewById(R.id.etAddressCompany);
+        tvCountryBusiness = findViewById(R.id.tvCountryBusiness);
+        etFistName = findViewById(R.id.etFistName);
+        etLastName = findViewById(R.id.etLastName);
+        etPhoneCompany = findViewById(R.id.etPhoneCompany);
+        etOther = findViewById(R.id.etOther);
+
+
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                toggle();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                if (b) {
+                    layoutVip.setVisibility(View.VISIBLE);
+                } else layoutVip.setVisibility(View.GONE);
+
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add, menu);//Menu Resource, Menu
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button.
-            NavUtils.navigateUpFromSameTask(this);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_next:
+
+                sendGetVerify();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
+
+    public void sendGetVerify() {
+        String full_name = etSureName.getText().toString().trim();
+        String address = etAddress.getText().toString().trim();
+        String phone = etPhone.getText().toString().trim();
+        String bank_account = etBankAccount.getText().toString().trim();
+
+
+        int id = radioGender.getCheckedRadioButtonId();
+
+        if (id < 0) {
+            Toast.makeText(this, getString(R.string.notify_choose_gender), Toast.LENGTH_SHORT).show();
+            return;
+        } else if (full_name.trim().matches("")) {
+            etSureName.setError(getString(R.string.notify_empty));
+            return;
+        } else if (address.trim().matches("")) {
+            etAddress.setError(getString(R.string.notify_empty));
+            return;
+        } else if (phone.trim().matches("")) {
+            etPhone.setError(getString(R.string.notify_empty));
+            return;
+        } else if (bank_account.trim().matches("")) {
+            etBankAccount.setError(getString(R.string.notify_empty));
+            return;
+        }
+
+        showLoading();
+
+        View radioButton = radioGender.findViewById(id);
+        int radioId = radioGender.indexOfChild(radioButton);
+        RadioButton btn = (RadioButton) radioGender.getChildAt(radioId);
+
+        String gender = btn.getText().toString().toLowerCase();
+
+        String country = tvCountry.getSelectedItem().toString();
+        String zip_code = etPostCode.getText().toString().trim();
+
+        String business;
+
+        if (checkbox.isChecked()) {
+            business = "on";
         } else {
-            show();
+
+            business = "off";
         }
+
+        String company = etCompany.getText().toString().trim();
+        String company_zip_code = etPostCodeCompany.getText().toString().trim();
+        String registered_number = etVATNumber.getText().toString().trim();
+
+        String company_address = etAddressCompany.getText().toString().trim();
+
+        String company_country = tvCountryBusiness.getSelectedItem().toString().trim();
+
+
+        String p_name = etFistName.getText().toString().trim();
+
+        String p_surname = etLastName.getText().toString().trim();
+
+        String p_phone = etPhoneCompany.getText().toString().trim();
+
+        String other = etOther.getText().toString().trim();
+
+        ION.postFormDataWithToken(this, Constant.URL_GET_VERIFY, token, ION.getVerify(full_name, address, phone, bank_account, gender, country, zip_code, business, company, company_zip_code, registered_number, company_address, company_country, p_name, p_surname, p_phone, other), this);
+
+
     }
 
-    private void hide() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
+    @Override
+    public void onCompleted(Exception e, Object result) {
+        super.onCompleted(e, result);
+
+        JsonObject jsonObject = (JsonObject) result;
+
+
+        try {
+            User user = new Gson().fromJson(jsonObject, User.class);
+            sharePrefManager.saveUser(user);
+            setResult(999);
+            finish();
+        } catch (Exception e1) {
+
         }
-        mControlsView.setVisibility(View.GONE);
-        mVisible = false;
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
+        try {
+            String status = jsonObject.get(STATUS).getAsString();
+            if (status.equals(ERROR)) {
+                Toast.makeText(this, getString(R.string.notify_you_sent_verify), Toast.LENGTH_SHORT).show();
+            }
 
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
+        } catch (Exception e1) {
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
+        }
+        hideLoading();
 
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 }

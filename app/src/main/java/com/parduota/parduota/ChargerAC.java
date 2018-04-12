@@ -1,20 +1,11 @@
 package com.parduota.parduota;
 
-import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.adapter.ChargerAdapter;
 import com.parduota.parduota.ion.Constant;
@@ -30,7 +21,7 @@ import java.util.List;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class ChargerActivity extends MActivity implements FutureCallback, Constant {
+public class ChargerAC extends MActivity implements FutureCallback, Constant {
 
 
     private String token;
@@ -81,6 +72,8 @@ public class ChargerActivity extends MActivity implements FutureCallback, Consta
             Charger charger = (Charger) result;
 
             Log.e("AAAAA", charger.getData().size() + " ");
+
+
             datas.addAll(charger.getData());
             chargerAdapter.notifyDataSetChanged();
             if (charger.getData().size() < 10) {
@@ -95,7 +88,7 @@ public class ChargerActivity extends MActivity implements FutureCallback, Consta
                     @Override
                     public void onLoadMore(int page_, int totalItemsCount, RecyclerView view) {
                         page++;
-                        ION.getDataWithToken(ChargerActivity.this, token, Constant.URL_GET_CHARGER_HISTORY + page, Charger.class, futureCallback);
+                        ION.getDataWithToken(ChargerAC.this, token, Constant.URL_GET_CHARGER_HISTORY + page, Charger.class, futureCallback);
                     }
                 });
             }
