@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.parduota.parduota.HomeActivity"
+    tools:context="com.parduota.parduota.MainAC"
     tools:showIn="@layout/app_bar_home">
 
 
@@ -62,4 +62,31 @@
 
     </LinearLayout>
 
+
+    <FrameLayout
+        android:id="@+id/normal_user_layout"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+
+        <TextView
+            android:text="@string/welcome_to_parduota"
+            style="@style/Base.TextAppearance.AppCompat.Large"
+            android:padding="@dimen/album_dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
+            android:layout_gravity="bottom"
+            android:text="@string/support_info"
+            android:padding="@dimen/album_dp_10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 </LinearLayout>

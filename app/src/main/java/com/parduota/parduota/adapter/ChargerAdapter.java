@@ -18,8 +18,8 @@ import java.util.List;
 public class ChargerAdapter extends RecyclerView.Adapter<ChargerHolder> {
 
 
-    public Context context;
-    public List<Datum> charger;
+    private final Context context;
+    private final List<Datum> charger;
 
     public ChargerAdapter(Context context, List<Datum> charger) {
         this.context = context;

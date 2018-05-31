@@ -2,12 +2,8 @@ package com.parduota.parduota;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,7 +11,6 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
-import com.parduota.parduota.model.Login;
 import com.parduota.parduota.model.Password;
 import com.parduota.parduota.utils.SharePrefManager;
 
@@ -42,14 +37,14 @@ public class ChangePasswordAC extends MActivity implements FutureCallback {
         }
 
 
-        etOldPassword = (EditText) findViewById(R.id.et_old_password);
-        etNewPassword = (EditText) findViewById(R.id.et_new_password);
-        etNewPasswordConfirm = (EditText) findViewById(R.id.et_new_password_confirm);
+        etOldPassword =  findViewById(R.id.et_old_password);
+        etNewPassword =  findViewById(R.id.et_new_password);
+        etNewPasswordConfirm =  findViewById(R.id.et_new_password_confirm);
 
 
     }
 
-    public void savePassword() {
+    private void savePassword() {
 
         String oldPass = etOldPassword.getText().toString().trim();
         String newPass = etNewPassword.getText().toString().trim();

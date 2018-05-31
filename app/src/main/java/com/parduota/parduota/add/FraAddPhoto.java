@@ -1,24 +1,28 @@
 package com.parduota.parduota.add;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.parduota.parduota.AddAC;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
 import com.parduota.parduota.adapter.UploadPhotoAdapter;
+import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.model.Photo;
+import com.parduota.parduota.model.UploadItem;
+import com.yanzhenjie.album.Action;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumFile;
 
 import java.util.ArrayList;
-
-import static android.content.Context.INPUT_METHOD_SERVICE;
+import java.util.Objects;
 
 /**
  * Created by MAC2015 on 11/8/17.
@@ -27,15 +31,25 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 public class FraAddPhoto extends MFragment {
 
 
-    private static final int REQUEST_IMAGE_CAPTURE = 999;
-    private static final int REQUEST_IMAGE_PICK = 888;
-    private GridLayoutManager gridLayoutManager;
-    private RecyclerView lvList;
     private TextView tvNotifyAddImage;
-    private FloatingActionButton btnCapture;
 
-    private ArrayList<Photo> photos;
     private UploadPhotoAdapter uploadPhotoAdapter;
+
+    // class variables
+    private static final int REQUEST_CODE = 123;
+
+    public ArrayList<AlbumFile> getmAlbumFiles() {
+        return mAlbumFiles;
+    }
+
+    public void setmAlbumFiles(ArrayList<AlbumFile> mAlbumFiles) {
+        this.mAlbumFiles = mAlbumFiles;
+    }
+
+    private ArrayList<AlbumFile> mAlbumFiles;
+
+    private int numberUpload = 0;
+
 
     @Override
     protected int setLayoutId() {
@@ -45,71 +59,82 @@ public class FraAddPhoto extends MFragment {
     @Override
     protected void initView(View view) {
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-
-        if (imm.isAcceptingText()) { // verify if the soft keyboard is open
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        }
+        mAlbumFiles = new ArrayList<>();
 
 
-        tvNotifyAddImage = (TextView) view.findViewById(R.id.tv_notify_add_image);
-        btnCapture = (FloatingActionButton) view.findViewById(R.id.btn_capture);
-
-        photos = new ArrayList<>();
-
-        lvList = (RecyclerView) view.findViewById(R.id.lv_list);
-        gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        tvNotifyAddImage = view.findViewById(R.id.tv_notify_add_image);
 
 
-        uploadPhotoAdapter = new UploadPhotoAdapter(getActivity(), photos);
+        RecyclerView lvList = view.findViewById(R.id.lv_list);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+
+
+        uploadPhotoAdapter = new UploadPhotoAdapter(getActivity(), mAlbumFiles);
         lvList.setLayoutManager(gridLayoutManager);
         lvList.setAdapter(uploadPhotoAdapter);
-//        btnCapture.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                }
-//            }
-//        });
-//
-//        btnPickPhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_photo)), REQUEST_IMAGE_PICK);
-//            }
-//        });
+
+        view.findViewById(R.id.btn_capture).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Album.image(getActivity()) // Image selection.
+                        .multipleChoice()
+                        .requestCode(999)
+                        .camera(true)
+                        .columnCount(3)
+                        .selectCount(12)
+                        .checkedList(mAlbumFiles) // Show the filtered files, but they are not available.
+                        .onResult(new Action<ArrayList<AlbumFile>>() {
+                            @Override
+                            public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
+                                tvNotifyAddImage.setVisibility(View.GONE);
+                                mAlbumFiles.addAll(result);
+                                uploadPhotoAdapter.notifyDataSetChanged();
+                                numberUpload = result.size();
+
+                                //Log.e("ALBUM",new Gson().toJson(mAlbumFiles));
+                            }
+                        })
+                        .onCancel(new Action<String>() {
+                            @Override
+                            public void onAction(int requestCode, @NonNull String result) {
+                            }
+                        })
+                        .start();
+            }
+        });
+
+
+        AddAC addAC = (AddAC) getActivity();
+        if (Objects.requireNonNull(addAC).getData() != null) {
+            ArrayList<AlbumFile> files;
+            UploadItem uploadItem = addAC.getUploadItem();
+
+            files = uploadItem.getPhotoArr();
+
+            if (files.size() > 0) {
+                mAlbumFiles.addAll(files);
+                uploadPhotoAdapter.notifyDataSetChanged();
+
+                tvNotifyAddImage.setVisibility(View.GONE);
+
+                if (Constant.isDEBUG)
+                    Log.e("AAAAAAAAA", new Gson().toJson(mAlbumFiles));
+            }
+        }
 
     }
+
 
     @Override
     protected void setData(View view) {
 
-
-
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            Photo photo = new Photo();
-            photo.setBitmap(imageBitmap);
-            photos.add(photo);
-            uploadPhotoAdapter.notifyDataSetChanged();
-        }
-        if (requestCode == REQUEST_IMAGE_PICK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-
-        }
     }
+
+
 }

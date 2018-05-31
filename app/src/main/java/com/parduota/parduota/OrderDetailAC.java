@@ -4,20 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -26,9 +25,11 @@ import com.parduota.parduota.adapter.MessageAdapter;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.MessageResponse;
+import com.parduota.parduota.model.createorder.OrderResponse;
 import com.parduota.parduota.model.notification.MetaData;
 import com.parduota.parduota.model.order.Datum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,32 +39,24 @@ import java.util.List;
 public class OrderDetailAC extends MActivity implements Constant, FutureCallback {
 
 
-    private Datum datum;
-
-    private MetaData metaData;
-    private String type;
-
     private Datum orderDetail;
 
-    private Snackbar snackbar;
-
-    private String detail;
-
     private BroadcastReceiver onCommingMessage;
-    private IntentFilter intentFilter;
 
     private RecyclerView lvList;
     private String token;
 
 
     private EditText et_chat;
-    private ImageButton btn_send;
-    private FutureCallback futureCallback;
+
+    private List<MessageResponse> messageResponses;
 
     @Override
     protected int setLayoutId() {
         return R.layout.activity_order_detail;
     }
+
+    private MessageAdapter messageAdapter;
 
     @Override
     protected void initView() {
@@ -72,21 +65,20 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        futureCallback = this;
 
+        messageResponses = new ArrayList<>();
         et_chat = findViewById(R.id.et_chat);
-        btn_send = findViewById(R.id.btn_send);
+        Button btn_send = findViewById(R.id.btn_send);
 
         token = sharePrefManager.getAccessToken();
 
-        type = getIntent().getStringExtra(TYPE);
+        String type = getIntent().getStringExtra(TYPE);
         orderDetail = new Datum();
 
         lvList = findViewById(R.id.lv_list);
 
-
         if (type.equals(TYPE_ORDER_LIST)) {
-            datum = new Gson().fromJson(getIntent().getStringExtra(DATA), Datum.class);
+            Datum datum = new Gson().fromJson(getIntent().getStringExtra(DATA), Datum.class);
             setTitle(datum.getTitle());
             orderDetail.setId(datum.getId());
             orderDetail.setTitle(datum.getTitle());
@@ -97,61 +89,112 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
             orderDetail.setNotice(datum.getNotice());
 
         } else if (type.equals(NOTIFICATION_SCREEN)) {
-            metaData = new Gson().fromJson(getIntent().getStringExtra(DATA), MetaData.class);
+            MetaData metaData = new Gson().fromJson(getIntent().getStringExtra(DATA), MetaData.class);
             setTitle(metaData.getTitle());
-            orderDetail.setId(metaData.getId());
+            orderDetail.setId(metaData.getOrder_id());
             orderDetail.setTitle(metaData.getTitle());
             orderDetail.setCreatedAt(metaData.getCreatedAt());
             orderDetail.setCreatedBy(metaData.getCreatedBy());
             orderDetail.setStatus(metaData.getStatus());
             orderDetail.setEbayId(metaData.getEbayId());
             orderDetail.setNotice(metaData.getNotice());
+
+
+            Ion.with(this).load(Constant.URL_GET_ORDER_DETAIL + orderDetail.getId()).setHeader(ION.authHeader(token)).as(OrderResponse.class).setCallback(new FutureCallback<OrderResponse>() {
+                @Override
+                public void onCompleted(Exception e, OrderResponse result) {
+
+                    try {
+                        orderDetail.setTitle(result.getOrder().getTitle());
+                        orderDetail.setNotice(result.getOrder().getNotice());
+                        orderDetail.setEbayId(result.getOrder().getEbayId());
+
+                    } catch (Exception ignored) {
+
+                    }
+
+                }
+            });
         }
-
-        detail = getString(R.string.order_title) + ":" + " \n " + orderDetail.getTitle() + " \n " + orderDetail.getEbayId() + " \n " + orderDetail.getNotice();
-        snackbar = Snackbar
-                .make(findViewById(R.id.parent), detail, Snackbar.LENGTH_LONG);
-        View view = snackbar.getView();
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = Gravity.TOP;
-        view.setLayoutParams(params);
-
 
         onCommingMessage = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-
+                Ion.with(getApplicationContext()).load(ION.URL_GET_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).as(new TypeToken<List<MessageResponse>>() {
+                }).setCallback(new FutureCallback<List<MessageResponse>>() {
+                    @Override
+                    public void onCompleted(Exception e, List<MessageResponse> result) {
+                        hideLoading();
+                        //Log.e("A", result.get(0).getMessages());
+                        messageResponses.clear();
+                        messageResponses.addAll(result);
+                        messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
+                        lvList.setLayoutManager(linearLayoutManager);
+                        lvList.setAdapter(messageAdapter);
+                        lvList.scrollToPosition(messageResponses.size() - 1);
+                    }
+                });
             }
         };
-        intentFilter = new IntentFilter(COMMING_MESSAGE);
+
+
+        IntentFilter intentFilter = new IntentFilter(COMMING_MESSAGE);
         registerReceiver(onCommingMessage, intentFilter);
 
         showLoading();
-        Ion.with(this).load(ION.URL_GET_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).as(new TypeToken<List<MessageResponse>>() {
+
+
+        Ion.with(this).load(ION.URL_GET_MESSAGE + orderDetail.getId()).setHeader(ION.authHeader(token)).as(new TypeToken<List<MessageResponse>>() {
         }).setCallback(new FutureCallback<List<MessageResponse>>() {
             @Override
             public void onCompleted(Exception e, List<MessageResponse> result) {
                 hideLoading();
-                //Log.e("A", result.get(0).getMessages());
-                MessageAdapter messageAdapter = new MessageAdapter(OrderDetailAC.this, result);
+                messageResponses.addAll(result);
+                messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
                 lvList.setLayoutManager(linearLayoutManager);
                 lvList.setAdapter(messageAdapter);
+                linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
             }
         });
-
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String text = et_chat.getText().toString().trim();
                 if (text.matches("")) {
-                    et_chat.setError(getString(R.string.notify_input));
+                    et_chat.setError(getString(R.string.notify_empty));
                     return;
                 }
+                showLoading();
+                Ion.with(getApplicationContext()).load(ION.URL_ADD_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).setMultipartParameter("message", text).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        et_chat.setText("");
+
+                        Ion.with(getApplicationContext()).load(ION.URL_GET_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).as(new TypeToken<List<MessageResponse>>() {
+                        }).setCallback(new FutureCallback<List<MessageResponse>>() {
+                            @Override
+                            public void onCompleted(Exception e, List<MessageResponse> result) {
+                                hideLoading();
+                                //Log.e("A", result.get(0).getMessages());
+                                messageResponses.clear();
+                                messageResponses.addAll(result);
+                                messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
+                                lvList.setLayoutManager(linearLayoutManager);
+                                lvList.setAdapter(messageAdapter);
+                                linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
+                            }
+                        });
+                    }
+                });
             }
         });
+
+
     }
 
 
@@ -181,9 +224,16 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
         if (id == R.id.action_send) {
 
         } else if (id == R.id.action_detail) {
-            if (snackbar.isShown()) snackbar.dismiss();
-            else
-                snackbar.show();
+
+            Intent intent = new Intent(this, ExtendOrderDetailActivity.class);
+
+            intent.putExtra(TITLE, orderDetail.getTitle());
+            intent.putExtra(LINK, orderDetail.getEbayId());
+            intent.putExtra(DESCRIPTION, orderDetail.getNotice());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            }
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

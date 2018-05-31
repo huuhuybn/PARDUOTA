@@ -34,6 +34,6 @@
 
 
     <!-- Nav mDrawerLayout -->
-    <include layout="@layout/global_nav_drawer" />
+    <include layout="@layout/home_nav_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

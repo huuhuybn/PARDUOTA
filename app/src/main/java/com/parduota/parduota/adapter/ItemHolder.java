@@ -11,7 +11,6 @@ import com.parduota.parduota.ItemDetailAC;
 import com.parduota.parduota.R;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.model.item.Datum;
-import com.parduota.parduota.view.DetailDialog;
 
 /**
  * Created by huy_quynh on 10/31/17.
@@ -20,27 +19,18 @@ import com.parduota.parduota.view.DetailDialog;
 class ItemHolder extends RecyclerView.ViewHolder implements Constant {
 
 
-    public final ImageView img_avatar;
-    public final TextView tv_price;
-    public final TextView tv_time;
-    public final TextView tv_title;
-    public final TextView tv_quality;
-    public final TextView tv_status;
-
-    public final View.OnClickListener onClickListener;
-
-    public Datum datum;
+    private Datum datum;
 
     public ItemHolder(final View itemView) {
         super(itemView);
 
-        tv_status = (TextView) itemView.findViewById(R.id.tv_status);
-        img_avatar = (ImageView) itemView.findViewById(R.id.img_avatar);
-        tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-        tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-        tv_quality = (TextView) itemView.findViewById(R.id.tv_quality);
-        tv_price = (TextView) itemView.findViewById(R.id.tv_price);
-        onClickListener = new View.OnClickListener() {
+        TextView tv_status = itemView.findViewById(R.id.tv_status);
+        ImageView img_avatar = itemView.findViewById(R.id.img_avatar);
+        TextView tv_time = itemView.findViewById(R.id.tv_time);
+        TextView tv_title = itemView.findViewById(R.id.tv_title);
+        TextView tv_quality = itemView.findViewById(R.id.tv_quality);
+        TextView tv_price = itemView.findViewById(R.id.tv_price);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(itemView.getContext(), ItemDetailAC.class);

@@ -18,9 +18,6 @@ public class SettingAC extends MActivity {
         return R.layout.activity_setting;
     }
 
-    private TextView tvProfile;
-    private TextView tvPassword;
-
 
     @Override
     protected void initView() {
@@ -29,8 +26,8 @@ public class SettingAC extends MActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        tvProfile = findViewById(R.id.tvProfile);
-        tvPassword = findViewById(R.id.tvPassword);
+        TextView tvProfile = findViewById(R.id.tvProfile);
+        TextView tvPassword = findViewById(R.id.tvPassword);
 
         tvProfile.setOnClickListener(new View.OnClickListener() {
             @Override

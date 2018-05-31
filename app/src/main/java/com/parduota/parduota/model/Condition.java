@@ -5,9 +5,9 @@ package com.parduota.parduota.model;
  */
 
 public class Condition {
-    String name;
-    String title;
-    int id;
+    private String name;
+    private String title;
+    private int id;
 
     public int getId() {
         return id;

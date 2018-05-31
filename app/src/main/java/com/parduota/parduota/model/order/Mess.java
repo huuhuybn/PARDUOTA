@@ -4,7 +4,7 @@ package com.parduota.parduota.model.order;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Mess {
+class Mess {
 
     @SerializedName("id")
     @Expose

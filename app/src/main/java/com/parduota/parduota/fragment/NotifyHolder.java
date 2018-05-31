@@ -16,7 +16,7 @@ class NotifyHolder extends RecyclerView.ViewHolder {
 
     public NotifyHolder(View itemView) {
         super(itemView);
-        tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-        tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+        tv_title = itemView.findViewById(R.id.tv_title);
+        tv_time = itemView.findViewById(R.id.tv_time);
     }
 }

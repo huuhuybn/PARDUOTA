@@ -28,12 +28,10 @@ import java.util.ArrayList;
 public class FraNotifications extends MFragment implements FutureCallback<Notify> {
 
 
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private NotifyAdapter notifyAdapter;
     private ArrayList<Datum> notifies;
     private String token;
-    private int page = 1;
+    private final int page = 1;
     private View loading;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -44,10 +42,10 @@ public class FraNotifications extends MFragment implements FutureCallback<Notify
 
     @Override
     protected void initView(View view) {
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_to_refresh);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
         token = SharePrefManager.getInstance(getActivity()).getAccessToken();
-        recyclerView = (RecyclerView) view.findViewById(R.id.lv_list);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView recyclerView = view.findViewById(R.id.lv_list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         notifies = new ArrayList<>();
@@ -91,7 +89,7 @@ public class FraNotifications extends MFragment implements FutureCallback<Notify
     }
 
 
-    public String getUrl(int page) {
+    private String getUrl(int page) {
         String url = Constant.URL_GET_NOTIFY + "/?token=" + token + "&page=" + page;
         Log.e("URL", url);
         return url;
@@ -117,11 +115,11 @@ public class FraNotifications extends MFragment implements FutureCallback<Notify
 
     private class NotifyAdapter extends RecyclerView.Adapter<NotifyHolder> {
 
-        private Context context;
-        private ArrayList<Datum> notifies;
+        private final Context context;
+        private final ArrayList<Datum> notifies;
 
-        public NotifyAdapter(Context context,
-                             ArrayList<Datum> notifies) {
+        NotifyAdapter(Context context,
+                      ArrayList<Datum> notifies) {
             this.context = context;
             this.notifies = notifies;
 

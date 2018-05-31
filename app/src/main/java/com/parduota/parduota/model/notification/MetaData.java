@@ -8,6 +8,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class MetaData {
 
+
+    public Integer getOrder_id() {
+        return order_id;
+    }
+
+    public void setOrder_id(Integer order_id) {
+        this.order_id = order_id;
+    }
+
+    @SerializedName("order_id")
+    @Expose
+    private Integer order_id;
+
     @SerializedName("id")
     @Expose
     private Integer id;

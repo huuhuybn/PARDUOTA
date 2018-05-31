@@ -2,14 +2,11 @@ package com.parduota.parduota;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.koushikdutta.async.Util;
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
@@ -31,8 +28,6 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
     private EditText et_name, et_email, et_password, et_password_2;
     private FutureCallback futureCallback;
 
-    private CheckBox checkBox;
-
     @Override
     protected void initView() {
 
@@ -42,13 +37,13 @@ public class SignUpAC extends MActivity implements FutureCallback, Constant {
         }
         futureCallback = this;
 
-        et_name = (EditText) findViewById(R.id.et_name);
+        et_name = findViewById(R.id.et_name);
 
-        et_email = (EditText) findViewById(R.id.et_email);
+        et_email = findViewById(R.id.et_email);
 
-        et_password = (EditText) findViewById(R.id.et_password);
-        et_password_2 = (EditText) findViewById(R.id.et_password_2);
-        checkBox = (CheckBox) findViewById(R.id.checkbox);
+        et_password = findViewById(R.id.et_password);
+        et_password_2 = findViewById(R.id.et_password_2);
+        CheckBox checkBox = findViewById(R.id.checkbox);
 
         findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
             @Override

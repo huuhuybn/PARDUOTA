@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.parduota.parduota.R;
 
+import java.util.Objects;
+
 /**
  * Created by huy_quynh on 7/24/17.
  */
 
-public class DetailDialog extends Dialog {
+class DetailDialog extends Dialog {
     public DetailDialog(@NonNull Context context) {
         super(context);
         initView(context, "");
@@ -39,18 +41,14 @@ public class DetailDialog extends Dialog {
     }
 
 
-    private Button btn_close;
-    private TextView tv_detail;
-
-
-    public void initView(Context context, String detail
+    private void initView(Context context, String detail
     ) {
-        getWindow().setBackgroundDrawable(
+        Objects.requireNonNull(getWindow()).setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         setContentView(R.layout.dialog_detail);
-        btn_close = (Button) findViewById(R.id.btn_close);
-        tv_detail = (TextView) findViewById(R.id.tv_detail);
+        Button btn_close = findViewById(R.id.btn_close);
+        TextView tv_detail = findViewById(R.id.tv_detail);
         if (detail != null)
             tv_detail.setText(detail);
 

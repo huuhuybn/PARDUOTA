@@ -9,6 +9,8 @@ import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
 import com.parduota.parduota.ion.Constant;
 
+import java.util.Objects;
+
 /**
  * Created by Dominic on 7/26/17.
  */
@@ -16,7 +18,6 @@ import com.parduota.parduota.ion.Constant;
 public class TitleFra extends MFragment implements Constant {
 
     private EditText edt_title;
-    private Button btn_next;
 
     @Override
     protected int setLayoutId() {
@@ -26,8 +27,8 @@ public class TitleFra extends MFragment implements Constant {
     @Override
     protected void initView(View view) {
 
-        edt_title = (EditText) view.findViewById(R.id.edt_title);
-        btn_next = (Button) view.findViewById(R.id.btn_next);
+        edt_title = view.findViewById(R.id.edt_title);
+        Button btn_next = view.findViewById(R.id.btn_next);
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,7 +40,7 @@ public class TitleFra extends MFragment implements Constant {
                 Intent intent = new Intent(ACTION_NEXT);
                 intent.putExtra(DATA, title);
                 intent.putExtra(INDEX,INPUT_TITLE);
-                getActivity().sendBroadcast(intent);
+                Objects.requireNonNull(getActivity()).sendBroadcast(intent);
             }
         });
     }

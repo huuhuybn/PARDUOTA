@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.parduota.parduota.HomeActivity"
-    tools:showIn="@layout/app_bar_home">
+    tools:context="com.parduota.parduota.MainAC"
+    tools:showIn="@layout/app_bar_home"
+    tools:keep="@layout/content_notification">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/lv_list"

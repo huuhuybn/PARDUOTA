@@ -4,11 +4,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
+
+
+
     <ImageView
         android:id="@+id/img_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@color/colorPrimary"
         android:scaleType="centerCrop" />
 
     <ImageView
@@ -16,5 +18,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_delete" />
+    
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

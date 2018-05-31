@@ -1,8 +1,6 @@
 package com.parduota.parduota;
 
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.parduota.parduota.abtract.MActivity;
@@ -14,8 +12,6 @@ import com.parduota.parduota.model.item.Datum;
  * status bar and navigation/system bar) with user interaction.
  */
 public class EditItemAC extends MActivity implements Constant {
-
-    private Datum datum;
 
     @Override
     protected int setLayoutId() {
@@ -31,7 +27,7 @@ public class EditItemAC extends MActivity implements Constant {
         }
 
         String data = getIntent().getStringExtra(DATA);
-        datum = new Gson().fromJson(data, Datum.class);
+        Datum datum = new Gson().fromJson(data, Datum.class);
 
 
 

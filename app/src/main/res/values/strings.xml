@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">PARDUOTA</string>
-    <string name="facebook_app_id">715186105349256</string>
+    <string name="facebook_app_id">1316048798514167</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -36,8 +36,6 @@
     <string name="notify_email_not_active">Pls verify your email!</string>
     <string name="log_out">Log out</string>
     <string name="title_item">Item</string>
-    <string name="btn_requestVIP">Request VIP</string>
-    <string name="what_is_vip">What is VIP?</string>
     <string name="notify_wrong_password">Wrong  password.Pls check again!</string>
     <string name="tv_total">Total items</string>
     <string name="tv_email">Email</string>
@@ -120,7 +118,7 @@
     <string name="action_send">Send</string>
 
     <string name="title_activity_item_detail_ac">ItemDetailAC</string>
-    <string name="shipping_options">Shipping options:</string>
+    <string name="shipping_options">Shipping options</string>
 
     <string name="title_activity_edit_item_ac">EditItemAC</string>
     <string name="action_notification">Notification</string>
@@ -158,7 +156,7 @@
     <string name="kg_dimension">KG and dimension</string>
     <string name="width">Width (cm)</string>
     <string name="height">Height (cm)</string>
-    <string name="weight">Weight (cm)</string>
+    <string name="weight">Weight (kg)</string>
     <string name="length">Length (cm)</string>
     <string name="notify_add_image">Click \"ADD\" button to choose photos</string>
     <string name="action_log_out">Log out</string>
@@ -751,6 +749,29 @@
     <string name="notify_error_sign_up">These credentials do not match our records.</string>
     <string name="notify_empty">No Data</string>
     <string name="notify_you_sent_verify">You already sent verify form!</string>
+    <string name="tv_ebay_link">Ebay Link</string>
+    <string name="notify_input_ebay_link">Please insert Ebay Link!</string>
+
+    <string name="title_activity_extend_order_detail">ExtendOrderDetailActivity</string>
+    <string name="view_on_ebay">View on Ebay</string>
+    <string name="btn_send">Send</string>
+    <string name="open">OPEN</string>
+    <string name="close">CLOSE</string>
+    <string name="notify_wait">Please wait for uploading photos...!</string>
+    <string name="action_edit">Edit</string>
+    <string name="notify_not_enough_credit">You dont have enough credit to post this item. Do you want to buy it ?</string>
+
+    <string name="title_activity_buy_credit_ac">Buy Credit</string>
+    <string name="notify_upload_item_successful">Create Item Successful!</string>
+    <string name="welcome_to_parduota">Welcome to Parduota</string>
+    <string name="notify_save_draft_success">Save draft successful!</string>
+    <string name="notify_buy_credit_successful">Buy credit successful!</string>
+    <string name="notify_update_succsessful">Update Item Successful !</string>
+    <string name="btn_accept">Accept</string>
+
+    <string name="title_activity_chat_ac">ChatAC</string>
+    <string name="action_chat_room">Inbox</string>
+    <string name="support_info">Support 24/7 : info@parduota.com</string>
 
 
     <!--'conditions'=> [-->

@@ -6,14 +6,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.parduota.parduota.AddAC;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
+import com.parduota.parduota.ion.Constant;
+import com.parduota.parduota.model.UploadItem;
+
+import java.util.Objects;
 
 /**
  * Created by MAC2015 on 11/8/17.
  */
 
-public class FraAddDimension extends MFragment {
+public class FraAddDimension extends MFragment implements Constant {
 
     @Override
     protected int setLayoutId() {
@@ -29,20 +34,63 @@ public class FraAddDimension extends MFragment {
     private EditText etWidth;
     private EditText etHeight;
     private EditText etWeight;
-    private EditText length;
+    private EditText etLength;
 
 
     @Override
-    protected void initView(View view) {
-        cbSellForCharity = (CheckBox) view.findViewById(R.id.cb_sell_for_charity);
-        rgShipping = (RadioGroup) view.findViewById(R.id.rg_shipping);
-        rbPickUpOnly = (RadioButton) view.findViewById(R.id.rb_pick_up_only);
-        rbFreight = (RadioButton) view.findViewById(R.id.rb_freight);
-        rbKgDimension = (RadioButton) view.findViewById(R.id.rb_kg_dimension);
-        etWidth = (EditText) view.findViewById(R.id.et_width);
-        etHeight = (EditText) view.findViewById(R.id.et_height);
-        etWeight = (EditText) view.findViewById(R.id.et_weight);
-        length = (EditText) view.findViewById(R.id.length);
+    protected void initView(final View view) {
+        cbSellForCharity = view.findViewById(R.id.cb_sell_for_charity);
+        rgShipping = view.findViewById(R.id.rg_shipping);
+        rbPickUpOnly = view.findViewById(R.id.rb_pick_up_only);
+        rbFreight = view.findViewById(R.id.rb_freight);
+        rbKgDimension = view.findViewById(R.id.rb_kg_dimension);
+        etWidth = view.findViewById(R.id.et_width);
+        etHeight = view.findViewById(R.id.et_height);
+        etWeight = view.findViewById(R.id.et_weight);
+        etLength = view.findViewById(R.id.length);
+
+        rgShipping.getChildAt(0).setSelected(true);
+
+        rgShipping.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+                int radioButton = radioGroup.getCheckedRadioButtonId();
+
+                int thirdButton = radioGroup.getChildAt(2).getId();
+
+                View expand = view.findViewById(R.id.expandLayout);
+                if (radioButton == thirdButton) {
+                    expand.setVisibility(View.VISIBLE);
+                } else {
+                    expand.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
+
+        AddAC addAC = (AddAC) getActivity();
+        if (Objects.requireNonNull(addAC).getData() != null) {
+            UploadItem uploadItem = addAC.getUploadItem();
+
+            if (uploadItem.getSell_for_charity().equals("1")) {
+                cbSellForCharity.setChecked(true);
+            }
+
+            switch (uploadItem.getShipping_type_custom()) {
+
+                case PICK_UP_ONLY:
+                    rgShipping.check(R.id.rb_pick_up_only);
+                    break;
+                case FREIGHT:
+                    rgShipping.check(R.id.rb_freight);
+                    break;
+                case KG_AND_DIMENSION:
+                    rgShipping.check(R.id.rb_kg_dimension);
+                    break;
+            }
+        }
 
     }
 
@@ -116,10 +164,10 @@ public class FraAddDimension extends MFragment {
     }
 
     public EditText getLength() {
-        return length;
+        return etLength;
     }
 
     public void setLength(EditText length) {
-        this.length = length;
+        this.etLength = length;
     }
 }

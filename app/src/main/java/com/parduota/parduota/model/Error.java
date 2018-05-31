@@ -4,7 +4,7 @@ package com.parduota.parduota.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Error {
+class Error {
 
     @SerializedName("message")
     @Expose

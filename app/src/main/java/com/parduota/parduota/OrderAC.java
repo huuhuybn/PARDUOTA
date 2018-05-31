@@ -34,18 +34,13 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
         return R.layout.activity_order_ac;
     }
 
-    private RecyclerView lv_list;
     private OrderAdapter orderAdapter;
     private ArrayList<Datum> orders;
-    private OnOrderClick orderOnItemClick;
 
     private FutureCallback<Order> orderFutureCallback;
-    private LinearLayoutManager linearLayoutManager;
 
     private String token;
     private int page_ = 1;
-
-    private FloatingActionButton btnAddOrder;
 
     @Override
     protected void initView() {
@@ -54,7 +49,7 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        btnAddOrder = findViewById(R.id.fab);
+        FloatingActionButton btnAddOrder = findViewById(R.id.fab);
         btnAddOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,11 +65,11 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
         ION.getDataWithToken(this, token, URL_GET_ORDER + page_, Order.class, this);
 
         orderFutureCallback = this;
-        lv_list = findViewById(R.id.lv_list);
+        RecyclerView lv_list = findViewById(R.id.lv_list);
         orders = new ArrayList<>();
-        linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
-        orderOnItemClick = new OnOrderClick() {
+        OnOrderClick orderOnItemClick = new OnOrderClick() {
             @Override
             public void onClick(Datum order) {
                 Intent intent = new Intent(OrderAC.this, OrderDetailAC.class);
@@ -108,16 +103,11 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
             Log.e("AAA", new Gson().toJson(order));
 
 
-            if (order != null) {
-                if (order.getData() != null) {
-                    orders.addAll(order.getData());
-                    orderAdapter.notifyDataSetChanged();
-                }
-
-            } else {
-                findViewById(R.id.tv_no_item).setVisibility(View.VISIBLE);
-
+            if (order.getData() != null) {
+                orders.addAll(order.getData());
+                orderAdapter.notifyDataSetChanged();
             }
+
         }
 
     }

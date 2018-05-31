@@ -4,23 +4,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.User;
 import com.parduota.parduota.utils.SharePrefManager;
+
+import java.util.Objects;
 
 /**
  * Created by huy_quynh on 6/13/17.
@@ -49,10 +46,10 @@ public class FraDashBoard extends MFragment implements Constant {
             public void onClick(View view) {
             }
         });
-        tv_name = (TextView) view.findViewById(R.id.tv_name);
-        tv_credit = (TextView) view.findViewById(R.id.tv_credit);
-        tv_total = (TextView) view.findViewById(R.id.tv_total);
-        tv_email = (TextView) view.findViewById(R.id.tv_email);
+        tv_name = view.findViewById(R.id.tv_name);
+        tv_credit = view.findViewById(R.id.tv_credit);
+        tv_total = view.findViewById(R.id.tv_total);
+        tv_email = view.findViewById(R.id.tv_email);
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -62,7 +59,7 @@ public class FraDashBoard extends MFragment implements Constant {
             }
         };
         IntentFilter intentFilter = new IntentFilter(UPDATE_TOTAL);
-        getActivity().registerReceiver(broadcastReceiver, intentFilter);
+        Objects.requireNonNull(getActivity()).registerReceiver(broadcastReceiver, intentFilter);
 
         receiverCredit = new BroadcastReceiver() {
             @Override
@@ -77,7 +74,7 @@ public class FraDashBoard extends MFragment implements Constant {
     }
 
 
-    public void updateCredit(String payCode) {
+    private void updateCredit(String payCode) {
         showToast("Updating Credit...!");
         String token = SharePrefManager.getInstance(getActivity()).getAccessToken();
         ION.postDataWithToken(getActivity(), URL_UPDATE_CREDIT, token, ION.updateCredit(payCode), Object.class, new FutureCallback() {
@@ -104,7 +101,7 @@ public class FraDashBoard extends MFragment implements Constant {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().unregisterReceiver(broadcastReceiver);
+        Objects.requireNonNull(getActivity()).unregisterReceiver(broadcastReceiver);
         getActivity().unregisterReceiver(receiverCredit);
     }
 }

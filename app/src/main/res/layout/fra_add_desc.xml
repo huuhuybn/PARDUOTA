@@ -51,9 +51,10 @@
         android:orientation="vertical" />
 
 
-    <Spinner
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/tv_country"
-        android:layout_height="38dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:entries="@array/country" />
 
     <View xmlns:android="http://schemas.android.com/apk/res/android"

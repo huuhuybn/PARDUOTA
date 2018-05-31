@@ -4,7 +4,7 @@ package com.parduota.parduota.model.medium;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Medium {
+class Medium {
 
     @SerializedName("medium")
     @Expose

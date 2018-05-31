@@ -7,20 +7,16 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.upload.DesFra;
 import com.parduota.parduota.upload.OtherFra;
 import com.parduota.parduota.upload.TitleFra;
-import com.parduota.parduota.view.UploadDialog;
 
 /**
  * Created by huy_quynh on 7/20/17.
@@ -49,13 +45,11 @@ public class UploadAC extends MActivity implements Constant {
 
     private BroadcastReceiver broadcastReceiver;
 
-    private UpItemAdapter upItemAdapter;
-
     @Override
     protected void initView() {
 
-        pagers = (ViewPager) findViewById(R.id.pagers);
-        upItemAdapter = new UpItemAdapter(getSupportFragmentManager());
+        pagers = findViewById(R.id.pagers);
+        UpItemAdapter upItemAdapter = new UpItemAdapter(getSupportFragmentManager());
         pagers.setAdapter(upItemAdapter);
 
         broadcastReceiver = new BroadcastReceiver() {
@@ -91,7 +85,7 @@ public class UploadAC extends MActivity implements Constant {
 
     class UpItemAdapter extends FragmentPagerAdapter {
 
-        public UpItemAdapter(FragmentManager fm) {
+        UpItemAdapter(FragmentManager fm) {
             super(fm);
         }
 

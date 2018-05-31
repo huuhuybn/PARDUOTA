@@ -21,9 +21,9 @@ class OrderHolder extends RecyclerView.ViewHolder {
 
     public OrderHolder(View itemView) {
         super(itemView);
-        tv_date_time = (TextView) itemView.findViewById(R.id.tv_date_time);
-        tv_title = (TextView) itemView.findViewById(R.id.tv_title);
-        tv_status = (TextView) itemView.findViewById(R.id.tv_status);
-        tv_ebay_id = (TextView) itemView.findViewById(R.id.tv_ebay_id);
+        tv_date_time = itemView.findViewById(R.id.tv_date_time);
+        tv_title = itemView.findViewById(R.id.tv_title);
+        tv_status = itemView.findViewById(R.id.tv_status);
+        tv_ebay_id = itemView.findViewById(R.id.tv_ebay_id);
     }
 }

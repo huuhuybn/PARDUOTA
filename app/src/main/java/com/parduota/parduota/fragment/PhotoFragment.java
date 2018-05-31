@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.library.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.parduota.parduota.PhotoViewAC;
 import com.parduota.parduota.R;
 import com.parduota.parduota.ion.Constant;
+
+import java.util.Objects;
 
 /**
  * Created by MAC2015 on 11/1/17.
@@ -31,18 +33,16 @@ public class PhotoFragment extends Fragment implements Constant {
 
     }
 
-    private ImageView img;
-
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fra_photo, container, false);
 
-        img = (ImageView) view.findViewById(R.id.img);
+        ImageView img = view.findViewById(R.id.img);
 
-        final String url = PHOTO_URL + getArguments().getString(DATA);
-        ImageLoader.loadImage(getContext(), url, img);
+        final String url = PHOTO_URL + Objects.requireNonNull(getArguments()).getString(DATA);
 
+        Glide.with(this).load(url).into(img);
 
         img.setOnClickListener(new View.OnClickListener() {
             @Override

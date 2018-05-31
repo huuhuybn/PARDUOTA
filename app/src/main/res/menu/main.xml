@@ -2,20 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_log_out"
-        android:title="@string/log_out"
+        android:id="@+id/action_notification"
+        android:title="@string/action_notification"
+        app:actionLayout="@layout/notification"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_add_credit"
-        android:title="@string/buy_credit"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_add_item"
-        android:title="@string/add_item"
-        app:showAsAction="never" />
-
-
 
 </menu>

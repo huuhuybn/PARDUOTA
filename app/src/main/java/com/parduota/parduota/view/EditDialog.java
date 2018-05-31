@@ -16,6 +16,8 @@ import android.widget.EditText;
 
 import com.parduota.parduota.R;
 
+import java.util.Objects;
+
 /**
  * Created by MAC2015 on 11/27/17.
  */
@@ -48,7 +50,7 @@ public class EditDialog extends DialogFragment {
         this.tvContainer = tvContainer;
     }
 
-    public OnEditFinishListener onEditFinishListener;
+    private OnEditFinishListener onEditFinishListener;
 
 
     public EditText getEtContent() {
@@ -80,7 +82,7 @@ public class EditDialog extends DialogFragment {
 
 
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(etContent, InputMethodManager.SHOW_FORCED);
+        Objects.requireNonNull(imm).showSoftInput(etContent, InputMethodManager.SHOW_FORCED);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)

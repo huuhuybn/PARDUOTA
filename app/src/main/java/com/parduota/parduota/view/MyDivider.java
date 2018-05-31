@@ -12,8 +12,8 @@ import com.parduota.parduota.R;
  * Created by huy_quynh on 7/24/17.
  */
 
-public class MyDivider extends RecyclerView.ItemDecoration {
-    private Drawable mDivider;
+class MyDivider extends RecyclerView.ItemDecoration {
+    private final Drawable mDivider;
 
     public MyDivider(Context context) {
         mDivider = context.getResources().getDrawable(R.drawable.line);

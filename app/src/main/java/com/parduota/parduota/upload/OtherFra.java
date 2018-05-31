@@ -18,8 +18,8 @@ import com.parduota.parduota.model.Condition;
 
 import java.util.ArrayList;
 
-/**
- * Created by huy_quynh on 7/27/17.
+/*
+  Created by huy_quynh on 7/27/17.
  */
 
 
@@ -33,9 +33,7 @@ public class OtherFra extends MFragment {
 
     private EditText edt_price;
     private EditText edt_quantity;
-    private EditText edt_address;
     private EditText category;
-    private Spinner spinner_condition;
     private Button btn_submit;
 
     private AutoCompleteTextView tv_country;
@@ -52,9 +50,9 @@ public class OtherFra extends MFragment {
     protected void initView(View view) {
 
         //edt_price = (EditText) view.findViewById(R.id.edt_price);
-        edt_address = (EditText) view.findViewById(R.id.edt_address);
+        EditText edt_address = view.findViewById(R.id.edt_address);
         //edt_quantity = (EditText) view.findViewById(R.id.edt_quantity);
-        spinner_condition = (Spinner) view.findViewById(R.id.spinner_condition);
+        Spinner spinner_condition = view.findViewById(R.id.spinner_condition);
 
         conditions = new ArrayList<>();
         initCondition();
@@ -82,12 +80,12 @@ public class OtherFra extends MFragment {
 
     }
 
-    public class SpinnerAdapter extends BaseAdapter {
+    class SpinnerAdapter extends BaseAdapter {
 
-        private Context context;
-        private ArrayList<Condition> conditions;
+        private final Context context;
+        private final ArrayList<Condition> conditions;
 
-        public SpinnerAdapter(Context context, ArrayList<Condition> conditions) {
+        SpinnerAdapter(Context context, ArrayList<Condition> conditions) {
             this.conditions = conditions;
             this.context = context;
         }
@@ -110,7 +108,7 @@ public class OtherFra extends MFragment {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             view = LayoutInflater.from(context).inflate(R.layout.item_condition, viewGroup, false);
-            TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
+            TextView tv_title = view.findViewById(R.id.tv_title);
             tv_title.setText(conditions.get(i).getName());
             return view;
         }

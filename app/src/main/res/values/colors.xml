@@ -13,6 +13,8 @@
     <color name="grey">#EEEEEE</color>
     <color name="grey_strong">#c1c1c1</color>
     <color name="black">#000000</color>
+    <color name="red">#DD0000</color>
+    <color name="green">#339900</color>
 
 
 </resources>

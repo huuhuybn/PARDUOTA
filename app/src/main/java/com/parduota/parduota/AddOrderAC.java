@@ -9,11 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.BaseActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
-import com.parduota.parduota.model.createorder.Order;
 import com.parduota.parduota.model.createorder.OrderResponse;
 import com.parduota.parduota.model.order.Datum;
 
@@ -69,6 +67,11 @@ public class AddOrderAC extends BaseActivity {
 
                 if (ebayId.matches("")) {
                     etEbayId.setError(getString(R.string.notify_input));
+                    break;
+                }
+
+                if (!ebayId.trim().startsWith("http")){
+                    etEbayId.setError(getString(R.string.notify_input_ebay_link));
                     break;
                 }
 

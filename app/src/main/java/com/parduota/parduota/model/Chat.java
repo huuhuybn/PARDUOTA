@@ -6,11 +6,11 @@ package com.parduota.parduota.model;
 
 public class Chat {
 
-    String name;
-    String content;
-    int id;
-    String time;
-    boolean isMe;
+    private String name;
+    private String content;
+    private int id;
+    private String time;
+    private boolean isMe;
 
     public boolean isMe() {
         return isMe;

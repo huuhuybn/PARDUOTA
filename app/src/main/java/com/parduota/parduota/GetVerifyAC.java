@@ -1,7 +1,6 @@
 package com.parduota.parduota;
 
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,10 +19,7 @@ import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.User;
-import com.parduota.parduota.model.Verify;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
-
-import org.w3c.dom.Text;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -109,6 +104,8 @@ public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add, menu);//Menu Resource, Menu
+
+        menu.getItem(0).setVisible(false);
         return true;
     }
 
@@ -126,7 +123,7 @@ public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
     }
 
 
-    public void sendGetVerify() {
+    private void sendGetVerify() {
         String full_name = etSureName.getText().toString().trim();
         String address = etAddress.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
@@ -206,7 +203,7 @@ public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
             sharePrefManager.saveUser(user);
             setResult(999);
             finish();
-        } catch (Exception e1) {
+        } catch (Exception ignored) {
 
         }
 
@@ -216,7 +213,7 @@ public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
                 Toast.makeText(this, getString(R.string.notify_you_sent_verify), Toast.LENGTH_SHORT).show();
             }
 
-        } catch (Exception e1) {
+        } catch (Exception ignored) {
 
         }
         hideLoading();

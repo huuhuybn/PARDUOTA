@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".ExtendOrderDetailActivity">
+
+
+    <TextView
+
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <Button
+
+        android:id="@+id/btnViewInEbay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_on_ebay" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textColor="@android:color/white" />
+
+    </ScrollView>
+
+
+</LinearLayout>

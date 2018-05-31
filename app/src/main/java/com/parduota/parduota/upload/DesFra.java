@@ -9,6 +9,8 @@ import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
 import com.parduota.parduota.ion.Constant;
 
+import java.util.Objects;
+
 /**
  * Created by huy_quynh on 7/27/17.
  */
@@ -22,14 +24,13 @@ public class DesFra extends MFragment implements Constant {
 
 
     private EditText edt_des;
-    private Button btn_next;
 
     @Override
     protected void initView(View view) {
 
-        edt_des = (EditText) view.findViewById(R.id.edt_des);
+        edt_des = view.findViewById(R.id.edt_des);
 
-        btn_next = (Button) view.findViewById(R.id.btn_next);
+        Button btn_next = view.findViewById(R.id.btn_next);
         btn_next.setText(getString(R.string.btn_next));
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +43,7 @@ public class DesFra extends MFragment implements Constant {
                 Intent intent = new Intent(ACTION_NEXT);
                 intent.putExtra(INDEX, INPUT_DES);
                 intent.putExtra(DATA, des);
-                getActivity().sendBroadcast(intent);
+                Objects.requireNonNull(getActivity()).sendBroadcast(intent);
 
             }
         });

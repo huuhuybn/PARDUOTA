@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,11 +18,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.R;
@@ -32,8 +29,7 @@ import com.parduota.parduota.utils.SharePrefManager;
 
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 
 public abstract class MActivity extends AppCompatActivity implements FutureCallback, Constant {
@@ -46,10 +42,10 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         super.onCreate(savedInstanceState);
         sharePrefManager = SharePrefManager.getInstance(this);
         context = this;
-        dialog = new Dialog(context,
+        Dialog dialog = new Dialog(context,
                 R.style.AppTheme_NoActionBar);
         dialog.setContentView(R.layout.loadding);
-        dialog.getWindow().setBackgroundDrawable(
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
         setContentView(setLayoutId());
 
@@ -73,8 +69,6 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
     protected abstract int setLayoutId();
 
     protected abstract void initView();
-
-    private Dialog dialog;
 
     protected Activity context;
     private Dialog networkDialog;
@@ -118,7 +112,6 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
 
     }
 
-
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
@@ -131,9 +124,9 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         startActivity(intent);
     }
 
-    protected void startNewActivityForResult(Class aClass,int code) {
+    protected void startNewActivityForResult(Class aClass) {
         Intent intent = new Intent(this, aClass);
-        startActivityForResult(intent,code);
+        startActivityForResult(intent, 999);
     }
 
     protected void showToast(String message) {
@@ -189,16 +182,15 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
      */
     public View getView(int layoutId) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(layoutId, null, false);
-        return view;
+        return Objects.requireNonNull(inflater).inflate(layoutId, null, false);
     }
 
 
-    public void hideKeyBoard() {
+    protected void hideKeyBoard() {
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -220,10 +212,9 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
                 startActivity(intent);
                 SharePrefManager.getInstance(this).removeAll();
                 finish();
-                return;
             }
 
-        } catch (Exception e1) {
+        } catch (Exception ignored) {
 
         }
 

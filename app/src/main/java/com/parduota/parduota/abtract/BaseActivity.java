@@ -21,14 +21,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.ChargerAC;
+import com.parduota.parduota.ChatAC;
 import com.parduota.parduota.ItemAC;
 import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.MainAC;
@@ -37,9 +43,16 @@ import com.parduota.parduota.OrderAC;
 import com.parduota.parduota.R;
 import com.parduota.parduota.SettingAC;
 import com.parduota.parduota.ion.Constant;
+import com.parduota.parduota.ion.ION;
+import com.parduota.parduota.model.notification.Notification;
 import com.parduota.parduota.utils.SharePrefManager;
 
 import org.json.JSONObject;
+
+import java.util.Objects;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public abstract class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FutureCallback, Constant {
@@ -48,7 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity
     private Toolbar mActionBarToolbar;
     private DrawerLayout mDrawerLayout;
     protected NavigationView mNavigationView;
-    private ActionBarDrawerToggle mToggle;
 
 
     private TextView notificationCounter;
@@ -61,7 +73,7 @@ public abstract class BaseActivity extends AppCompatActivity
      *
      * @return true
      */
-    protected boolean useToolbar() {
+    private boolean useToolbar() {
         return true;
     }
 
@@ -72,10 +84,23 @@ public abstract class BaseActivity extends AppCompatActivity
      *
      * @return
      */
-    protected boolean useDrawerToggle() {
+    private boolean useDrawerToggle() {
         return true;
     }
 
+
+    protected void updateFCM() {
+        String fcm = FirebaseInstanceId.getInstance().getToken();
+        //Log.e("fcm", fcm);
+        if (fcm != null) {
+            ION.postFormDataWithToken(this, URL_SET_FCM_TOKEN, sharePrefManager.getAccessToken(), ION.fcmUpdate(fcm), new FutureCallback<JsonObject>() {
+                @Override
+                public void onCompleted(Exception e, JsonObject result) {
+
+                }
+            });
+        }
+    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -85,16 +110,43 @@ public abstract class BaseActivity extends AppCompatActivity
 
         setupNavDrawer();
 
+        notifyUpdateCounter = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                alertCount = sharePrefManager.getCountNotification();
+                updateAlertIcon();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(COMMING_MESSAGE);
+        registerReceiver(notifyUpdateCounter, intentFilter);
+
+        ION.getDataWithToken(getApplicationContext(), sharePrefManager.getAccessToken(), Constant.URL_GET_NOTIFICATION + 1, Notification.class, new FutureCallback<Notification>() {
+            @Override
+            public void onCompleted(Exception e, Notification result) {
+                try {
+                    sharePrefManager.setCountNotification(Integer.parseInt(result.getNew_()));
+                    alertCount = Integer.parseInt(result.getNew_());
+                    Log.e("ABC", alertCount + "");
+                    updateAlertIcon();
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+
 
     }//end setContentView
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (notifyUpdateCounter != null) unregisterReceiver(notifyUpdateCounter);
+    }
 
     protected SharePrefManager sharePrefManager;
-    private ProgressDialog progressDialog;
 
-    private Dialog dialog;
-
-    protected Activity context;
+    private Activity context;
     private Dialog networkDialog;
 
     @Override
@@ -104,12 +156,12 @@ public abstract class BaseActivity extends AppCompatActivity
         //Global methods as
         sharePrefManager = SharePrefManager.getInstance(this);
         context = this;
-        dialog = new Dialog(context,
+        Dialog dialog = new Dialog(context,
                 R.style.AppTheme_NoActionBar);
         dialog.setContentView(R.layout.loadding);
-        dialog.getWindow().setBackgroundDrawable(
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        progressDialog = new ProgressDialog(this);
+        ProgressDialog progressDialog = new ProgressDialog(this);
 
 
         notifyUpdateCounter = new BroadcastReceiver() {
@@ -129,9 +181,9 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onPause();
     }
 
-    protected Toolbar getActionBarToolbar() {
+    private void getActionBarToolbar() {
         if (mActionBarToolbar == null) {
-            mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mActionBarToolbar = findViewById(R.id.toolbar);
             if (mActionBarToolbar != null) {
                 // Depending on which version of Android you are on the Toolbar or the ActionBar may be
                 // active so the a11y description is set here.
@@ -147,7 +199,6 @@ public abstract class BaseActivity extends AppCompatActivity
             }
         }
 
-        return mActionBarToolbar;
     }
 
 
@@ -162,7 +213,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
         // use the hamburger menu
         if (useDrawerToggle()) {
-            mToggle = new ActionBarDrawerToggle(
+            ActionBarDrawerToggle mToggle = new ActionBarDrawerToggle(
                     this, mDrawerLayout, mActionBarToolbar,
                     R.string.navigation_drawer_open,
                     R.string.navigation_drawer_close);
@@ -220,20 +271,15 @@ public abstract class BaseActivity extends AppCompatActivity
 
         }
 
-        if (!sharePrefManager.getVerifyStatus()) {
-
-            Toast.makeText(this, getString(R.string.notify_confirm_email), Toast.LENGTH_SHORT).show();
-            return true;
-        }
 
         switch (id) {
             case R.id.nav_home:
                 createBackStack(new Intent(this, MainAC.class));
                 break;
 
-            case R.id.nav_notification:
-                createBackStack(new Intent(this, NotificationAC.class));
-                break;
+//            case R.id.nav_notification:
+//                createBackStack(new Intent(this, NotificationAC.class));
+//                break;
 
             case R.id.nav_all:
                 createBackStack(new Intent(this, ItemAC.class));
@@ -260,11 +306,31 @@ public abstract class BaseActivity extends AppCompatActivity
 
                 break;
 
+            case R.id.nav_chat:
+
+                createBackStack(new Intent(this, ChatAC.class));
+
+                break;
+
 
             case R.id.nav_log_out:
 
+                LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, LoginActivity.class));
+
+                String fcm = FirebaseInstanceId.getInstance().getToken();
+                //Log.e("fcm", fcm);
+                if (fcm != null) {
+                    ION.postFormDataWithToken(this, URL_SET_FCM_TOKEN, sharePrefManager.getAccessToken(), ION.fcmUpdate(""), new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+
+                        }
+                    });
+                }
+
                 sharePrefManager.clearAccessToken();
+
                 finish();
 
                 break;
@@ -281,7 +347,7 @@ public abstract class BaseActivity extends AppCompatActivity
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(GravityCompat.START);
     }
 
-    protected void closeNavDrawer() {
+    private void closeNavDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -323,17 +389,99 @@ public abstract class BaseActivity extends AppCompatActivity
                 startActivity(intent);
                 SharePrefManager.getInstance(this).removeAll();
                 finish();
-                return;
             }
 
-        } catch (Exception e1) {
+        } catch (Exception ignored) {
 
         }
 
     }
 
-    protected void showToast(String message) {
+    private void showToast(String message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main, menu);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+
+
+        final MenuItem alertMenuItem = menu.findItem(R.id.action_notification);
+
+
+        View view = alertMenuItem.getActionView();
+        frameLayout = view.findViewById(R.id.view_alert_red_circle);
+
+
+        countTextView = frameLayout.findViewById(R.id.view_alert_count_textview);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onOptionsItemSelected(alertMenuItem);
+
+            }
+        });
+
+
+        alertCount = sharePrefManager.getCountNotification();
+        updateAlertIcon();
+
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private FrameLayout frameLayout;
+
+    private int alertCount = -1;
+
+    private void updateAlertIcon() {
+        // if alert count extends into two digits, just show the red circle
+
+        if (0 < alertCount) {
+            countTextView.setText(String.valueOf(alertCount));
+        }
+
+        frameLayout.setVisibility((alertCount > 0) ? VISIBLE : GONE);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_notification:
+
+                startActivityForResult(new Intent(this, NotificationAC.class), 777);
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private TextView countTextView;
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 777) {
+
+            alertCount = sharePrefManager.getCountNotification();
+            updateAlertIcon();
+
+        }
+    }
 }//end BaseActivity

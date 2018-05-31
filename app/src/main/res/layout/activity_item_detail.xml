@@ -2,27 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
     android:orientation="vertical"
     tools:context="com.parduota.parduota.ItemDetailAC">
 
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="250dp">
 
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pagers"
             android:layout_width="match_parent"
-            android:layout_height="150dp" />
+            android:layout_height="250dp" />
 
 
         <TextView
-            android:layout_margin="2dp"
             android:id="@+id/tvIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="2dp"
             android:background="@drawable/tv_bg"
             android:padding="5dp"
             android:textColor="@android:color/white" />
@@ -30,64 +29,179 @@
 
     </FrameLayout>
 
-
-    <TableLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="1dp"
+        android:background="@color/grey_strong" />
 
 
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/Base.TextAppearance.AppCompat.Large"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="AAAAAAAAAAA" />
+            android:orientation="vertical"
+            android:padding="5dp">
 
-
-        <TextView
-            android:id="@+id/tv_date_time"
-            style="@style/Base.TextAppearance.AppCompat.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="20-09-2017" />
-
-        <TableRow android:padding="5dp">
 
             <TextView
-                android:id="@+id/tv_price"
-                android:text="Price: 1000 $" />
+                android:id="@+id/tv_title"
+                style="@style/Base.TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            <TextView android:text="" />
+                />
+
 
             <TextView
-                android:id="@+id/tv_quality"
-                android:text="Quantity: 50" />
+                android:id="@+id/tv_date_time"
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        </TableRow>
-
-
-        <TextView
-            android:id="@+id/tv_detail"
-            android:padding="5dp"
-            android:text="oieuweurioewuiroewuiorweuirouweiruweiruiweourioweuiorewuioruweioruweiourwioeruiewouriweourioewuorewuiorweiourewoi" />
-
-        <TextView
-            android:id="@+id/tv_address"
-            android:padding="5dp"
-            android:text="TT Lim Tien Du - Bac Ninh" />
-
-        <TextView
-            android:id="@+id/tv_condition"
-            android:padding="5dp" />
-
-        <TextView
-            android:padding="5dp"
-            android:text="@string/shipping_options" />
-
-    </TableLayout>
+                android:textSize="11sp" />
 
 
+            <View
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/grey" />
+
+            <TableLayout android:stretchColumns="0,1">
+
+                <TableRow>
+
+                    <TextView
+                        android:text="@string/hint_price"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:text="@string/hint_quantity"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tv_price"
+                         />
+
+                    <TextView
+                        android:id="@+id/tv_quality"
+                       />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <View
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/grey" />
+
+
+            <TextView
+                android:text="@string/hint_description"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:padding="5dp"
+               />
+
+            <TextView
+                android:text="@string/hint_address"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:padding="5dp"
+                 />
+
+
+            <TextView
+                android:text="@string/hint_condition"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_condition"
+                android:padding="5dp" />
+
+            <TextView
+                android:text="@string/shipping_options"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_shipping_option"
+                android:padding="5dp" />
+
+
+            <View
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/grey" />
+
+            <TableLayout
+                android:id="@+id/layout_dimen"
+                android:stretchColumns="0,1"
+                android:visibility="gone">
+
+
+                <TableRow>
+
+                    <TextView
+                        android:text="@string/width"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:text="@string/height"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tvWidth"
+                         />
+
+                    <TextView
+                        android:id="@+id/tvHeight"
+                       />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:text="@string/weight"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:text="@string/length"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tvWeight"
+                         />
+
+                    <TextView
+                        android:id="@+id/tvLength"
+                       />
+
+                </TableRow>
+
+            </TableLayout>
+
+
+        </TableLayout>
+
+    </ScrollView>
 </LinearLayout>

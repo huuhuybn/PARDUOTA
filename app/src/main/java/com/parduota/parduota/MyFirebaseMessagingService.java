@@ -2,15 +2,20 @@ package com.parduota.parduota;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
 import com.parduota.parduota.ion.Constant;
+import com.parduota.parduota.model.User;
+import com.parduota.parduota.utils.SharePrefManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Objects;
 
 /**
  * Created by huy_quynh on 6/27/17.
@@ -24,11 +29,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.e(TAG, "From: " + remoteMessage.getFrom());
+        Log.e(TAG, "From: " + remoteMessage.getMessageType() + " " + remoteMessage.getData().toString());
+
+
+        SharePrefManager.getInstance(this).addCountNoti();
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Message data payload: " + remoteMessage.getData());
+            String type_ = remoteMessage.getData().toString();
+            try {
+                JSONObject jsonObject = new JSONObject(type_);
+                int type = jsonObject.getInt("TYPE");
+
+                Log.e("TYPE", type + "");
+                switch (type) {
+
+                    // coming message
+                    case 19:
+                        Intent intent = new Intent(COMMING_MESSAGE);
+                        sendBroadcast(intent);
+                        break;
+
+                    // update terms and condition
+                    case 14:
+                        User user = SharePrefManager.getInstance(this).getUser();
+                        user.setTerm_accept(0);
+                        SharePrefManager.getInstance(this).saveUser(user);
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         // Check if message contains a notification payload.
@@ -36,7 +67,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
             Log.e(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             showNotification(remoteMessage.getFrom(), remoteMessage.getNotification().getBody());
             Intent intent = new Intent(COMMING_MESSAGE);
-            //intent.putExtra(DATA, remoteMessage);
+            intent.putExtra(DATA, remoteMessage);
             sendBroadcast(intent);
         }
 
@@ -45,10 +76,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
 
     }
 
-    public void showNotification(String from, String message) {
+    private void showNotification(String from, String message) {
 
         // Open NotificationView Class on Notification Click
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, MainAC.class);
         // Send data to NotificationView Class
         intent.putExtra("title", from);
         intent.putExtra("text", message);
@@ -63,7 +94,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
                 // Set Ticker Message
                 .setTicker(getString(R.string.app_name))
                 // Set Title
-                .setContentTitle(from)
+                .setContentTitle(getString(R.string.app_name))
                 // Set Text
                 .setContentText(message)
                 // Add an Action Button below Notification
@@ -76,7 +107,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         // Create Notification Manager
         NotificationManager notificationmanager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Build Notification with Notification Manager
-        notificationmanager.notify(0, builder.build());
+        Objects.requireNonNull(notificationmanager).notify(0, builder.build());
     }
 
 

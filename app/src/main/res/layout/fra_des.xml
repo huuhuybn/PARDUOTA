@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <include layout="@layout/my_bar"></include>
+    <include layout="@layout/my_bar" />
 
 
     <EditText

@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="@string/btn_requestVIP"
         android:visibility="gone" />
 
 
@@ -32,7 +31,7 @@
         <View
             android:layout_width="100dp"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"></View>
+            android:background="@color/colorPrimary" />
 
         <TableRow android:padding="10dp">
 
@@ -47,7 +46,7 @@
         <View
             android:layout_width="100dp"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"></View>
+            android:background="@color/colorPrimary" />
 
         <TableRow android:padding="10dp">
 
@@ -62,7 +61,7 @@
         <View
             android:layout_width="100dp"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"></View>
+            android:background="@color/colorPrimary" />
 
         <TableRow android:padding="10dp">
 

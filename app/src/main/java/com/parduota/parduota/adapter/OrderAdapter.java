@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.parduota.parduota.R;
 import com.parduota.parduota.face.OnOrderClick;
 import com.parduota.parduota.model.order.Datum;
-import com.parduota.parduota.model.order.Order;
 
 import java.util.ArrayList;
 
@@ -20,9 +19,9 @@ import java.util.ArrayList;
 public class OrderAdapter extends RecyclerView.Adapter<OrderHolder> {
 
 
-    public Context context;
-    public ArrayList<Datum> orders;
-    public OnOrderClick orderOnItemClick;
+    private final Context context;
+    private final ArrayList<Datum> orders;
+    private OnOrderClick orderOnItemClick;
 
     public OrderAdapter(Context context, ArrayList<Datum> orders) {
         this.context = context;
@@ -48,7 +47,20 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderHolder> {
         final Datum order = orders.get(position);
         holder.tv_title.setText(order.getTitle());
         holder.tv_ebay_id.setText(order.getEbayId());
-        holder.tv_status.setText(order.getStatus());
+        try {
+            if (order.getStatus().toLowerCase().trim().equals("open")) {
+                holder.tv_status.setText(context.getString(R.string.open));
+
+                holder.tv_status.setBackgroundColor(context.getResources().getColor(R.color.green));
+            } else {
+                holder.tv_status.setText(context.getString(R.string.close));
+                holder.tv_status.setBackgroundColor(context.getResources().getColor(R.color.red));
+            }
+
+        } catch (Exception ignored) {
+
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,8 +68,6 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderHolder> {
             }
         });
         holder.tv_date_time.setText(order.getCreatedAt());
-
-
     }
 
     @Override

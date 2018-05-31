@@ -1,6 +1,9 @@
 package com.parduota.parduota;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.util.Log;
@@ -8,26 +11,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
+import com.google.gson.Gson;
 import com.parduota.parduota.abtract.BaseActivity;
 import com.parduota.parduota.ion.Constant;
-import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.User;
+import com.parduota.parduota.view.ConfirmTermDialog;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class MainAC extends BaseActivity implements Constant {
 
 
-    private User user;
-
-
-    private TextView tv_email, tv_name, tv_credit;
-
     private TextView tv_notify_get_verify;
     private Button btn_get_verify;
 
-    private View layout_request_verify;
+    private BroadcastReceiver updateCredit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,19 +35,21 @@ public class MainAC extends BaseActivity implements Constant {
 
         updateFCM();
 
-        layout_request_verify = findViewById(R.id.layout_request_verify);
+
+        View layout_request_verify = findViewById(R.id.layout_request_verify);
 
         //Set nav drawer selected to first item in list
         mNavigationView.getMenu().getItem(0).setChecked(true);
 
-        user = sharePrefManager.getUser();
+        User user = sharePrefManager.getUser();
+        if (Constant.isDEBUG) Log.e("User Main", new Gson().toJson(user));
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
 
-        tv_email = headerView.findViewById(R.id.tvEmail);
-        tv_name = headerView.findViewById(R.id.tvFullName);
-        tv_credit = headerView.findViewById(R.id.tv_credit);
+        TextView tv_email = headerView.findViewById(R.id.tvEmail);
+        TextView tv_name = headerView.findViewById(R.id.tvFullName);
+        TextView tv_credit = headerView.findViewById(R.id.tv_credit);
         tv_notify_get_verify = findViewById(R.id.tv_notify_get_verify);
 
         btn_get_verify = findViewById(R.id.btnGetVerify);
@@ -56,87 +57,120 @@ public class MainAC extends BaseActivity implements Constant {
         int verifyStatus = sharePrefManager.getVerifyStatus();
 
 
-        if (verifyStatus == VERIFY_ADMIN) {
+        // if user haven't accept our terms and condition yet. show dialog
+        if (user.getTerm_accept() == 0) {
+            ConfirmTermDialog confirmDialog = new ConfirmTermDialog(this);
+            confirmDialog.setCancelable(false);
+            confirmDialog.show();
+        }
 
-            // hide all form and notify confirm email
-            layout_request_verify.setVisibility(View.GONE);
-            findViewById(R.id.layout_confirm_email).setVisibility(View.GONE);
+
+        switch (verifyStatus) {
+            case VERIFY_ADMIN:
+
+                findViewById(R.id.normal_user_layout).setVisibility(VISIBLE);
+                // hide all form and notify confirm email
+                layout_request_verify.setVisibility(GONE);
+                findViewById(R.id.layout_confirm_email).setVisibility(GONE);
 
 
+                break;
+            case VERIFY_EMAIL:
 
-        } else if (verifyStatus == VERIFY_EMAIL) {
+                layout_request_verify.setVisibility(VISIBLE);
 
-            layout_request_verify.setVisibility(View.VISIBLE);
+                if (user.getRequest_vip().equals(REQUEST_NO_VIP)) {
 
-            if (user.getRequest_vip().equals(REQUEST_NO_VIP)) {
+                    tv_notify_get_verify.setText(getString(R.string.notify_get_verify));
 
-                tv_notify_get_verify.setText(getString(R.string.notify_get_verify));
-
-                // if user has not get verify yet. set onClick to request VIP
-                btn_get_verify.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        startActivityForResult(new Intent(MainAC.this, GetVerifyAC.class), 999);
-
-                    }
-                });
-
-            } else {
-
-                if (user.getVip() == USER_NOT_APPROVED) {
-
-                    setUserNotApprove();
+                    // if user has not get verify yet. set onClick to request VIP
+                    btn_get_verify.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivityForResult(new Intent(MainAC.this, GetVerifyAC.class), 999);
+                        }
+                    });
 
                 } else {
 
+                    if (user.getVip() == USER_NOT_APPROVED) {
+
+                        setUserNotApprove();
+
+                    }
+
                 }
 
-            }
+                break;
+            case VERIFY_NOTHING:
 
-        } else if (verifyStatus == VERIFY_NOTHING) {
-            findViewById(R.id.layout_confirm_email).setVisibility(View.VISIBLE);
+                findViewById(R.id.layout_confirm_email).setVisibility(VISIBLE);
 
-
+                break;
         }
-
 
         // user try catch to avoid crash app
 
         try {
 
-            tv_email.setText(user.getEmail());
+            if (!user.getEmail().contains("domain"))
+                tv_email.setText(user.getEmail());
 
 
-        } catch (Exception e) {
-
-            tv_email.setText(sharePrefManager.getAccountLogin());
+        } catch (Exception ignored) {
 
         }
 
         try {
 
             tv_name.setText(user.getName());
-            tv_name.setText(user.getFullName());
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
+
         try {
 
             tv_credit.setText(getString(R.string.tv_credit) + " : " + user.getCredit());
+            tv_credit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(MainAC.this, BuyCreditAC.class));
+                }
+            });
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
+
+        updateCredit = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+        IntentFilter intentFilter = new IntentFilter(URL_UPDATE_CREDIT);
+        registerReceiver(updateCredit, intentFilter);
 
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (updateCredit != null) {
+            unregisterReceiver(updateCredit);
+        }
+    }
 
-    public void setUserNotApprove() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void setUserNotApprove() {
         tv_notify_get_verify.setText(getString(R.string.notify_get_verify_done));
-        btn_get_verify.setVisibility(View.GONE);
+        btn_get_verify.setVisibility(GONE);
     }
 
     @Override
@@ -150,17 +184,6 @@ public class MainAC extends BaseActivity implements Constant {
 
     }
 
-    public void updateFCM() {
-        String fcm = FirebaseInstanceId.getInstance().getToken();
-        Log.e("fcm", fcm);
-        if (fcm != null) {
-            ION.postFormDataWithToken(this, URL_SET_FCM_TOKEN, sharePrefManager.getAccessToken(), ION.fcmUpdate(fcm), new FutureCallback<JsonObject>() {
-                @Override
-                public void onCompleted(Exception e, JsonObject result) {
 
-                }
-            });
-        }
-    }
 }
 

@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
@@ -73,7 +74,6 @@ public class ChargerAC extends MActivity implements FutureCallback, Constant {
 
             Log.e("AAAAA", charger.getData().size() + " ");
 
-
             datas.addAll(charger.getData());
             chargerAdapter.notifyDataSetChanged();
             if (charger.getData().size() < 10) {
@@ -83,6 +83,15 @@ public class ChargerAC extends MActivity implements FutureCallback, Constant {
 
                     }
                 });
+            } else if (charger.getData().size() == 0) {
+                try {
+
+                    findViewById(R.id.tv_no_item).setVisibility(View.VISIBLE);
+                    lvList.setVisibility(View.GONE);
+
+                } catch (Exception ignored) {
+
+                }
             } else {
                 lvList.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
                     @Override
@@ -92,7 +101,6 @@ public class ChargerAC extends MActivity implements FutureCallback, Constant {
                     }
                 });
             }
-
 
         }
 

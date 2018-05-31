@@ -12,7 +12,7 @@ import com.parduota.parduota.fragment.FraNotifications;
  * Created by huy_quynh on 6/13/17.
  */
 
-public class HomePagerAdapter extends FragmentStatePagerAdapter {
+class HomePagerAdapter extends FragmentStatePagerAdapter {
 
     public HomePagerAdapter(FragmentManager fm) {
         super(fm);

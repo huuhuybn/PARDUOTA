@@ -19,6 +19,20 @@ public class Notification {
     @Expose
     private String error;
 
+    public String getNew_() {
+        return new_;
+    }
+
+    public void setNew_(String new_) {
+        this.new_ = new_;
+    }
+
+    @SerializedName("new")
+    @Expose
+    private String new_;
+
+
+
     @SerializedName("current_page")
     @Expose
     private Integer currentPage;

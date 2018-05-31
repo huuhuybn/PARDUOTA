@@ -2,11 +2,8 @@ package com.parduota.parduota.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.parduota.parduota.R;
 import com.parduota.parduota.model.Chat;
 
 import java.util.ArrayList;
@@ -15,14 +12,13 @@ import java.util.ArrayList;
  * Created by huy_quynh on 10/30/17.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatHolder> {
+class ChatAdapter extends RecyclerView.Adapter<ChatHolder> {
 
 
-    public Context context;
-    public ArrayList<Chat> chats;
+    private final ArrayList<Chat> chats;
 
     public ChatAdapter(Context context, ArrayList<Chat> chats) {
-        this.context = context;
+        Context context1 = context;
         this.chats = chats;
     }
 

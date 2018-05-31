@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="10dp"
-            android:background="@color/grey"></View>
+            android:background="@color/grey" />
 
 
         <LinearLayout
@@ -95,7 +95,7 @@
 
             <TextView
                 style="@style/Base.TextAppearance.AppCompat.Medium"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_vertical"

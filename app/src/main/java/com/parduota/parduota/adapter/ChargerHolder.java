@@ -13,16 +13,15 @@ import com.parduota.parduota.R;
 class ChargerHolder extends RecyclerView.ViewHolder {
 
 
-    final TextView tvTitle;
     final TextView tvCredit;
     final TextView tvTime;
 
 
     public ChargerHolder(View convertView) {
         super(convertView);
-        tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
-        tvCredit = (TextView) convertView.findViewById(R.id.tvCredit);
-        tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+        TextView tvTitle = convertView.findViewById(R.id.tvTitle);
+        tvCredit = convertView.findViewById(R.id.tvCredit);
+        tvTime = convertView.findViewById(R.id.tvTime);
 
     }
 }

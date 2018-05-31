@@ -22,7 +22,8 @@
                     android:id="@+id/img_avatar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_photo" />
 
                 <TextView
                     android:id="@+id/tv_status"
@@ -44,14 +45,16 @@
                     android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="AAAAAAAAAAAAA" />
+
+                    android:textStyle="bold" />
 
 
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="BBBBBBBBBB" />
+
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_quality"
@@ -61,9 +64,7 @@
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tv_time"

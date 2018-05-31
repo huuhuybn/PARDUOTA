@@ -2,10 +2,8 @@ package com.parduota.parduota.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.koushikdutta.async.future.FutureCallback;
-import com.parduota.parduota.HomeActivity;
 import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
@@ -26,9 +22,11 @@ import com.parduota.parduota.model.item.Datum;
 import com.parduota.parduota.model.item.Item;
 import com.parduota.parduota.utils.EndlessRecyclerViewScrollListener;
 import com.parduota.parduota.utils.SharePrefManager;
-import com.parduota.parduota.view.MyDivider;
+
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Created by huy_quynh on 7/18/17.
@@ -40,7 +38,6 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
     private ArrayList<Datum> items;
     private ItemAdapter itemAdap;
     private String token;
-    private int page = 1;
 
     private View progress_bar;
 
@@ -48,7 +45,7 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
 
     private View no_item;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    //private SwipeRefreshLayout swipeRefreshLayout;
     private FutureCallback futureCallback;
 
 
@@ -64,8 +61,6 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
     }
 
 
-    private int TYPE = -1;
-
     @Override
     protected int setLayoutId() {
         return R.layout.fra_item;
@@ -74,13 +69,13 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
     @Override
     protected void initView(View view) {
 
-        TYPE = getArguments().getInt(DATA);
+        int TYPE = Objects.requireNonNull(getArguments()).getInt(DATA);
 
         futureCallback = this;
 
         no_item = view.findViewById(R.id.tv_no_item);
 
-        swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
+        //swipeRefreshLayout = view.findViewById(R.id.swipe_to_refresh);
         token = SharePrefManager.getInstance(getActivity()).getAccessToken();
         recyclerView = view.findViewById(R.id.lv_list);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -133,11 +128,19 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                page++;
+                //page++;
                 //ION.getData(getActivity(), getUrl(page), Item.class, futureCallback);
             }
         });
-        recyclerView.addItemDecoration(new MyDivider(getActivity()));
+        //recyclerView.addItemDecoration(new MyDivider(getActivity()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.UPDATE_SUCCESSFUL) {
+
+        }
     }
 
     @Override
@@ -145,13 +148,14 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
 
     }
 
-    public void getDataWithType(int type) {
+    private void getDataWithType(int type) {
 
+        int page = 1;
         ION.getDataWithToken(getActivity(), token, getItemByStatus(type, page), Item.class, futureCallback);
     }
 
 
-    public String getItemByStatus(int type, int page) {
+    private String getItemByStatus(int type, int page) {
         String url = Constant.URL_GET_ITEM_BY_STATUS + type + "?page=" + page;
         Log.e("getItemByStatus", url);
         return url;
@@ -169,47 +173,47 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
                 showToast(getString(R.string.notify_out_of_session));
                 startActivity(new Intent(getActivity(), LoginActivity.class));
                 SharePrefManager.getInstance(getActivity()).removeAll();
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
                 return;
             }
         }
         //Log.e("DATA", new Gson().toJson(result));
-        if (result != null) {
-            if (result.getData() != null & result.getData().size() > 0) {
-                no_item.setVisibility(View.GONE);
-                if (result.getData().size() < 5) {
-                    recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-                        @Override
-                        public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+        if (result.getData() != null & result.getData().size() > 0) {
 
-                        }
-                    });
-                }
-             /*   for (int i = 0; i < result.getData().size(); i++) {
-                    switch (result.getData().get(i).getStatus()) {
-                        case DRAFT:
-                            result.getData().get(i).setStatusText(getString(R.string.draft));
-                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.draft));
-                            break;
-                        case PENDING:
-                            result.getData().get(i).setStatusText(getString(R.string.pending));
-                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.pending));
-                            break;
-                        case SOLD:
-                            result.getData().get(i).setStatusText(getString(R.string.sold));
-                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.sold));
-                            break;
-                        case REJECT:
-                            result.getData().get(i).setStatusText(getString(R.string.reject));
-                            result.getData().get(i).setColorStatus(getResources().getColor(R.color.reject));
-                            break;
+            Collections.reverse(result.getData());
+            no_item.setVisibility(View.GONE);
+            if (result.getData().size() < 5) {
+                recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
 
                     }
-                }*/
-                items.addAll(result.getData());
-                itemAdap.notifyDataSetChanged();
-            } else no_item.setVisibility(View.VISIBLE);
-        }
+                });
+            }
+         /*   for (int i = 0; i < result.getData().size(); i++) {
+                switch (result.getData().get(i).getStatus()) {
+                    case DRAFT:
+                        result.getData().get(i).setStatusText(getString(R.string.draft));
+                        result.getData().get(i).setColorStatus(getResources().getColor(R.color.draft));
+                        break;
+                    case PENDING:
+                        result.getData().get(i).setStatusText(getString(R.string.pending));
+                        result.getData().get(i).setColorStatus(getResources().getColor(R.color.pending));
+                        break;
+                    case SOLD:
+                        result.getData().get(i).setStatusText(getString(R.string.sold));
+                        result.getData().get(i).setColorStatus(getResources().getColor(R.color.sold));
+                        break;
+                    case REJECT:
+                        result.getData().get(i).setStatusText(getString(R.string.reject));
+                        result.getData().get(i).setColorStatus(getResources().getColor(R.color.reject));
+                        break;
+
+                }
+            }*/
+            items.addAll(result.getData());
+            itemAdap.notifyDataSetChanged();
+        } else no_item.setVisibility(View.VISIBLE);
     }
 
     public static Fragment instance(int position) {
@@ -220,12 +224,12 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
         return fraItem;
     }
 
-    public class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
+    class ItemAdapter extends RecyclerView.Adapter<ItemHolder> {
 
-        public Context context;
-        public ArrayList<Datum> items;
+        final Context context;
+        final ArrayList<Datum> items;
 
-        public ItemAdapter(Context context, ArrayList<Datum> items) {
+        ItemAdapter(Context context, ArrayList<Datum> items) {
             this.context = context;
             this.items = items;
         }
@@ -242,11 +246,19 @@ public class FraItem extends MFragment implements FutureCallback<Item>, Constant
             holder.datum = datum;
             holder.tv_title.setText(datum.getTitle());
             holder.tv_price.setText(getString(R.string.hint_price) + ": " + datum.getPrice());
-            holder.tv_quality.setText(datum.getQuantity() + "");
+            holder.tv_quality.setText(context.getString(R.string.hint_quantity) + ": " + datum.getQuantity() + "");
             holder.tv_time.setText(datum.getCreatedAt());
             holder.tv_status.setText("" + datum.getStatus());
             holder.tv_status.setBackgroundColor(datum.getColorStatus());
-            Glide.with(context).load(PHOTO_URL + datum.getMedia().get(0).getLink()).into(holder.img_avatar);
+
+            try {
+
+                Glide.with(context).load(PHOTO_URL + datum.getMedia().get(0).getLink()).into(holder.img_avatar);
+
+            } catch (Exception ignored) {
+
+            }
+
             holder.itemView.setOnClickListener(holder.onClickListener);
         }
 

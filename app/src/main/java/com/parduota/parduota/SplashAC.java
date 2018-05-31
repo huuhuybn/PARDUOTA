@@ -1,12 +1,6 @@
 package com.parduota.parduota;
 
-import com.anthonycr.grant.PermissionsManager;
-import com.anthonycr.grant.PermissionsResultAction;
 import com.parduota.parduota.abtract.MActivity;
-
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 /**
@@ -25,26 +19,33 @@ public class SplashAC extends MActivity {
         deQuiRequest();
     }
 
-    public void deQuiRequest() {
-        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this,
-                new PermissionsResultAction() {
-                    @Override
-                    public void onGranted() {
-                        // Proceed with initialization
-                        final String token = sharePrefManager.getAccessToken();
-                        if (token != null)
-                            startNewActivity(MainAC.class);
-                        else
-                            startNewActivity(LoginActivity.class);
-                        finish();
-                    }
+    private void deQuiRequest() {
 
-                    @Override
-                    public void onDenied(String permission) {
-                        // Notify the user that you need all of the permissions
-                        deQuiRequest();
-                    }
-                });
+
+
+        final String token = sharePrefManager.getAccessToken();
+
+        if (token != null)
+            startNewActivity(MainAC.class);
+        else
+            startNewActivity(LoginActivity.class);
+
+        finish();
+
+//        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this,
+//                new PermissionsResultAction() {
+//                    @Override
+//                    public void onGranted() {
+//                        // Proceed with initialization
+//
+//                    }
+//
+//                    @Override
+//                    public void onDenied(String permission) {
+//                        // Notify the user that you need all of the permissions
+//                        deQuiRequest();
+//                    }
+//                });
 
     }
 

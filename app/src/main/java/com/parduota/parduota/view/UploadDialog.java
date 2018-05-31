@@ -2,7 +2,6 @@ package com.parduota.parduota.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
@@ -31,8 +30,6 @@ public class UploadDialog extends Dialog {
         super(context, cancelable, cancelListener);
         initView();
     }
-
-    private Button btn_gallery, btn_camera;
 
     private OnCameraClick onCameraClick;
     private OnGalleryClick onGalleryClick;
@@ -63,11 +60,11 @@ public class UploadDialog extends Dialog {
         void onCLick();
     }
 
-    public void initView() {
+    private void initView() {
 
         setContentView(R.layout.dialog_upload);
-        btn_camera = (Button) findViewById(R.id.btn_capture);
-        btn_gallery = (Button) findViewById(R.id.btn_gallery);
+        Button btn_camera = findViewById(R.id.btn_capture);
+        Button btn_gallery = findViewById(R.id.btn_gallery);
 
         btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override

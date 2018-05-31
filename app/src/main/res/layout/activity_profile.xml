@@ -16,7 +16,7 @@
             android:drawableLeft="@drawable/ic_email"
             android:gravity="center_vertical"
             android:padding="10dp"
-            android:text="huuhuybn@gmail.com" />
+             />
 
 
         <RadioGroup
@@ -63,7 +63,7 @@
             android:drawableLeft="@drawable/ic_user_name"
             android:gravity="center"
             android:padding="10dp"
-            android:text="huuhuybn" />
+             />
 
         <View
             android:layout_width="0.2dp"
@@ -81,7 +81,7 @@
             android:drawableLeft="@drawable/ic_credit"
             android:gravity="center"
             android:padding="10dp"
-            android:text="1000" />
+             />
 
     </LinearLayout>
 
@@ -91,7 +91,7 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
             android:paddingLeft="10dp"
@@ -167,7 +167,7 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_bank"
                     android:gravity="center_vertical"
-                    android:inputType="number" />
+                    />
 
                 <ImageView
                     android:id="@+id/btn_edit_bank"
@@ -220,7 +220,7 @@
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_phone"
                     android:gravity="center_vertical"
-                    android:inputType="number" />
+                   />
 
                 <ImageView
                     android:id="@+id/btn_edit_phone"

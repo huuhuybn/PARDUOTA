@@ -7,40 +7,48 @@ import com.google.gson.annotations.SerializedName;
  * Created by MAC2015 on 11/30/17.
  */
 
-public class Profile {
+class Profile {
 
     @SerializedName("bank_account")
     @Expose
+    private
     String bank_account;
 
     @SerializedName("gender")
     @Expose
+    private
     String gender;
 
     @SerializedName("full_name")
     @Expose
+    private
     String full_name;
 
     @SerializedName("company")
     @Expose
+    private
     String company;
 
 
     @SerializedName("address")
     @Expose
+    private
     String address;
 
     @SerializedName("phone")
     @Expose
+    private
     String phone;
 
     @SerializedName("description")
     @Expose
+    private
     String description;
 
 
     @SerializedName("other")
     @Expose
+    private
     String other;
 
 

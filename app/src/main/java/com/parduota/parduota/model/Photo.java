@@ -9,7 +9,7 @@ import android.net.Uri;
 
 public class Photo {
 
-    int id;
+    private int id;
 
     public int getId() {
         return id;
@@ -35,8 +35,8 @@ public class Photo {
         this.uri = uri;
     }
 
-    String link;
-    Uri uri;
+    private String link;
+    private Uri uri;
 
     public Bitmap getBitmap() {
         return bitmap;
@@ -46,5 +46,5 @@ public class Photo {
         this.bitmap = bitmap;
     }
 
-    Bitmap bitmap;
+    private Bitmap bitmap;
 }

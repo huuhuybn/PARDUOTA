@@ -1,2 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('ion-2.1.9.aar'))

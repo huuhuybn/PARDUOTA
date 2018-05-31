@@ -12,10 +12,12 @@ public class Password {
 
     @SerializedName("status")
     @Expose
+    private
     String status;
 
     @Expose
     @SerializedName("messages")
+    private
     String messages;
 
     public String getStatus() {

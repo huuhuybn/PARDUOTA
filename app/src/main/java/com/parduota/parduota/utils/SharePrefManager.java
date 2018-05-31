@@ -2,7 +2,7 @@ package com.parduota.parduota.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
+
 
 import com.google.gson.Gson;
 import com.parduota.parduota.model.User;
@@ -17,12 +17,14 @@ public class SharePrefManager {
 
     private static final String PREFERENCES_NAME = "PREFERENCES_NAME";
     private final String ACCESS_TOKEN = "_access_token_123";
-    private final String WAS_LOGIN = "_was_log_in_123";
     private final String USER = "user___";
 
     private final String VERIFY = "verify__";
     private final String ACCOUNT_LOGIN = "login___";
     private final String FCM = "FCM__";
+
+
+    private final String COUNT_NOTI = "count_noti";
 
 
     private static SharePrefManager instance = null;
@@ -56,17 +58,36 @@ public class SharePrefManager {
 
     public User getUser() {
         String json = getStringValue(USER);
-        User user = new Gson().fromJson(json, User.class);
-        return user;
+        return new Gson().fromJson(json, User.class);
     }
 
+
+    public int getCountNotification() {
+        return getIntValue(COUNT_NOTI, 0);
+    }
+
+    public void setCountNotification(int count) {
+        putIntValue(COUNT_NOTI, count);
+    }
+
+    public void subCountNotification() {
+        int count = getCountNotification();
+        if (count > 0) count = count - 1;
+        setCountNotification(count);
+    }
+
+    public void addCountNoti() {
+        int count = getCountNotification();
+        count = count + 1;
+        setCountNotification(count);
+    }
 
     public void saveAccessToken(String access_token) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(ACCESS_TOKEN, access_token);
-        editor.commit();
+        editor.apply();
     }
 
     public String getAccessToken() {
@@ -76,6 +97,7 @@ public class SharePrefManager {
     }
 
     public void clearAccessToken() {
+        String WAS_LOGIN = "_was_log_in_123";
         putBooleanValue(WAS_LOGIN, false);
         putStringValue(ACCESS_TOKEN, null);
     }
@@ -86,12 +108,12 @@ public class SharePrefManager {
      * @param key
      * @param s
      */
-    public void putStringValue(String key, String s) {
+    private void putStringValue(String key, String s) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(key, s);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -100,7 +122,7 @@ public class SharePrefManager {
      * @param key
      * @return
      */
-    public String getStringValue(String key) {
+    private String getStringValue(String key) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
                 0);
         return pref.getString(key, "");
@@ -113,9 +135,9 @@ public class SharePrefManager {
      * @param defaultValue
      * @return
      */
-    public String getStringValue(String key, String defaultValue) {
+    private String getStringValue(String key, String defaultValue) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         return pref.getString(key, defaultValue);
     }
 
@@ -124,12 +146,12 @@ public class SharePrefManager {
      *
      * @param key
      */
-    public void putBooleanValue(String key, Boolean b) {
+    private void putBooleanValue(String key, Boolean b) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(key, b);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -140,7 +162,7 @@ public class SharePrefManager {
      */
     public boolean getBooleanValue(String key) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         return pref.getBoolean(key, false);
     }
 
@@ -166,7 +188,7 @@ public class SharePrefManager {
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putFloat(key, f);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -187,12 +209,12 @@ public class SharePrefManager {
      * @param key
      * @param value
      */
-    public void putIntValue(String key, int value) {
+    private void putIntValue(String key, int value) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -203,7 +225,7 @@ public class SharePrefManager {
      */
     public int getIntValue(String key) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         return pref.getInt(key, 0);
     }
 
@@ -213,9 +235,9 @@ public class SharePrefManager {
      * @param key
      * @return
      */
-    public int getIntValue(String key, int defaultValue) {
+    private int getIntValue(String key, int defaultValue) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                defaultValue);
+                Context.MODE_PRIVATE);
         return pref.getInt(key, defaultValue);
     }
 
@@ -227,10 +249,10 @@ public class SharePrefManager {
      */
     public void putLongValue(String key, long value) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME,
-                0);
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putLong(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -250,7 +272,7 @@ public class SharePrefManager {
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.putStringSet(key, listString);
-        editor.commit();
+        editor.apply();
     }
 
     public Set<String> getStringSet(String key) {
@@ -264,7 +286,7 @@ public class SharePrefManager {
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.remove(key);
-        editor.commit();
+        editor.apply();
     }
 
     public void removeAll() {
@@ -272,7 +294,7 @@ public class SharePrefManager {
                 0);
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     public void saveFCMToken(String refreshedToken) {
@@ -298,5 +320,7 @@ public class SharePrefManager {
     public int getVerifyStatus() {
         return getIntValue(VERIFY, -1);
     }
+
+
 }
 

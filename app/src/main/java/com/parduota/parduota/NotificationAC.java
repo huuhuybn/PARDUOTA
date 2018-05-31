@@ -2,30 +2,26 @@ package com.parduota.parduota;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
-import com.parduota.parduota.abtract.BaseActivity;
+import com.koushikdutta.ion.Ion;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.face.OnNotificationClick;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
-import com.parduota.parduota.model.item.Category;
-import com.parduota.parduota.model.item.Medium;
-import com.parduota.parduota.model.item.User;
 import com.parduota.parduota.model.notification.Datum;
-import com.parduota.parduota.model.notification.MetaData;
 import com.parduota.parduota.model.notification.Notification;
 import com.parduota.parduota.utils.EndlessRecyclerViewScrollListener;
 import com.parduota.parduota.utils.SharePrefManager;
@@ -36,30 +32,50 @@ import java.util.ArrayList;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class NotificationAC extends BaseActivity implements FutureCallback, Constant {
+public class NotificationAC extends MActivity implements FutureCallback, Constant {
 
-    String token;
-    int page_ = 1;
+    private String token;
+    private int page_ = 1;
 
     private FutureCallback<Notification> notificationFutureCallback;
 
-    private LinearLayoutManager linearLayoutManager;
-    private RecyclerView lvList;
     private NotificationAdapter notificationAdapter;
     private ArrayList<Datum> data;
-    private OnNotificationClick onNotificationClick;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
+    protected int setLayoutId() {
+        return R.layout.activity_notification;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void initView() {
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        setTitle(getString(R.string.title_activity_notification_ac));
 
         notificationFutureCallback = this;
 
         token = SharePrefManager.getInstance(this).getAccessToken();
 
-        onNotificationClick = new OnNotificationClick() {
+        OnNotificationClick onNotificationClick = new OnNotificationClick() {
             @Override
             public void onClick(Datum datum) {
 
@@ -80,30 +96,29 @@ public class NotificationAC extends BaseActivity implements FutureCallback, Cons
             }
         };
         ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page_, Notification.class, notificationFutureCallback);
-        lvList = findViewById(R.id.lv_list);
+        RecyclerView lvList = findViewById(R.id.lv_list);
         data = new ArrayList<>();
-        linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         notificationAdapter = new NotificationAdapter(this, data, onNotificationClick);
         lvList.setAdapter(notificationAdapter);
         lvList.setLayoutManager(linearLayoutManager);
 
-//        lvList.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
-//            @Override
-//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-//                page_++;
-//                ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page, Notification.class, notificationFutureCallback);
-//            }
-//        });
+        lvList.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                page_++;
+                ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page, Notification.class, notificationFutureCallback);
+            }
+        });
 
 
-        //Set nav drawer selected to first item in list
-        mNavigationView.getMenu().getItem(1).setChecked(true);
     }
 
 
     @Override
     public void onCompleted(Exception e, Object result) {
         super.onCompleted(e, result);
+        if (Constant.isDEBUG) Log.e("DATA",new Gson().toJson(result));
         Notification notification = (Notification) result;
 
         if (notification.getError() != null) {
@@ -116,25 +131,26 @@ public class NotificationAC extends BaseActivity implements FutureCallback, Cons
             }
         }
 
-        if (notification != null) {
-            Log.e("notification", new Gson().toJson(notification));
-            if (notification.getData() != null)
-                data.addAll(notification.getData());
-            notificationAdapter.notifyDataSetChanged();
-        }
+        Log.e("notification", new Gson().toJson(notification));
+        if (notification.getData() != null)
+            data.addAll(notification.getData());
+        notificationAdapter.notifyDataSetChanged();
 
     }
 
-    public class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder> implements Constant {
+    class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder> implements Constant {
 
-        public Context context;
-        public ArrayList<Datum> datas;
-        public OnNotificationClick onNotificationClick;
+        final Context context;
+        final ArrayList<Datum> datas;
+        final OnNotificationClick onNotificationClick;
 
-        public NotificationAdapter(Context context, ArrayList<Datum> datas, OnNotificationClick onNotificationClick) {
+        final String token_;
+
+        NotificationAdapter(Context context, ArrayList<Datum> datas, OnNotificationClick onNotificationClick) {
             this.context = context;
             this.datas = datas;
             this.onNotificationClick = onNotificationClick;
+            this.token_ = SharePrefManager.getInstance(context).getAccessToken();
         }
 
         @Override
@@ -144,22 +160,31 @@ public class NotificationAC extends BaseActivity implements FutureCallback, Cons
         }
 
         @Override
-        public void onBindViewHolder(NotificationHolder holder, int position) {
+        public void onBindViewHolder(final NotificationHolder holder,int position) {
 
-            final Datum datum = datas.get(position);
+            final Datum datum = datas.get(holder.getAdapterPosition());
             holder.tvTitle.setText(Html.fromHtml(datum.getText()));
             holder.tvDateTime.setText(datum.getCreatedAt());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     onNotificationClick.onClick(datum);
+
+                    datas.get(holder.getAdapterPosition()).setReaded(1);
+                    notifyDataSetChanged();
+
+                    Ion.with(context).load(Constant.URL_UPDATE_READ + datum.getId().toString()).setHeader(ION.authHeader(token_)).setBodyParameter("", "").asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            sharePrefManager.subCountNotification();
+                        }
+                    });
                 }
             });
-            if (datum.getReaded() == READED) {
-
-                holder.tvTitle.setTextColor(getResources().getColor(R.color.grey_strong));
-                holder.tvDateTime.setTextColor(getResources().getColor(R.color.grey_strong));
-
+            if (datum.getReaded() != READED) {
+                holder.itemView.setBackgroundColor(getResources().getColor(R.color.grey_strong));
+            } else {
+                holder.itemView.setBackgroundColor(getResources().getColor(R.color.white));
             }
         }
 
@@ -176,12 +201,12 @@ public class NotificationAC extends BaseActivity implements FutureCallback, Cons
         final TextView tvTitle;
         final TextView tvDateTime;
 
-        public NotificationHolder(View convertView) {
+        NotificationHolder(View convertView) {
 
             super(convertView);
 
-            tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
-            tvDateTime = (TextView) convertView.findViewById(R.id.tv_date_time);
+            tvTitle = convertView.findViewById(R.id.tv_title);
+            tvDateTime = convertView.findViewById(R.id.tv_date_time);
 
         }
     }

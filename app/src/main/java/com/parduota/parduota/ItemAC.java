@@ -20,25 +20,19 @@ import com.parduota.parduota.ion.Constant;
 
 public class ItemAC extends BaseActivity implements Constant {
 
-    private ViewPager viewPager;
-
-    private TabLayout tabLayout;
-
-    private ItemPager itemPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
 
-        viewPager = findViewById(R.id.pagers);
+        ViewPager viewPager = findViewById(R.id.pagers);
 
-        tabLayout = findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
-        itemPager = new ItemPager(getSupportFragmentManager());
+        ItemPager itemPager = new ItemPager(getSupportFragmentManager());
 
         viewPager.setAdapter(itemPager);
 
@@ -54,10 +48,16 @@ public class ItemAC extends BaseActivity implements Constant {
         });
     }
 
-    public class ItemPager extends FragmentStatePagerAdapter {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    class ItemPager extends FragmentStatePagerAdapter {
 
 
-        public ItemPager(FragmentManager fm) {
+        ItemPager(FragmentManager fm) {
             super(fm);
         }
 
@@ -91,8 +91,29 @@ public class ItemAC extends BaseActivity implements Constant {
 
         }
 
+        final int Draft = -1;
+        final int Pending = 0;
+        final int Sold = 1;
+        final int Reject = 2;
+        final int Active = 3;
+
         @Override
         public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    return FraItem.instance(Active);
+                case 1:
+                    return FraItem.instance(Sold);
+                case 2:
+                    return FraItem.instance(Pending);
+                case 3:
+                    return FraItem.instance(Draft);
+                case 4:
+                    return FraItem.instance(Reject);
+            }
+
+
             return FraItem.instance(position);
         }
 

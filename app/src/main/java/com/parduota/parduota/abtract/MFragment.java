@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 /**
  * Created by huy_quynh on 6/2/17.
  */
@@ -36,12 +38,22 @@ public abstract class MFragment extends Fragment {
 
     protected abstract void setData(View view);
 
-    public void printFindViewById(View view) {
+    private void printFindViewById(View view) {
 
     }
 
-    public void showToast(String message) {
+    protected void showToast(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void showLoading(){
+        MActivity mActivity = (MActivity) getActivity();
+        Objects.requireNonNull(mActivity).showLoading();
+    }
+    public void hideLoading(){
+        MActivity mActivity = (MActivity) getActivity();
+        Objects.requireNonNull(mActivity).hideLoading();
     }
 
 
