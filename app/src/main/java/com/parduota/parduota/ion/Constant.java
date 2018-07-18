@@ -1,6 +1,11 @@
 package com.parduota.parduota.ion;
 
 
+import android.content.Context;
+import android.content.res.Configuration;
+
+import java.util.Locale;
+
 /**
  * Created by huy_quynh o`n 6/27/17.
  */
@@ -10,12 +15,14 @@ public interface Constant {
     int GET_VERIFY_CODE = 123344;
 
 
+    int RESULT_FROM_ADD_ITEM = 6677;
+
     String TERM_ACCEPTED = "1";
     String NOT_TERM_ACCEPTED = "0";
 
+    String ID = "id";
 
     int UPDATE_SUCCESSFUL = 222;
-
 
 
     String PICK_UP_ONLY = "local_pickup";
@@ -97,8 +104,45 @@ public interface Constant {
     String NEW_PASSWORD = "password";
     String NEW_PASSWORD_CONFIRM = "password_confirmation";
 
-    String TYPE_UPDATE_ITEM = "updated_item";
-    String TYPE_MESSAGE_ORDER = "notification.type_desc_19";
+
+    // notification click item event
+//     <!--type_noti_0' => ':user: created new item - :title',-->
+//    <!--'type_noti_1' => ':user: updated  item :title',-->
+//    <!--'type_noti_2' => ':user: updated :title is Sold',-->
+//    <!--'type_noti_3' => ':user: send a request access :title',-->
+//    <!--'type_noti_4' => ':user: You have been unlocked :title',-->
+//    <!--'type_noti_5' => ':user: You are Blocked :title',-->
+//    <!--'type_noti_6' => ':user: updated :title is Reject',-->
+//    <!--'type_noti_7' => ':user: delete :title',-->
+//    <!--'type_noti_8' => ':user: Your account is upgraded  :title',-->
+//    <!--'type_noti_9' => ':user: Your account is upgraded, You can push item to ebay :title',-->
+//    <!--'type_noti_10' => ':user: Your account is downgraded, You can\'t push item to ebay :title',-->
+//    <!--'type_noti_11' => ':user: updated :title is cancel',-->
+//    <!--'type_noti_12' => ':user: Item with name :title is approved',-->
+//    <!--'type_noti_13' => ':user: Item with name :title is active on ebay',-->
+//    <!--'type_noti_14' => ':user: make new for you an offer abouts the price:title',-->
+//    <!--'type_noti_15' => ':user: make for you an offer abouts the price:title',-->
+//    <!--'type_noti_16' => ':user: make for you decline item, click to view:title',-->
+//    <!--'type_noti_17' => ':user: accept offer item , click to view:title',-->
+//    <!--'type_noti_18' => ':user: created new order ebay :title',-->
+//    <!--'type_noti_19' => ':user: have a new message on order :title',-->
+//    <!--'type_noti_20' => ':user: close an order :title',-->
+//    <!--'type_noti_21' => ':user: You need buy credit for service charge :title',-->
+//    <!--'type_noti_22' => ':user: We have just collected your monthly service fee  :title',-->
+//    <!--'type_noti_23' => ':user: All item is cancel :title',-->
+//    <!--'type_noti_24' => ':user account is initialized',-->
+//    <!--'type_noti_25' => ':user: Your account has been activated',-->
+//    <!--'type_noti_26' => ':user: We have just collected your monthly service fee for the ebay item',-->
+//    <!--'type_noti_27' => ':user: You need buy credit for service charge ebay item',-->
+//    <!--'type_noti_28' => ':user: All item is cancel',-->
+
+    int TYPE_UPDATE_ITEM = 1;
+    int TYPE_REJECT_ITEM = 6;
+    int TYPE_MESSAGE_ORDER = 19;
+    int TYPE_CLOSED_ORDER = 20;
+    int TYPE_CHARGE = 22;
+    int TYPE_ACTIVE_ITEM = 13;
+
 
     String TYPE_ORDER_LIST = "order_list";
 
@@ -113,7 +157,7 @@ public interface Constant {
     String COMMING_MESSAGE = "coming_message";
     String ERROR = "error";
 
-    boolean isDEBUG = true;
+    boolean isDEBUG = false;
     String TYPE = "type";
     String ANDROID = "android";
 
@@ -231,4 +275,6 @@ public interface Constant {
 
     String URL_ACCECPT_TERM = BASE_URL + "api/term_accept";
     String URL_GET_ITEM_DETAIL = BASE_URL + "api/get_item/";
+
+
 }

@@ -43,7 +43,7 @@ public class DesFra extends MFragment implements Constant {
                 Intent intent = new Intent(ACTION_NEXT);
                 intent.putExtra(INDEX, INPUT_DES);
                 intent.putExtra(DATA, des);
-                Objects.requireNonNull(getActivity()).sendBroadcast(intent);
+                (getActivity()).sendBroadcast(intent);
 
             }
         });

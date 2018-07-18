@@ -2,11 +2,13 @@ package com.parduota.parduota.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 
 
 import com.google.gson.Gson;
 import com.parduota.parduota.model.User;
 
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -16,6 +18,7 @@ import java.util.Set;
 public class SharePrefManager {
 
     private static final String PREFERENCES_NAME = "PREFERENCES_NAME";
+    private static final String IS_FACEBOOK_LOGIN = "IS_FACEBOOK_LOGIN";
     private final String ACCESS_TOKEN = "_access_token_123";
     private final String USER = "user___";
 
@@ -322,5 +325,35 @@ public class SharePrefManager {
     }
 
 
+    public void setIsFacebookLogin(boolean isFacebookLogin) {
+        putBooleanValue(IS_FACEBOOK_LOGIN, isFacebookLogin);
+    }
+
+    public boolean isFacebookLogin() {
+        return getBooleanValue(IS_FACEBOOK_LOGIN);
+    }
+
+
+    final String LOCALE = "LOCALE";
+    public static String ENG = "en";
+    public static String LT = "lt";
+
+    public void setLocale(String locale) {
+        putStringValue(LOCALE, locale);
+    }
+
+    public String getLocale() {
+        return getStringValue(LOCALE, ENG);
+    }
+
+    void setLocale(Context context, String languageToLoad) {
+
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        context.getResources().updateConfiguration(config,
+                context.getResources().getDisplayMetrics());
+    }
 }
 

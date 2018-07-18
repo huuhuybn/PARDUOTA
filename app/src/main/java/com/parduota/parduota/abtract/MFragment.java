@@ -49,11 +49,11 @@ public abstract class MFragment extends Fragment {
 
     public void showLoading(){
         MActivity mActivity = (MActivity) getActivity();
-        Objects.requireNonNull(mActivity).showLoading();
+        (mActivity).showLoading();
     }
     public void hideLoading(){
         MActivity mActivity = (MActivity) getActivity();
-        Objects.requireNonNull(mActivity).hideLoading();
+        (mActivity).hideLoading();
     }
 
 

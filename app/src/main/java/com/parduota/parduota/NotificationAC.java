@@ -23,21 +23,25 @@ import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.notification.Datum;
 import com.parduota.parduota.model.notification.Notification;
+import com.parduota.parduota.remote.RetrofitRequest;
+import com.parduota.parduota.remote.RetrofitClient;
 import com.parduota.parduota.utils.EndlessRecyclerViewScrollListener;
 import com.parduota.parduota.utils.SharePrefManager;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class NotificationAC extends MActivity implements FutureCallback, Constant {
+public class NotificationAC extends MActivity implements Constant {
 
     private String token;
     private int page_ = 1;
-
-    private FutureCallback<Notification> notificationFutureCallback;
 
     private NotificationAdapter notificationAdapter;
     private ArrayList<Datum> data;
@@ -71,33 +75,64 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
 
         setTitle(getString(R.string.title_activity_notification_ac));
 
-        notificationFutureCallback = this;
-
         token = SharePrefManager.getInstance(this).getAccessToken();
+
 
         OnNotificationClick onNotificationClick = new OnNotificationClick() {
             @Override
             public void onClick(Datum datum) {
 
-                switch (datum.getTypeDesc()) {
+                Log.e("TYPE", datum.getType() + "");
+                Log.e("ID",datum.getId()+"");
+
+                switch (datum.getType()) {
+
+                    case TYPE_REJECT_ITEM:
+                        Intent intentReject = new Intent(getApplicationContext(), ItemDetailAC.class);
+                        intentReject.putExtra(ID,datum.getMetaData().getId());
+                        startActivity(intentReject);
+                        break;
+
                     case TYPE_UPDATE_ITEM:
                         Intent intent = new Intent(getApplicationContext(), ItemDetailAC.class);
-                        intent.putExtra(FROM, NOTIFICATION_SCREEN);
-                        intent.putExtra(DATA, new Gson().toJson((datum.getMetaData())));
+                        intent.putExtra(ID,datum.getMetaData().getId());
                         startActivity(intent);
                         break;
+
                     case TYPE_MESSAGE_ORDER:
                         Intent intent_ = new Intent(getApplicationContext(), OrderDetailAC.class);
-                        intent_.putExtra(TYPE, NOTIFICATION_SCREEN);
-                        intent_.putExtra(DATA, new Gson().toJson((datum.getMetaData())));
+                        intent_.putExtra(ID, datum.getMetaData().getOrder_id());
                         startActivity(intent_);
                         break;
+
+                    case TYPE_CHARGE:
+                        Intent intentCharge = new Intent(getApplicationContext(), ChargeAC.class);
+                        startActivity(intentCharge);
+                        break;
+
+                    case TYPE_CLOSED_ORDER:
+                        Intent intentCloseOrder = new Intent(getApplicationContext(), OrderDetailAC.class);
+                        intentCloseOrder.putExtra(ID, datum.getMetaData().getId());
+                        startActivity(intentCloseOrder);
+                        break;
+
+                    case TYPE_ACTIVE_ITEM:
+                        Intent intentActiveItem = new Intent(getApplicationContext(), ItemDetailAC.class);
+                        intentActiveItem.putExtra(ID,datum.getMetaData().getId());
+                        startActivity(intentActiveItem);
+                        break;
+
                 }
             }
         };
-        ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page_, Notification.class, notificationFutureCallback);
+
+
+        showLoading();
+        getNotification(page_);
+
         RecyclerView lvList = findViewById(R.id.lv_list);
         data = new ArrayList<>();
+        
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         notificationAdapter = new NotificationAdapter(this, data, onNotificationClick);
         lvList.setAdapter(notificationAdapter);
@@ -107,35 +142,48 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 page_++;
-                ION.getDataWithToken(getApplicationContext(), token, Constant.URL_GET_NOTIFICATION + page, Notification.class, notificationFutureCallback);
+                getNotification(page_);
             }
         });
 
 
     }
 
+    public void getNotification(int page) {
+        hideLoading();
+        RetrofitRequest apiService =
+                RetrofitClient.getClient().create(RetrofitRequest.class);
 
-    @Override
-    public void onCompleted(Exception e, Object result) {
-        super.onCompleted(e, result);
-        if (Constant.isDEBUG) Log.e("DATA",new Gson().toJson(result));
-        Notification notification = (Notification) result;
+        String locale = sharePrefManager.getLocale();
 
-        if (notification.getError() != null) {
-            if (notification.getError().equals(TOKEN_EXPIRED)) {
-                showToast(getString(R.string.notify_out_of_session));
-                startActivity(new Intent(this, LoginActivity.class));
-                SharePrefManager.getInstance(this).removeAll();
-                finish();
-                return;
+        Log.e("locale", locale);
+
+        Call<Notification> call = apiService.getNotification(RetrofitRequest.PRE_TOKEN + token, page, locale);
+        call.enqueue(new Callback<Notification>() {
+            @Override
+            public void onResponse(Call<Notification> call, Response<Notification> response) {
+
+                if (response.body().getError() != null) {
+                    if (response.body().getError().equals(TOKEN_EXPIRED)) {
+                        showToast(getString(R.string.notify_out_of_session));
+                        startActivity(new Intent(NotificationAC.this, LoginActivity.class));
+                        SharePrefManager.getInstance(NotificationAC.this).removeAll();
+                        finish();
+                        return;
+                    }
+                }
+
+                if (response.body().getData() != null)
+                    data.addAll(response.body().getData());
+                notificationAdapter.notifyDataSetChanged();
+
             }
-        }
 
-        Log.e("notification", new Gson().toJson(notification));
-        if (notification.getData() != null)
-            data.addAll(notification.getData());
-        notificationAdapter.notifyDataSetChanged();
+            @Override
+            public void onFailure(Call<Notification> call, Throwable t) {
 
+            }
+        });
     }
 
     class NotificationAdapter extends RecyclerView.Adapter<NotificationHolder> implements Constant {
@@ -160,7 +208,7 @@ public class NotificationAC extends MActivity implements FutureCallback, Constan
         }
 
         @Override
-        public void onBindViewHolder(final NotificationHolder holder,int position) {
+        public void onBindViewHolder(final NotificationHolder holder, int position) {
 
             final Datum datum = datas.get(holder.getAdapterPosition());
             holder.tvTitle.setText(Html.fromHtml(datum.getText()));

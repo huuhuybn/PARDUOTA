@@ -1,36 +1,41 @@
 package com.parduota.parduota;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.parduota.parduota.abtract.BaseActivity;
-import com.parduota.parduota.ion.Constant;
-import com.parduota.parduota.ion.ION;
+import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.model.createorder.OrderResponse;
 import com.parduota.parduota.model.order.Datum;
+import com.parduota.parduota.remote.RetrofitRequest;
+import com.parduota.parduota.remote.RetrofitClient;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by MAC2015 on 2/9/18.
  */
 
-public class AddOrderAC extends BaseActivity {
+public class AddOrderAC extends MActivity implements Callback<OrderResponse> {
 
     private EditText etTitle;
     private EditText etEbayId;
     private EditText etDescription;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int setLayoutId() {
+        return R.layout.activity_add_order;
+    }
 
-        setContentView(R.layout.activity_add_order);
-
+    @Override
+    protected void initView() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,7 +75,7 @@ public class AddOrderAC extends BaseActivity {
                     break;
                 }
 
-                if (!ebayId.trim().startsWith("http")){
+                if (!URLUtil.isValidUrl(ebayId)) {
                     etEbayId.setError(getString(R.string.notify_input_ebay_link));
                     break;
                 }
@@ -83,7 +88,13 @@ public class AddOrderAC extends BaseActivity {
 
                 String token = sharePrefManager.getAccessToken();
 
-                ION.postDataWithToken(this, Constant.URL_CREATE_ORDER, token, ION.createOrder(title, ebayId, des), OrderResponse.class, this);
+
+                showLoading();
+                RetrofitRequest apiService =
+                        RetrofitClient.getClient().create(RetrofitRequest.class);
+
+
+                apiService.addNewOrder(RetrofitRequest.PRE_TOKEN + token, title, ebayId, des).enqueue(this);
 
 
                 break;
@@ -94,19 +105,17 @@ public class AddOrderAC extends BaseActivity {
 
 
     @Override
-    public void onCompleted(Exception e, Object result) {
-        super.onCompleted(e, result);
-        if (result != null) {
-            OrderResponse orderResponse = (OrderResponse) result;
-
-            if (orderResponse.getStatus().equals("ok")) {
+    public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+        hideLoading();
+        if (response != null) {
+            if (response.body().getStatus().equals("ok")) {
                 Toast.makeText(this, getString(R.string.notify_order_succseccful), Toast.LENGTH_SHORT).show();
                 Datum datum = new Datum();
-                datum.setId(orderResponse.getOrder().getId());
-                datum.setTitle(orderResponse.getOrder().getTitle());
-                datum.setNotice(orderResponse.getOrder().getNotice());
-                datum.setCreatedAt(orderResponse.getOrder().getCreatedAt());
-                datum.setUpdatedAt(orderResponse.getOrder().getUpdatedAt());
+                datum.setId(response.body().getOrder().getId());
+                datum.setTitle(response.body().getOrder().getTitle());
+                datum.setNotice(response.body().getOrder().getNotice());
+                datum.setCreatedAt(response.body().getOrder().getCreatedAt());
+                datum.setUpdatedAt(response.body().getOrder().getUpdatedAt());
                 Intent intent = new Intent(this, OrderDetailAC.class);
                 intent.putExtra(DATA, new Gson().toJson(datum));
                 intent.putExtra(TYPE, TYPE_ORDER_LIST);
@@ -115,5 +124,10 @@ public class AddOrderAC extends BaseActivity {
 
             }
         }
+    }
+
+    @Override
+    public void onFailure(Call<OrderResponse> call, Throwable t) {
+
     }
 }

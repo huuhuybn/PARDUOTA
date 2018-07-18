@@ -105,7 +105,7 @@ public class FraAddPhoto extends MFragment {
 
 
         AddAC addAC = (AddAC) getActivity();
-        if (Objects.requireNonNull(addAC).getData() != null) {
+        if ((addAC).getData() != null) {
             ArrayList<AlbumFile> files;
             UploadItem uploadItem = addAC.getUploadItem();
 

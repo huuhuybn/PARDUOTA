@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +17,7 @@ import com.google.gson.Gson;
 import com.parduota.parduota.abtract.BaseActivity;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.model.User;
-import com.parduota.parduota.view.ConfirmTermDialog;
+import com.parduota.parduota.view.NotifyTermAndConditionDialog;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -34,6 +36,8 @@ public class MainAC extends BaseActivity implements Constant {
         setContentView(R.layout.activity_main);
 
         updateFCM();
+
+        if (Constant.isDEBUG) Log.e("token",sharePrefManager.getAccessToken());
 
 
         View layout_request_verify = findViewById(R.id.layout_request_verify);
@@ -59,9 +63,13 @@ public class MainAC extends BaseActivity implements Constant {
 
         // if user haven't accept our terms and condition yet. show dialog
         if (user.getTerm_accept() == 0) {
-            ConfirmTermDialog confirmDialog = new ConfirmTermDialog(this);
-            confirmDialog.setCancelable(false);
-            confirmDialog.show();
+
+            FragmentManager fm = getSupportFragmentManager();
+            NotifyTermAndConditionDialog notifyTermAndConditionDialog = new NotifyTermAndConditionDialog();
+            // User must accept this dialog to go
+            notifyTermAndConditionDialog.setCancelable(false);
+            notifyTermAndConditionDialog.show(fm, "editNameDialogFragment");
+
         }
 
 
@@ -92,13 +100,9 @@ public class MainAC extends BaseActivity implements Constant {
                     });
 
                 } else {
-
                     if (user.getVip() == USER_NOT_APPROVED) {
-
                         setUserNotApprove();
-
                     }
-
                 }
 
                 break;

@@ -7,27 +7,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
-import com.koushikdutta.async.future.FutureCallback;
 import com.parduota.parduota.abtract.MActivity;
 import com.parduota.parduota.adapter.OrderAdapter;
 import com.parduota.parduota.face.OnOrderClick;
 import com.parduota.parduota.ion.Constant;
-import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.order.Datum;
 import com.parduota.parduota.model.order.Order;
+import com.parduota.parduota.remote.RetrofitRequest;
+import com.parduota.parduota.remote.RetrofitClient;
 import com.parduota.parduota.utils.EndlessRecyclerViewScrollListener;
 import com.parduota.parduota.utils.SharePrefManager;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class OrderAC extends MActivity implements Constant, FutureCallback {
+public class OrderAC extends MActivity implements Constant, Callback<Order> {
 
+    public Callback<Order> orderCallback;
 
     @Override
     protected int setLayoutId() {
@@ -37,10 +43,10 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
     private OrderAdapter orderAdapter;
     private ArrayList<Datum> orders;
 
-    private FutureCallback<Order> orderFutureCallback;
-
     private String token;
     private int page_ = 1;
+
+    private LinearLayout tvNoItem;
 
     @Override
     protected void initView() {
@@ -48,6 +54,9 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+
+        tvNoItem = findViewById(R.id.tv_no_item);
 
         FloatingActionButton btnAddOrder = findViewById(R.id.fab);
         btnAddOrder.setOnClickListener(new View.OnClickListener() {
@@ -58,13 +67,14 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
 
             }
         });
-        orderFutureCallback = this;
 
         token = SharePrefManager.getInstance(this).getAccessToken();
         showLoading();
-        ION.getDataWithToken(this, token, URL_GET_ORDER + page_, Order.class, this);
 
-        orderFutureCallback = this;
+        RetrofitRequest apiService =
+                RetrofitClient.getClient().create(RetrofitRequest.class);
+        orderCallback = this;
+        apiService.getOrderList(page_, RetrofitRequest.PRE_TOKEN + token).enqueue(this);
         RecyclerView lv_list = findViewById(R.id.lv_list);
         orders = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -73,8 +83,7 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
             @Override
             public void onClick(Datum order) {
                 Intent intent = new Intent(OrderAC.this, OrderDetailAC.class);
-                intent.putExtra(TYPE, TYPE_ORDER_LIST);
-                intent.putExtra(DATA, new Gson().toJson(order));
+                intent.putExtra(ID, order.getId());
                 startActivity(intent);
             }
         };
@@ -86,29 +95,40 @@ public class OrderAC extends MActivity implements Constant, FutureCallback {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 page_++;
-                ION.getDataWithToken(getApplicationContext(), token, URL_GET_ORDER + page_, Order.class, orderFutureCallback);
+                RetrofitRequest apiService =
+                        RetrofitClient.getClient().create(RetrofitRequest.class);
+                apiService.getOrderList(page_, RetrofitRequest.PRE_TOKEN + token).enqueue(orderCallback);
+
             }
         });
 
     }
 
     @Override
-    public void onCompleted(Exception e, Object result) {
-        super.onCompleted(e, result);
+    public void onResponse(Call<Order> call, Response<Order> response) {
+
         hideLoading();
 
 
-        if (result != null) {
-            Order order = (Order) result;
-            Log.e("AAA", new Gson().toJson(order));
+        if (response.body() != null) {
 
+            if (Constant.isDEBUG)
+                Log.e("AAA", new Gson().toJson(response.body()));
+            if (response.body().getData() != null) {
 
-            if (order.getData() != null) {
-                orders.addAll(order.getData());
-                orderAdapter.notifyDataSetChanged();
+                if (response.body().getTotal() == 0) {
+                    tvNoItem.setVisibility(View.VISIBLE);
+                } else {
+                    orders.addAll(response.body().getData());
+                    orderAdapter.notifyDataSetChanged();
+                }
             }
 
         }
+    }
+
+    @Override
+    public void onFailure(Call<Order> call, Throwable t) {
 
     }
 }

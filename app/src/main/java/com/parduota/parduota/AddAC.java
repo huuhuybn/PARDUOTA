@@ -37,6 +37,8 @@ import com.parduota.parduota.model.UploadResponse;
 import com.parduota.parduota.view.NonSwipableViewPager;
 import com.yanzhenjie.album.AlbumFile;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -113,9 +115,7 @@ public class AddAC extends MActivity implements Constant {
                 if (id > -1) {
                     arrayIds.add("" + id);
                 }
-
                 Log.e("IDDD", id + " ");
-
             }
         };
 
@@ -257,9 +257,19 @@ public class AddAC extends MActivity implements Constant {
                             public void onCompleted(Exception e, JsonObject result) {
 
                                 hideLoading();
-                                Log.e("DRAF", result.toString());
+                                if (Constant.isDEBUG) Log.e("DRAFT", result.toString());
+                                try {
+                                    //{"error":{"message":"The given data failed to pass validation.","status_code":500}}
+                                    JSONObject jsonObject = new JSONObject(result.toString());
+                                    JSONObject error = jsonObject.getJSONObject("error");
+                                    int status = error.getInt("status_code");
+                                    if (status == 500) {
+                                        Toast.makeText(AddAC.this, getString(R.string.notify_save_draft_fail), Toast.LENGTH_SHORT).show();
+                                    }
 
-                                Toast.makeText(AddAC.this, getString(R.string.notify_save_draft_success), Toast.LENGTH_SHORT).show();
+                                } catch (Exception e1) {
+                                    Toast.makeText(AddAC.this, getString(R.string.notify_save_draft_success), Toast.LENGTH_SHORT).show();
+                                }
                                 finish();
                             }
                         });
@@ -285,16 +295,23 @@ public class AddAC extends MActivity implements Constant {
         Fragment mFragment = addPagerAdapter.getRegisteredFragment(viewPager.getCurrentItem());
         if (mFragment instanceof FraAddTitle) {
             String text = ((FraAddTitle) mFragment).getEtTitle().getText().toString();
+            int length = ((FraAddTitle) mFragment).getCounter();
             if (text.trim().matches("")) {
                 ((FraAddTitle) mFragment).getEtTitle().setError(getString(R.string.notify_input));
+            } else if (length >= 300) {
+                ((FraAddTitle) mFragment).getEtTitle().setError(getString(R.string.notify_input_length));
             } else {
                 uploadItem.setTitle(text);
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
             }
         } else if (mFragment instanceof FraAddDetail) {
             String text = ((FraAddDetail) mFragment).getEtDetail().getText().toString();
+            int length = ((FraAddDetail) mFragment).getCounter();
+
             if (text.trim().matches("")) {
                 ((FraAddDetail) mFragment).getEtDetail().setError(getString(R.string.notify_input));
+            } else if (length >= 1000) {
+                ((FraAddDetail) mFragment).getEtDetail().setError(getString(R.string.notify_input_length));
             } else {
                 uploadItem.setDescription(text);
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
@@ -406,7 +423,6 @@ public class AddAC extends MActivity implements Constant {
             showLoading();
 
             if (uploadItem.isUpdate()) {
-
                 if (Constant.isDEBUG) Log.e("OBJECT UPDATE", new Gson().toJson(uploadItem));
                 ION.postFormDataWithToken(this, Constant.URL_UPDATE_ITEM + uploadItem.getId(), sharePrefManager.getAccessToken(), ION.addItem(uploadItem), new FutureCallback<JsonObject>() {
                     @Override
@@ -445,6 +461,7 @@ public class AddAC extends MActivity implements Constant {
                             }
                         } catch (Exception notEnoughCredit) {
                             finish();
+                            setResult(RESULT_FROM_ADD_ITEM);
                             Toast.makeText(AddAC.this, getString(R.string.notify_upload_item_successful), Toast.LENGTH_SHORT).show();
                         }
 

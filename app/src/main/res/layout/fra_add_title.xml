@@ -5,31 +5,39 @@
     android:orientation="vertical">
 
 
-
     <TextView
 
-        android:layout_gravity="right"
         style="@style/Base.TextAppearance.AppCompat.Small"
-        android:padding="5dp"
-        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="5dp"
+        android:textColor="@color/colorPrimaryDark" />
 
 
     <TextView
-        android:text="@string/enter_title"
-        android:gravity="center"
-        android:padding="30dp"
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        android:padding="30dp"
+        android:text="@string/enter_title" />
+
+    <TextView
+        android:id="@+id/tv_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="0/500" />
 
 
     <EditText
         android:id="@+id/et_title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
 </LinearLayout>

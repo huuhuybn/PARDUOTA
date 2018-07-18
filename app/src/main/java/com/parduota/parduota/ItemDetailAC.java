@@ -1,6 +1,7 @@
 package com.parduota.parduota;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -22,13 +24,19 @@ import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.ion.ION;
 import com.parduota.parduota.model.UploadItem;
 import com.parduota.parduota.model.item.Datum;
-import com.parduota.parduota.model.item.Medium;
+import com.parduota.parduota.model.notification.Medium;
 import com.parduota.parduota.model.notification.MetaData;
 import com.parduota.parduota.model.updateitem.ItemResponse;
+import com.parduota.parduota.remote.RetrofitClient;
+import com.parduota.parduota.remote.RetrofitRequest;
 import com.yanzhenjie.album.AlbumFile;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -42,7 +50,9 @@ public class ItemDetailAC extends MActivity implements Constant {
         return R.layout.activity_item_detail;
     }
 
-    private Datum datum;
+    //private Datum datum;
+
+    private Button btnViewOnEbay;
 
 
     private ViewPager pagers;
@@ -70,7 +80,14 @@ public class ItemDetailAC extends MActivity implements Constant {
     private String shipping_type;
     private ArrayList<AlbumFile> photoArr;
 
+
     private PhotoNotiAdapter photoNotiAdapter;
+
+
+    private int itemID = -1;
+
+    private
+    int size = 0;
 
     @Override
     protected void initView() {
@@ -79,6 +96,7 @@ public class ItemDetailAC extends MActivity implements Constant {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        btnViewOnEbay = findViewById(R.id.btnViewInEbay);
 
         photoArr = new ArrayList<>();
         tvShippingOption = findViewById(R.id.tv_shipping_option);
@@ -99,127 +117,112 @@ public class ItemDetailAC extends MActivity implements Constant {
         tvLength = findViewById(R.id.tvLength);
 
 
-        String from = getIntent().getStringExtra(FROM);
-        String type_from = from;
-        int size = 0;
+        itemID = getIntent().getIntExtra(ID, -1);
 
-        if (Constant.isDEBUG) Log.e("Data", getIntent().getStringExtra(DATA));
-        if (from.equals(ITEM_SCREEN)) {
-            datum = new Gson().fromJson(getIntent().getStringExtra(DATA), Datum.class);
-            if (actionBar != null) actionBar.setTitle(datum.getTitle());
+        if (itemID > 0) {
+            showLoading();
+            RetrofitRequest retrofitRequest = RetrofitClient.getClient().create(RetrofitRequest.class);
 
-            id = datum.getId() + "";
-            countryCode = datum.getCountry();
-            conditionCode = "" + datum.getCondition();
-            isCharity = datum.getSellForCharity() + "";
-            shipping_type = datum.getShippingTypeCustom();
+            String token = sharePrefManager.getAccessToken();
+
+            retrofitRequest.getItemDetail(RetrofitRequest.PRE_TOKEN + token, itemID).enqueue(new Callback<ItemResponse>() {
+                @Override
+                public void onResponse(Call<ItemResponse> call, final Response<ItemResponse> response) {
+
+                    hideLoading();
+                    if (Constant.isDEBUG)
+                        Log.e("Item Detail", new Gson().toJson(response.body()).toString());
+
+                    setTitle(response.body().getTitle());
+
+                    id = response.body().getId() + "";
+                    countryCode = response.body().getCountry();
+                    conditionCode = "" + response.body().getCondition();
+                    isCharity = response.body().getSellForCharity() + "";
+                    shipping_type = response.body().getShippingTypeCustom();
 
 
-            tvQuality.setText(datum.getQuantity() + "");
-            tvDetail.setText(datum.getDescription());
-            tvTitle.setText(datum.getTitle());
-            tvDateTime.setText(datum.getCreatedAt());
-            tvAddress.setText(datum.getLocation());
-            tvPrice.setText(datum.getPrice());
-            tvCondition.setText(getConditionByCode(datum.getCondition() + ""));
+                    tvQuality.setText(response.body().getQuantity() + "");
+                    tvDetail.setText(response.body().getDescription());
+                    tvTitle.setText(response.body().getTitle());
+                    tvDateTime.setText(response.body().getCreatedAt());
+                    tvAddress.setText(response.body().getLocation());
+                    tvPrice.setText(response.body().getPrice());
+                    tvCondition.setText(getConditionByCode(response.body().getCondition() + ""));
+                    tvShippingOption.setText(response.body().getShippingTypeCustom());
 
-            tvShippingOption.setText(datum.getShippingTypeCustom());
+                    if (response.body().getShippingTypeCustom().equals(KG_AND_DIMENSION)) {
 
-            if (datum.getShippingTypeCustom().equals(KG_AND_DIMENSION)) {
+                        findViewById(R.id.layout_dimen).setVisibility(View.VISIBLE);
+                        tvWidth.setText(response.body().getWidth() + "");
+                        tvHeight.setText(response.body().getHeight() + "");
+                        tvWeight.setText(response.body().getWeight() + "");
+                        tvLength.setText(response.body().getLength() + "");
 
-                findViewById(R.id.layout_dimen).setVisibility(View.VISIBLE);
-                tvWidth.setText(datum.getWidth() + "");
-                tvHeight.setText(datum.getHeight() + "");
-                tvWeight.setText(datum.getWeight() + "");
-                tvLength.setText(datum.getLength() + "");
+                    }
 
-            }
+                    if (response.body().getEbayId() != null && !response.body().getEbayId().equals("")) {
+                        btnViewOnEbay.setVisibility(View.VISIBLE);
+                        btnViewOnEbay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String url = "http://cgi.ebay.de/ws/eBayISAPI.dll?ViewItem&item=" + response.body().getEbayId();
+                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                i.setData(Uri.parse(url));
+                                startActivity(i);
 
-            PhotoItemAdapter photoAdapter = new PhotoItemAdapter(getSupportFragmentManager(), datum.getMedia());
-            pagers.setAdapter(photoAdapter);
+                            }
+                        });
+                    } else btnViewOnEbay.setVisibility(View.GONE);
 
-            size = datum.getMedia().size();
 
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    AlbumFile album = new AlbumFile();
-                    album.setThumbPath(Constant.PHOTO_URL + datum.getMedia().get(i).getLink());
-                    album.setPath(Constant.PHOTO_URL + datum.getMedia().get(i).getLink());
-                    album.setWidth(datum.getMedia().get(i).getId());
+                    PhotoItemAdapter photoAdapter = new PhotoItemAdapter(getSupportFragmentManager(), response.body().getMedia());
+                    pagers.setAdapter(photoAdapter);
 
-                    photoArr.add(album);
+                    size = response.body().getMedia().size();
+
+                    if (size > 0) {
+                        for (int i = 0; i < size; i++) {
+                            AlbumFile album = new AlbumFile();
+                            album.setThumbPath(Constant.PHOTO_URL + response.body().getMedia().get(i).getLink());
+                            album.setPath(Constant.PHOTO_URL + response.body().getMedia().get(i).getLink());
+                            album.setWidth(response.body().getMedia().get(i).getId());
+                            photoArr.add(album);
+                        }
+                    }
+
+
+                    tvIndicator.setText("1/" + size);
+
+                    pagers.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+
+                            tvIndicator.setText((position + 1) + "/" + size);
+
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
+
                 }
-            }
 
-        }
-        if (from.equals(NOTIFICATION_SCREEN)) {
-            MetaData metaData = new Gson().fromJson(getIntent().getStringExtra(DATA), MetaData.class);
-            if (actionBar != null) actionBar.setTitle(metaData.getTitle());
-            tvTitle.setText(metaData.getTitle());
-            tvDateTime.setText(metaData.getCreatedAt());
-
-
-            id = metaData.getId() + "";
-            countryCode = metaData.getCountry();
-            conditionCode = "" + metaData.getCondition();
-            isCharity = metaData.getSellForCharity() + "";
-            shipping_type = metaData.getShippingTypeCustom();
-
-            tvCondition.setText(getConditionByCode(metaData.getCondition() + ""));
-            tvShippingOption.setText(metaData.getShippingTypeCustom());
-
-
-            if (metaData.getShippingTypeCustom().equals(KG_AND_DIMENSION)) {
-
-
-                findViewById(R.id.layout_dimen).setVisibility(View.VISIBLE);
-                tvWidth.setText(metaData.getWidth() + "");
-                tvHeight.setText(metaData.getHeight() + "");
-                tvWeight.setText(metaData.getWeight() + "");
-                tvLength.setText(metaData.getLength() + "");
-
-            }
-            photoNotiAdapter = new PhotoNotiAdapter(getSupportFragmentManager(), metaData.getMedia());
-            pagers.setAdapter(photoNotiAdapter);
-
-            size = metaData.getMedia().size();
-
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    AlbumFile album = new AlbumFile();
-                    album.setThumbPath(Constant.PHOTO_URL + datum.getMedia().get(i).getLink());
-                    album.setPath(Constant.PHOTO_URL + datum.getMedia().get(i).getLink());
-                    album.setWidth(datum.getMedia().get(i).getId());
-
-                    photoArr.add(album);
+                @Override
+                public void onFailure(Call<ItemResponse> call, Throwable t) {
+                    hideLoading();
                 }
-            }
-
+            });
         }
 
 
-        final int finalSize = size;
-
-        tvIndicator.setText("1/" + finalSize);
-
-        pagers.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-                tvIndicator.setText((position + 1) + "/" + finalSize);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override
@@ -274,23 +277,6 @@ public class ItemDetailAC extends MActivity implements Constant {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == UPDATE_SUCCESSFUL) {
-
-//
-//            tvTitle.setText(itemResponse.getItem().getTitle());
-//            tvDateTime.setText(itemResponse.getItem().getCreatedAt());
-//            tvAddress.setText(itemResponse.getItem().getLocation());
-//            tvPrice.setText(itemResponse.getItem().getPrice());
-//            tvCondition.setText(getConditionByCode(itemResponse.getItem().getCondition() + ""));
-//
-//            tvShippingOption.setText(itemResponse.getItem().getShippingTypeCustom());
-//
-//            if (itemResponse.getItem().getShippingTypeCustom().equals(KG_AND_DIMENSION)) {
-//                findViewById(R.id.layout_dimen).setVisibility(View.VISIBLE);
-//                tvWidth.setText(itemResponse.getItem().getWidth() + "");
-//                tvHeight.setText(itemResponse.getItem().getHeight() + "");
-//                tvWeight.setText(itemResponse.getItem().getWeight() + "");
-//                tvLength.setText(itemResponse.getItem().getLength() + "");
-//            }
 
             String token = sharePrefManager.getAccessToken();
             Ion.with(this).load(Constant.URL_GET_ITEM_DETAIL + id).setHeader(ION.authHeader(token

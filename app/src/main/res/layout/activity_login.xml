@@ -30,11 +30,15 @@
         android:paddingTop="@dimen/activity_vertical_margin">
 
 
-        <TextView
-            style="@style/Base.TextAppearance.AppCompat.Large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/action_sign_in" />
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_sign_in" />
+
+
+
 
 
         <EditText
@@ -113,6 +117,25 @@
 
 
         </LinearLayout>
+
+
+        <RadioGroup
+            android:id="@+id/radioLanguage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/english"
+                android:text="@string/english"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <RadioButton
+                android:id="@+id/lithuania"
+                android:text="@string/lithuania"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RadioGroup>
+
     </LinearLayout>
 
 </FrameLayout>

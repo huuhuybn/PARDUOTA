@@ -71,7 +71,7 @@ public class EditDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_edit, null);
 
-        etContent = (EditText) view.findViewById(R.id.etContent);
+        etContent = view.findViewById(R.id.etContent);
         etContent.setText(tvContainer);
 
         if (isNumberInput) etContent.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -82,7 +82,7 @@ public class EditDialog extends DialogFragment {
 
 
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        Objects.requireNonNull(imm).showSoftInput(etContent, InputMethodManager.SHOW_FORCED);
+        (imm).showSoftInput(etContent, InputMethodManager.SHOW_FORCED);
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)

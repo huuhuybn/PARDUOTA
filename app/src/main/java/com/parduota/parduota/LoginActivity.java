@@ -8,6 +8,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,22 +33,24 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.parduota.parduota.abtract.MActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
+import com.parduota.parduota.face.OnFinish;
 import com.parduota.parduota.ion.Constant;
 import com.parduota.parduota.model.Login;
 import com.parduota.parduota.model.User;
-import com.parduota.parduota.remote.ParduotaRequest;
+import com.parduota.parduota.remote.RetrofitRequest;
 import com.parduota.parduota.remote.RetrofitClient;
+import com.parduota.parduota.utils.SharePrefManager;
 
 import org.json.JSONObject;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,6 +77,34 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
     @Override
     protected void initView() {
         // Set up the login form.
+
+        RadioGroup radioGroup = findViewById(R.id.radioLanguage);
+
+        if (sharePrefManager.getLocale().equals(SharePrefManager.ENG)) {
+            radioGroup.check(radioGroup.getChildAt(0).getId());
+        } else {
+            radioGroup.check(radioGroup.getChildAt(1).getId());
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+                Log.e("ABC", i + "");
+                switch (radioGroup.getCheckedRadioButtonId()) {
+                    case R.id.english:
+                        sharePrefManager.setLocale(SharePrefManager.ENG);
+                        recreate();
+                        break;
+                    case R.id.lithuania:
+                        sharePrefManager.setLocale(SharePrefManager.LT);
+                        recreate();
+                        break;
+                }
+
+            }
+        });
+
 
         LoginManager.getInstance().logOut();
         mEmailView = findViewById(R.id.email);
@@ -138,8 +170,8 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
                                     Log.e(TAG, "id" + user.optString("last_name"));
 
 
-                                    ParduotaRequest apiService =
-                                            RetrofitClient.getClient().create(ParduotaRequest.class);
+                                    RetrofitRequest apiService =
+                                            RetrofitClient.getClient().create(RetrofitRequest.class);
 
                                     apiService.loginWithFacebook(user.optString("first_name") + " " + user.optString("last_name"), user.optString("id"), FACEBOOK).enqueue(new Callback<Login>() {
                                         @Override
@@ -148,27 +180,29 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
                                             if (Constant.isDEBUG)
                                                 Log.e("LOGIN CALLBACK", new Gson().toJson(response));
-                                            if (Objects.requireNonNull(response.body()).getError() != null) {
+                                            if ((response.body()).getError() != null) {
                                                 showToast(getString(R.string.notify_email_not_active));
                                                 return;
                                             }
 
-                                            if (Objects.requireNonNull(response.body()).getUser().getBlock() == 1) {
+                                            if ((response.body()).getUser().getBlock() == 1) {
                                                 Toast.makeText(getApplicationContext(), getString(R.string.notify_your_account_is_block), Toast.LENGTH_LONG).show();
                                                 return;
                                             }
 
                                             hideKeyBoard();
-                                            sharePrefManager.saveAccessToken(Objects.requireNonNull(response.body()).getToken());
+                                            sharePrefManager.saveAccessToken((response.body()).getToken());
 
-                                            if (Objects.requireNonNull(response.body()).getUser().getVerified() == 0) {
+                                            if ((response.body()).getUser().getVerified() == 0) {
                                                 sharePrefManager.setVerifyStatus(2);
-                                                Objects.requireNonNull(response.body()).getUser().setVerified(2);
+                                                (response.body()).getUser().setVerified(2);
 
                                             } else
-                                                sharePrefManager.setVerifyStatus(Objects.requireNonNull(response.body()).getUser().getVerified());
+                                                sharePrefManager.setVerifyStatus((response.body()).getUser().getVerified());
 
-                                            sharePrefManager.saveUser(Objects.requireNonNull(response.body()).getUser());
+                                            sharePrefManager.saveUser((response.body()).getUser());
+
+                                            sharePrefManager.setIsFacebookLogin(true);
 
                                             startNewActivity(MainAC.class);
                                             finish();
@@ -190,8 +224,6 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
                 parameters.putString("fields", "id,first_name,last_name");
                 request.setParameters(parameters);
                 request.executeAsync();
-
-
             }
 
             @Override
@@ -264,145 +296,128 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
             showLoading();
 
 
-            ParduotaRequest apiService =
-                    RetrofitClient.getClient().create(ParduotaRequest.class);
+            RetrofitRequest apiService =
+                    RetrofitClient.getClient().create(RetrofitRequest.class);
 
-
-            apiService.loginViaEmail(email, password).enqueue(new Callback<ResponseBody>() {
+            apiService.loginViaEmail(email, password).enqueue(new Callback<JsonObject>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     hideLoading();
 
-                    // login success
-                    try {
 
-                        Login login = new Gson().fromJson(Objects.requireNonNull(response.body()).string(), Login.class);
+                    if (response.code() == 200) {
+                        // login success
+                        try {
 
-                        if (login.getUser().getBlock() == 1) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.notify_your_account_is_block), Toast.LENGTH_LONG).show();
-                            return;
+                            Login login = new Gson().fromJson(response.body(), Login.class);
+
+                            if (login.getUser().getBlock() == 1) {
+                                Toast.makeText(getApplicationContext(), getString(R.string.notify_your_account_is_block), Toast.LENGTH_LONG).show();
+                                return;
+                            }
+
+                            hideKeyBoard();
+                            if (Constant.isDEBUG) Log.e("TOKEN", login.getToken());
+
+                            sharePrefManager.saveAccountLogin(login.getUser().getEmail());
+                            sharePrefManager.saveAccessToken(login.getToken());
+                            sharePrefManager.saveUser(login.getUser());
+                            sharePrefManager.setVerifyStatus(login.getUser().getVerified());
+
+                            if (Constant.isDEBUG)
+                                Log.e("EMAIL", login.getUser().getEmail());
+
+                            startNewActivity(MainAC.class);
+
+                            finish();
+
+                        } catch (Exception e1) {
+
+                            showToast(e1.toString());
+
                         }
-
-                        hideKeyBoard();
-                        if (Constant.isDEBUG) Log.e("TOKEN", login.getToken());
-
-                        sharePrefManager.saveAccountLogin(login.getUser().getEmail());
-                        sharePrefManager.saveAccessToken(login.getToken());
-                        sharePrefManager.saveUser(login.getUser());
-                        sharePrefManager.setVerifyStatus(login.getUser().getVerified());
-
-                        if (Constant.isDEBUG)
-                            Log.e("EMAIL", login.getUser().getEmail());
-
-                        startNewActivity(MainAC.class);
-
-                        finish();
-
-                    } catch (Exception e1) {
-
-                        Log.e("A", e1.toString());
 
                     }
 
+                    if (response.code() == 403)
 
-                    // login success but not verified yet
+                    {
+
+                        QuickAsyncTask quickAsyncTask = new QuickAsyncTask();
+                        quickAsyncTask.setOnFinish(new OnFinish<String>() {
+                            @Override
+                            public void onFinished(String s) {
+
+                                // login fail
+
+                                //{"error":{"message":"403 Forbidden","status_code":403}}
+
+
+                                try {
+                                    JSONObject jsonObject = new JSONObject(s);
+
+                                    JSONObject error = jsonObject.getJSONObject("error");
+                                    if (error != null) {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.notify_wrong_password), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+
+                                    showToast(e.toString());
+                                }
+
+                                try {
+                                    // login success but not verified yet
 //                            {
 //                                "status": "error",
 //                                    "code": 403,
 //                                    "error": "verified"
 //                            }
 
-                    try {
-                        JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
-                        String status = jsonObject.getString("status");
-                        String code = jsonObject.getString("code");
-                        String error = jsonObject.getString("error");
-                        if (error.equals("verified")) {
 
-                            sharePrefManager.saveAccountLogin(email);
-                            sharePrefManager.setVerifyStatus(0);
-                            sharePrefManager.saveUser(null);
-                            startNewActivity(MainAC.class);
-                            finish();
-                            return;
+                                    JSONObject jsonObject = new JSONObject(s);
+                                    String status = jsonObject.getString("status");
+                                    String code = jsonObject.getString("code");
+                                    String error = jsonObject.getString("error");
+                                    if (error.equals("verified")) {
 
-                        }
+                                        showToast(getString(R.string.notify_verify_email));
 
-                    } catch (Exception ignored) {
+                                    }
 
-                    }
+                                } catch (Exception ignored) {
 
-                    // login fail
 
-                    //{"error":{"message":"403 Forbidden","status_code":403}}
-                    try {
-                        JSONObject jsonObject = new JSONObject(Objects.requireNonNull(response.body()).string());
-                        JSONObject error = jsonObject.getJSONObject("error");
-                        if (error != null) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.notify_wrong_password), Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+                        try {
+                            quickAsyncTask.execute(response.errorBody().bytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+
+                            showToast(e.toString());
                         }
 
 
-                    } catch (Exception ignored) {
-
                     }
+
 
                 }
 
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<JsonObject> call, Throwable t) {
                     hideLoading();
 
                     Log.e("BUG", t.getMessage());
 
+                    showToast(t.getMessage());
+
                 }
+
             });
 
-//            Ion.with(this)
-//                    .load(Constant.URL_LOGIN).setBodyParameters(ION.loginForm(email, password)).asString()
-//                    .setCallback(new FutureCallback<String>() {
-//                        @Override
-//                        public void onCompleted(Exception e, String result) {
-//                            hideLoading();
-//                            if (Constant.isDEBUG) Log.e("DATA_LOGIN", result);
-//
-//                            if (e != null) {
-//                                Toast.makeText(getApplicationContext(), getString(R.string.notify_internet_connection), Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//                        }
-//                    });
-
-//            ION.postData(this, Constant.URL_LOGIN, ION.loginForm(email, password), Login.class, new FutureCallback() {
-//                @Override
-//                public void onCompleted(Exception e, Object result) {
-//                    hideLoading();
-//                    if (e != null) {
-//                        return;
-//                    }
-//
-//                    Login login = (Login) result;
-//
-//                    if (login.getError() != null) {
-//                        showToast(getString(R.string.notify_wrong_password));
-//                        return;
-//                    }
-//
-//                    hideKeyBoard();
-//                    if (Constant.isDEBUG) Log.e("TOKEN", login.getToken());
-//
-//                    sharePrefManager.saveAccountLogin(login.getUser().getEmail());
-//                    sharePrefManager.saveAccessToken(login.getToken());
-//                    sharePrefManager.saveUser(login.getUser());
-//
-//                    Log.e("EMAIL", login.getUser().getEmail());
-//                    startNewActivity(MainAC.class);
-//                    finish();
-//
-//
-//                }
-//            });
         }
     }
 
@@ -479,11 +494,44 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
         if (requestCode == 999) {
 
-            String email = data.getStringExtra(DATA);
-            mEmailView.setText(email);
+            if (resultCode == RESULT_OK) {
+                String email = data.getStringExtra(DATA);
+                mEmailView.setText(email);
+            }
 
         }
 
+    }
+
+
+    public class QuickAsyncTask extends AsyncTask<byte[], Long, String> {
+
+
+        public OnFinish<String> onFinish;
+
+
+        public OnFinish<String> getOnFinish() {
+            return onFinish;
+        }
+
+        public void setOnFinish(OnFinish<String> onFinish) {
+            this.onFinish = onFinish;
+        }
+
+        @Override
+
+        protected String doInBackground(byte[]... bytes) {
+            String string = new String(bytes[0]);
+            return string;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            onFinish.onFinished(s);
+
+        }
     }
 }
 

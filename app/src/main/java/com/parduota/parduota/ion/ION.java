@@ -62,10 +62,13 @@ public class ION implements Constant {
             , FutureCallback<T> futureCallback) {
         if (Constant.isDEBUG)
             Log.e("getDataWithToken", url);
-        Ion.with(context)
-                .load(url).setHeader("Authorization", "Bearer" + " " + token.trim())
-                .as(class_)
-                .setCallback(futureCallback);
+
+        // when new user login,
+        if (token != null)
+            Ion.with(context)
+                    .load(url).setHeader("Authorization", "Bearer" + " " + token.trim())
+                    .as(class_)
+                    .setCallback(futureCallback);
     }
 
     public static void postDataWithToken(Context context, String url, String token, Map<String, List<String>> parameters, Class class_
@@ -271,8 +274,6 @@ public class ION implements Constant {
 
         } catch (Exception e) {
 
-            Log.e("VVV", e.toString());
-
         }
         params.put(CONDITION, Collections.singletonList(uploadItem.getCondition()));
 
@@ -299,7 +300,7 @@ public class ION implements Constant {
         params.put(SHIPPING_TYPE_CUSTOM, Collections.singletonList(uploadItem.getShipping_type()));
 
         if (Constant.isDEBUG)
-        Log.e("PARAM", params.toString());
+            Log.e("PARAM", params.toString());
         return params;
     }
 

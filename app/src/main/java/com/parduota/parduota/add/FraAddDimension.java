@@ -71,7 +71,7 @@ public class FraAddDimension extends MFragment implements Constant {
 
 
         AddAC addAC = (AddAC) getActivity();
-        if (Objects.requireNonNull(addAC).getData() != null) {
+        if ((addAC).getData() != null) {
             UploadItem uploadItem = addAC.getUploadItem();
 
             if (uploadItem.getSell_for_charity().equals("1")) {

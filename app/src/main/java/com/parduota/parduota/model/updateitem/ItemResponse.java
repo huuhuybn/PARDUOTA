@@ -46,7 +46,7 @@ public class ItemResponse {
     private Integer condition;
     @SerializedName("ebay_id")
     @Expose
-    private Object ebayId;
+    private String ebayId;
     @SerializedName("ebay_timestamp")
     @Expose
     private Object ebayTimestamp;
@@ -213,11 +213,11 @@ public class ItemResponse {
         this.condition = condition;
     }
 
-    public Object getEbayId() {
+    public String getEbayId() {
         return ebayId;
     }
 
-    public void setEbayId(Object ebayId) {
+    public void setEbayId(String ebayId) {
         this.ebayId = ebayId;
     }
 

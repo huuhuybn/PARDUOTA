@@ -240,7 +240,11 @@ public class BuyCreditAC extends MActivity {
                                     @Override
                                     public void onCompleted(Exception e, User result) {
                                         //Log.e("ABC", result.toString());
-                                        sharePrefManager.saveUser(result);
+
+                                        User user = sharePrefManager.getUser();
+                                        user.setCredit(result.getCredit());
+                                        sharePrefManager.saveUser(user);
+
                                         sendBroadcast(new Intent(URL_UPDATE_CREDIT));
                                         displayResultText(getString(R.string.notify_buy_credit_successful));
                                         finish();

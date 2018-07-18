@@ -199,7 +199,8 @@ public class GetVerifyAC extends MActivity implements FutureCallback, Constant {
 
 
         try {
-            User user = new Gson().fromJson(jsonObject, User.class);
+            User user = sharePrefManager.getUser();
+            user.setRequest_vip(REQUEST_VIP);
             sharePrefManager.saveUser(user);
             setResult(999);
             finish();

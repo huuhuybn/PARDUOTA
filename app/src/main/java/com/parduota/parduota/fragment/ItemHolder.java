@@ -2,6 +2,7 @@ package com.parduota.parduota.fragment;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,7 +44,10 @@ class ItemHolder extends RecyclerView.ViewHolder implements Constant {
             @Override
             public void onClick(View view) {
 
+                if (Constant.isDEBUG) Log.e("Item",new Gson().toJson(datum));
+
                 Intent intent = new Intent(itemView.getContext(), ItemDetailAC.class);
+                intent.putExtra(ID, datum.getId());
                 intent.putExtra(FROM, ITEM_SCREEN);
                 intent.putExtra(DATA, new Gson().toJson(datum));
                 itemView.getContext().startActivity(intent);

@@ -43,7 +43,7 @@ class DetailDialog extends Dialog {
 
     private void initView(Context context, String detail
     ) {
-        Objects.requireNonNull(getWindow()).setBackgroundDrawable(
+        (getWindow()).setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         setContentView(R.layout.dialog_detail);

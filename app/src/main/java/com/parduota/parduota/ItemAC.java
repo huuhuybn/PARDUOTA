@@ -20,12 +20,15 @@ import com.parduota.parduota.ion.Constant;
 
 public class ItemAC extends BaseActivity implements Constant {
 
+
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item);
 
-        ViewPager viewPager = findViewById(R.id.pagers);
+        viewPager = findViewById(R.id.pagers);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -43,7 +46,7 @@ public class ItemAC extends BaseActivity implements Constant {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ItemAC.this, AddAC.class));
+                startActivityForResult(new Intent(ItemAC.this, AddAC.class), RESULT_FROM_ADD_ITEM);
             }
         });
     }
@@ -51,6 +54,7 @@ public class ItemAC extends BaseActivity implements Constant {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        viewPager.setCurrentItem(2);
 
     }
 
@@ -102,15 +106,15 @@ public class ItemAC extends BaseActivity implements Constant {
 
             switch (position) {
                 case 0:
-                    return FraItem.instance(Active);
+                    return FraItem.newInstance(Active);
                 case 1:
-                    return FraItem.instance(Sold);
+                    return FraItem.newInstance(Sold);
                 case 2:
-                    return FraItem.instance(Pending);
+                    return FraItem.newInstance(Pending);
                 case 3:
-                    return FraItem.instance(Draft);
+                    return FraItem.newInstance(Draft);
                 case 4:
-                    return FraItem.instance(Reject);
+                    return FraItem.newInstance(Reject);
             }
 
 

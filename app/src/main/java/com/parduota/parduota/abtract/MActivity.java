@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,10 +30,11 @@ import com.parduota.parduota.utils.SharePrefManager;
 
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.Objects;
 
 
-public abstract class MActivity extends AppCompatActivity implements FutureCallback, Constant {
+public abstract class MActivity extends BossAC implements FutureCallback, Constant {
 
     protected SharePrefManager sharePrefManager;
     private ProgressDialog progressDialog;
@@ -45,8 +47,11 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         Dialog dialog = new Dialog(context,
                 R.style.AppTheme_NoActionBar);
         dialog.setContentView(R.layout.loadding);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(
+        (dialog.getWindow()).setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+
+
         setContentView(setLayoutId());
 
         progressDialog = new ProgressDialog(this);
@@ -182,7 +187,7 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
      */
     public View getView(int layoutId) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return Objects.requireNonNull(inflater).inflate(layoutId, null, false);
+        return (inflater).inflate(layoutId, null, false);
     }
 
 
@@ -190,7 +195,7 @@ public abstract class MActivity extends AppCompatActivity implements FutureCallb
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            Objects.requireNonNull(imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
+            (imm).hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

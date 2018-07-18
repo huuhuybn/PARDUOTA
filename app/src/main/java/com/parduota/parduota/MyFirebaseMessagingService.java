@@ -107,7 +107,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService impleme
         // Create Notification Manager
         NotificationManager notificationmanager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         // Build Notification with Notification Manager
-        Objects.requireNonNull(notificationmanager).notify(0, builder.build());
+       (notificationmanager).notify(0, builder.build());
     }
 
 

@@ -6,6 +6,10 @@
     tools:context="com.parduota.parduota.SettingAC">
 
 
+
+
+
+
     <TextView
         android:id="@+id/tvProfile"
         android:layout_width="match_parent"
@@ -33,6 +37,31 @@
         android:onClick="onPasswordClick"
         android:padding="10dp"
         android:text="@string/password" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@color/grey" />
+
+    <RadioGroup
+        android:id="@+id/radioLanguage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/english"
+            android:text="@string/english"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/lithuania"
+            android:text="@string/lithuania"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+
 
 
 </LinearLayout>

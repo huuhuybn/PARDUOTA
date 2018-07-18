@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -17,7 +18,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,7 +33,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
-import com.parduota.parduota.ChargerAC;
+import com.parduota.parduota.ChargeAC;
 import com.parduota.parduota.ChatAC;
 import com.parduota.parduota.ItemAC;
 import com.parduota.parduota.LoginActivity;
@@ -49,12 +49,10 @@ import com.parduota.parduota.utils.SharePrefManager;
 
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public abstract class BaseActivity extends AppCompatActivity
+public abstract class BaseActivity extends BossAC
         implements NavigationView.OnNavigationItemSelectedListener, FutureCallback, Constant {
 
 
@@ -104,6 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     @Override
     public void setContentView(int layoutResID) {
+
         super.setContentView(layoutResID);
 
         getActionBarToolbar();
@@ -127,7 +126,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 try {
                     sharePrefManager.setCountNotification(Integer.parseInt(result.getNew_()));
                     alertCount = Integer.parseInt(result.getNew_());
-                    Log.e("ABC", alertCount + "");
+                    //Log.e("ABC", alertCount + "");
                     updateAlertIcon();
                 } catch (Exception ignored) {
 
@@ -159,7 +158,7 @@ public abstract class BaseActivity extends AppCompatActivity
         Dialog dialog = new Dialog(context,
                 R.style.AppTheme_NoActionBar);
         dialog.setContentView(R.layout.loadding);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(
+        dialog.getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
         ProgressDialog progressDialog = new ProgressDialog(this);
 
@@ -233,7 +232,7 @@ public abstract class BaseActivity extends AppCompatActivity
         notificationCounter = (TextView) MenuItemCompat.getActionView(mNavigationView.getMenu().
                 findItem(R.id.nav_notification));
 
-        initializeCountDrawer();
+        //initializeCountDrawer();
 
     }
 
@@ -274,7 +273,9 @@ public abstract class BaseActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_home:
-                createBackStack(new Intent(this, MainAC.class));
+
+                if (!(this instanceof MainAC))
+                    createBackStack(new Intent(this, MainAC.class));
                 break;
 
 //            case R.id.nav_notification:
@@ -302,7 +303,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
             case R.id.nav_charge:
 
-                createBackStack(new Intent(this, ChargerAC.class));
+                createBackStack(new Intent(this, ChargeAC.class));
 
                 break;
 
@@ -351,6 +352,8 @@ public abstract class BaseActivity extends AppCompatActivity
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
+
+
     }
 
 

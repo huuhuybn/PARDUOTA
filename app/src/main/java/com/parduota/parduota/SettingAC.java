@@ -1,10 +1,13 @@
 package com.parduota.parduota;
 
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.parduota.parduota.abtract.MActivity;
+import com.parduota.parduota.utils.SharePrefManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -35,14 +38,44 @@ public class SettingAC extends MActivity {
                 startNewActivity(ProfileAC.class);
             }
         });
-        tvPassword.setOnClickListener(new View.OnClickListener() {
+
+
+        // if user used Facebook to login, he doesnt need this button
+        if (sharePrefManager.isFacebookLogin())
+            tvPassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startNewActivity(ChangePasswordAC.class);
+                }
+            });
+        else tvPassword.setVisibility(View.GONE);
+
+
+        RadioGroup radioGroup = findViewById(R.id.radioLanguage);
+
+        if (sharePrefManager.getLocale().equals(SharePrefManager.ENG)) {
+            radioGroup.check(radioGroup.getChildAt(0).getId());
+        } else {
+            radioGroup.check(radioGroup.getChildAt(1).getId());
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                startNewActivity(ChangePasswordAC.class);
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+
+                switch (radioGroup.getCheckedRadioButtonId()) {
+                    case R.id.english:
+                        sharePrefManager.setLocale(SharePrefManager.ENG);
+                        recreate();
+                        break;
+                    case R.id.lithuania:
+                        sharePrefManager.setLocale(SharePrefManager.LT);
+                        recreate();
+                        break;
+                }
+
             }
         });
-
-
     }
 
     public void onProfileClick(View view) {

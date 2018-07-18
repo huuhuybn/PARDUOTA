@@ -21,7 +21,7 @@ public class ExtendOrderDetailActivity extends MActivity implements Constant {
 
     @Override
     protected int setLayoutId() {
-        return R.layout.activity_extend_order_detail;
+        return R.layout.dialog_extend_order_detail;
     }
 
     @Override

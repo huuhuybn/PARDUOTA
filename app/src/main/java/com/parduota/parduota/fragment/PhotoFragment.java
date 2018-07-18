@@ -40,7 +40,7 @@ public class PhotoFragment extends Fragment implements Constant {
 
         ImageView img = view.findViewById(R.id.img);
 
-        final String url = PHOTO_URL + Objects.requireNonNull(getArguments()).getString(DATA);
+        final String url = PHOTO_URL + (getArguments()).getString(DATA);
 
         Glide.with(this).load(url).into(img);
 

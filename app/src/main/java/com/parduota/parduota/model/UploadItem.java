@@ -20,19 +20,19 @@ public class UploadItem {
         this.id = id;
     }
 
-    private String title;
-    private String description;
-    private String price;
-    private String location;
-    private String country;
-    private String quantity;
-    private String media;
-    private String condition;
-    private String weight;
-    private String length;
-    private String width;
-    private String height;
-    private String shipping_type;
+    private String title = "";
+    private String description = "";
+    private String price = "";
+    private String location = "";
+    private String country = "";
+    private String quantity = "";
+    private String media = "";
+    private String condition = "";
+    private String weight = "";
+    private String length = "";
+    private String width = "";
+    private String height = "";
+    private String shipping_type = "";
 
     public boolean isUpdate() {
         return isUpdate;
@@ -44,7 +44,7 @@ public class UploadItem {
 
     private boolean isUpdate;
 
-    private ArrayList<AlbumFile> photoArr;
+    private ArrayList<AlbumFile> photoArr = new ArrayList<>();
 
     public ArrayList<AlbumFile> getPhotoArr() {
         return photoArr;
@@ -206,10 +206,10 @@ public class UploadItem {
         this.shipping_type_custom = shipping_type_custom;
     }
 
-    private String shipping_service;
-    private String shipping_service_cost;
-    private String shipping_service_add_cost;
-    private String sell_for_charity;
-    private String status;
-    private String shipping_type_custom;
+    private String shipping_service = "";
+    private String shipping_service_cost = "";
+    private String shipping_service_add_cost = "";
+    private String sell_for_charity = "";
+    private String status = "";
+    private String shipping_type_custom = "";
 }

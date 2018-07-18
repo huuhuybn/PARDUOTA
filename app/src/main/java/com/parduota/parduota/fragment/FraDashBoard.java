@@ -59,7 +59,7 @@ public class FraDashBoard extends MFragment implements Constant {
             }
         };
         IntentFilter intentFilter = new IntentFilter(UPDATE_TOTAL);
-        Objects.requireNonNull(getActivity()).registerReceiver(broadcastReceiver, intentFilter);
+        (getActivity()).registerReceiver(broadcastReceiver, intentFilter);
 
         receiverCredit = new BroadcastReceiver() {
             @Override
@@ -101,7 +101,7 @@ public class FraDashBoard extends MFragment implements Constant {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Objects.requireNonNull(getActivity()).unregisterReceiver(broadcastReceiver);
+        (getActivity()).unregisterReceiver(broadcastReceiver);
         getActivity().unregisterReceiver(receiverCredit);
     }
 }

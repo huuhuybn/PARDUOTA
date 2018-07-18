@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,9 +28,16 @@ import com.parduota.parduota.model.MessageResponse;
 import com.parduota.parduota.model.createorder.OrderResponse;
 import com.parduota.parduota.model.notification.MetaData;
 import com.parduota.parduota.model.order.Datum;
+import com.parduota.parduota.remote.RetrofitRequest;
+import com.parduota.parduota.remote.RetrofitClient;
+import com.parduota.parduota.view.OrderDetailDialog;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -50,6 +57,8 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
     private EditText et_chat;
 
     private List<MessageResponse> messageResponses;
+
+    private int orderID = -1;
 
     @Override
     protected int setLayoutId() {
@@ -72,50 +81,31 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
 
         token = sharePrefManager.getAccessToken();
 
-        String type = getIntent().getStringExtra(TYPE);
-        orderDetail = new Datum();
 
         lvList = findViewById(R.id.lv_list);
 
-        if (type.equals(TYPE_ORDER_LIST)) {
-            Datum datum = new Gson().fromJson(getIntent().getStringExtra(DATA), Datum.class);
-            setTitle(datum.getTitle());
-            orderDetail.setId(datum.getId());
-            orderDetail.setTitle(datum.getTitle());
-            orderDetail.setCreatedAt(datum.getCreatedAt());
-            orderDetail.setCreatedBy(datum.getCreatedBy());
-            orderDetail.setStatus(datum.getStatus());
-            orderDetail.setEbayId(datum.getEbayId());
-            orderDetail.setNotice(datum.getNotice());
+        orderDetail = new Datum();
 
-        } else if (type.equals(NOTIFICATION_SCREEN)) {
-            MetaData metaData = new Gson().fromJson(getIntent().getStringExtra(DATA), MetaData.class);
-            setTitle(metaData.getTitle());
-            orderDetail.setId(metaData.getOrder_id());
-            orderDetail.setTitle(metaData.getTitle());
-            orderDetail.setCreatedAt(metaData.getCreatedAt());
-            orderDetail.setCreatedBy(metaData.getCreatedBy());
-            orderDetail.setStatus(metaData.getStatus());
-            orderDetail.setEbayId(metaData.getEbayId());
-            orderDetail.setNotice(metaData.getNotice());
+        orderID = getIntent().getIntExtra(ID, -1);
+        orderDetail.setId(orderID);
 
+        Ion.with(this).load(Constant.URL_GET_ORDER_DETAIL + orderDetail.getId()).setHeader(ION.authHeader(token)).as(OrderResponse.class).setCallback(new FutureCallback<OrderResponse>() {
+            @Override
+            public void onCompleted(Exception e, OrderResponse result) {
 
-            Ion.with(this).load(Constant.URL_GET_ORDER_DETAIL + orderDetail.getId()).setHeader(ION.authHeader(token)).as(OrderResponse.class).setCallback(new FutureCallback<OrderResponse>() {
-                @Override
-                public void onCompleted(Exception e, OrderResponse result) {
+                try {
+                    orderDetail.setTitle(result.getOrder().getTitle());
+                    setTitle(result.getOrder().getTitle());
+                    orderDetail.setNotice(result.getOrder().getNotice());
+                    orderDetail.setEbayId(result.getOrder().getEbayId());
 
-                    try {
-                        orderDetail.setTitle(result.getOrder().getTitle());
-                        orderDetail.setNotice(result.getOrder().getNotice());
-                        orderDetail.setEbayId(result.getOrder().getEbayId());
-
-                    } catch (Exception ignored) {
-
-                    }
+                } catch (Exception ignored) {
 
                 }
-            });
-        }
+
+            }
+        });
+
 
         onCommingMessage = new BroadcastReceiver() {
             @Override
@@ -145,17 +135,32 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
         showLoading();
 
 
-        Ion.with(this).load(ION.URL_GET_MESSAGE + orderDetail.getId()).setHeader(ION.authHeader(token)).as(new TypeToken<List<MessageResponse>>() {
-        }).setCallback(new FutureCallback<List<MessageResponse>>() {
+        RetrofitRequest apiService =
+                RetrofitClient.getClient().create(RetrofitRequest.class);
+
+        Call<List<MessageResponse>> call = apiService.getOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderID);
+        call.enqueue(new Callback<List<MessageResponse>>() {
             @Override
-            public void onCompleted(Exception e, List<MessageResponse> result) {
+            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
                 hideLoading();
-                messageResponses.addAll(result);
-                messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
-                lvList.setLayoutManager(linearLayoutManager);
-                lvList.setAdapter(messageAdapter);
-                linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
+                try {
+
+                    messageResponses.addAll(response.body());
+                    messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
+                    lvList.setLayoutManager(linearLayoutManager);
+                    lvList.setAdapter(messageAdapter);
+                    linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
+
+                } catch (Exception e) {
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                hideLoading();
             }
         });
 
@@ -169,26 +174,54 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
                     return;
                 }
                 showLoading();
-                Ion.with(getApplicationContext()).load(ION.URL_ADD_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).setMultipartParameter("message", text).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
+
+                RetrofitRequest apiService =
+                        RetrofitClient.getClient().create(RetrofitRequest.class);
+
+                Call<JsonObject> call_ = apiService.sendOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderDetail.getId(), text);
+                call_.enqueue(new Callback<JsonObject>() {
                     @Override
-                    public void onCompleted(Exception e, JsonObject result) {
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         et_chat.setText("");
 
-                        Ion.with(getApplicationContext()).load(ION.URL_GET_MESSAGE + orderDetail.getId()).addHeader("Authorization", "Bearer" + " " + token).as(new TypeToken<List<MessageResponse>>() {
-                        }).setCallback(new FutureCallback<List<MessageResponse>>() {
+                        RetrofitRequest apiService =
+                                RetrofitClient.getClient().create(RetrofitRequest.class);
+
+                        Call<List<MessageResponse>> callNew = apiService.getOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderDetail.getId());
+
+                        callNew.enqueue(new Callback<List<MessageResponse>>() {
                             @Override
-                            public void onCompleted(Exception e, List<MessageResponse> result) {
+                            public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
                                 hideLoading();
-                                //Log.e("A", result.get(0).getMessages());
-                                messageResponses.clear();
-                                messageResponses.addAll(result);
-                                messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
-                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
-                                lvList.setLayoutManager(linearLayoutManager);
-                                lvList.setAdapter(messageAdapter);
-                                linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
+                                try {
+
+                                    hideLoading();
+                                    messageResponses.clear();
+                                    messageResponses.addAll(response.body());
+                                    messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
+                                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
+                                    lvList.setLayoutManager(linearLayoutManager);
+                                    lvList.setAdapter(messageAdapter);
+                                    linearLayoutManager.scrollToPosition(messageResponses.size() - 1);
+
+                                } catch (Exception e) {
+
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<MessageResponse>> call, Throwable t) {
+                                hideLoading();
+                                if (Constant.isDEBUG) Log.e("Message", t.getMessage());
                             }
                         });
+                    }
+
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                        hideLoading();
+
                     }
                 });
             }
@@ -225,15 +258,15 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
 
         } else if (id == R.id.action_detail) {
 
-            Intent intent = new Intent(this, ExtendOrderDetailActivity.class);
-
+            Intent intent = new Intent();
             intent.putExtra(TITLE, orderDetail.getTitle());
             intent.putExtra(LINK, orderDetail.getEbayId());
             intent.putExtra(DESCRIPTION, orderDetail.getNotice());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-            }
-            startActivity(intent);
+            FragmentManager fm = getSupportFragmentManager();
+            OrderDetailDialog orderDetailDialog = OrderDetailDialog.instance(intent);
+            // User must accept this dialog to go
+            orderDetailDialog.show(fm, "orderDetailDialog");
+
         }
         return super.onOptionsItemSelected(item);
     }

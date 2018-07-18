@@ -71,7 +71,7 @@ public class FraAddDescription extends MFragment {
 
 
             AddAC addAC = (AddAC) getActivity();
-            String data = Objects.requireNonNull(addAC).getData();
+            String data = (addAC).getData();
 
             if (data != null) {
                 UploadItem uploadItem = addAC.getUploadItem();

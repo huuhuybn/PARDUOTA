@@ -52,8 +52,8 @@
     <string name="hint_title">Title</string>
     <string name="hint_description">Description</string>
     <string name="hint_address">Address</string>
-    <string name="hint_price">Price</string>
-    <string name="hint_quantity">Quantity</string>
+    <string name="hint_price">Price : </string>
+    <string name="hint_quantity">Quantity : </string>
     <string name="hint_category">Category</string>
     <string name="action_add_item">ADD</string>
     <string name="action_upload_image">Upload Image</string>
@@ -161,7 +161,7 @@
     <string name="notify_add_image">Click \"ADD\" button to choose photos</string>
     <string name="action_log_out">Log out</string>
     <string name="action_detail">Detail</string>
-    <string name="action_charger">Charger</string>
+    <string name="action_charger">Charge</string>
 
     <string-array name="condition">
         <item>@string/choose_item_condition</item>
@@ -700,7 +700,7 @@
         <item>Zimbabwe.</item>
     </string-array>
 
-    <string name="title_activity_charger">History Charger</string>
+    <string name="title_activity_charger">History Charge</string>
 
     <string name="title_activity_change_password_ac">Password</string>
 
@@ -774,6 +774,18 @@
     <string name="support_info">Support 24/7 : info@parduota.com</string>
 
 
+    <string-array name="language">
+        <item>English</item>
+        <item>Lietuvių</item>
+    </string-array>
+
+    <string name="euro"> €</string>
+    <string name="english">English</string>
+    <string name="lithuania">Lithuania</string>
+    <string name="notify_input_length">Title\'s Length is over limit !!!</string>
+    <string name="notify_save_draft_fail">Please add more information to save item as Draft !</string>
+
+
     <!--'conditions'=> [-->
     <!--1000 => 'New',-->
     <!--1500=>'New other (see details)',-->
@@ -787,4 +799,34 @@
     <!--7000=>'For parts or not working',-->
     <!--],-->
 
+
+    <!--type_noti_0' => ':user: created new item - :title',-->
+    <!--'type_noti_1' => ':user: updated  item :title',-->
+    <!--'type_noti_2' => ':user: updated :title is Sold',-->
+    <!--'type_noti_3' => ':user: send a request access :title',-->
+    <!--'type_noti_4' => ':user: You have been unlocked :title',-->
+    <!--'type_noti_5' => ':user: You are Blocked :title',-->
+    <!--'type_noti_6' => ':user: updated :title is Reject',-->
+    <!--'type_noti_7' => ':user: delete :title',-->
+    <!--'type_noti_8' => ':user: Your account is upgraded  :title',-->
+    <!--'type_noti_9' => ':user: Your account is upgraded, You can push item to ebay :title',-->
+    <!--'type_noti_10' => ':user: Your account is downgraded, You can\'t push item to ebay :title',-->
+    <!--'type_noti_11' => ':user: updated :title is cancel',-->
+    <!--'type_noti_12' => ':user: Item with name :title is approved',-->
+    <!--'type_noti_13' => ':user: Item with name :title is active on ebay',-->
+    <!--'type_noti_14' => ':user: make new for you an offer abouts the price:title',-->
+    <!--'type_noti_15' => ':user: make for you an offer abouts the price:title',-->
+    <!--'type_noti_16' => ':user: make for you decline item, click to view:title',-->
+    <!--'type_noti_17' => ':user: accept offer item , click to view:title',-->
+    <!--'type_noti_18' => ':user: created new order ebay :title',-->
+    <!--'type_noti_19' => ':user: have a new message on order :title',-->
+    <!--'type_noti_20' => ':user: close an order :title',-->
+    <!--'type_noti_21' => ':user: You need buy credit for service charge :title',-->
+    <!--'type_noti_22' => ':user: We have just collected your monthly service fee  :title',-->
+    <!--'type_noti_23' => ':user: All item is cancel :title',-->
+    <!--'type_noti_24' => ':user account is initialized',-->
+    <!--'type_noti_25' => ':user: Your account has been activated',-->
+    <!--'type_noti_26' => ':user: We have just collected your monthly service fee for the ebay item',-->
+    <!--'type_noti_27' => ':user: You need buy credit for service charge ebay item',-->
+    <!--'type_noti_28' => ':user: All item is cancel',-->
 </resources>

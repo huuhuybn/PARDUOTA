@@ -64,12 +64,14 @@
                 android:textSize="11sp" />
 
 
+            <Button android:text="@string/view_on_ebay" android:id="@+id/btnViewInEbay" />
+
             <View
                 android:layout_height="1dp"
                 android:layout_margin="10dp"
                 android:background="@color/grey" />
 
-            <TableLayout android:stretchColumns="0,1">
+            <TableLayout>
 
                 <TableRow>
 
@@ -78,20 +80,25 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:text="@string/hint_quantity"
-                        android:textStyle="bold" />
+                        android:id="@+id/tv_price"
+                        android:layout_marginLeft="5dp" />
+
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/euro" />
 
                 </TableRow>
 
                 <TableRow>
 
+
                     <TextView
-                        android:id="@+id/tv_price"
-                         />
+                        android:text="@string/hint_quantity"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_quality"
-                       />
+                        android:layout_marginLeft="5dp" />
 
                 </TableRow>
 
@@ -102,15 +109,13 @@
                 android:layout_margin="10dp"
                 android:background="@color/grey" />
 
-
             <TextView
                 android:text="@string/hint_description"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_detail"
-                android:padding="5dp"
-               />
+                android:padding="5dp" />
 
             <TextView
                 android:text="@string/hint_address"
@@ -118,8 +123,7 @@
 
             <TextView
                 android:id="@+id/tv_address"
-                android:padding="5dp"
-                 />
+                android:padding="5dp" />
 
 
             <TextView
@@ -164,13 +168,9 @@
 
                 <TableRow>
 
-                    <TextView
-                        android:id="@+id/tvWidth"
-                         />
+                    <TextView android:id="@+id/tvWidth" />
 
-                    <TextView
-                        android:id="@+id/tvHeight"
-                       />
+                    <TextView android:id="@+id/tvHeight" />
 
                 </TableRow>
 
@@ -188,13 +188,9 @@
 
                 <TableRow>
 
-                    <TextView
-                        android:id="@+id/tvWeight"
-                         />
+                    <TextView android:id="@+id/tvWeight" />
 
-                    <TextView
-                        android:id="@+id/tvLength"
-                       />
+                    <TextView android:id="@+id/tvLength" />
 
                 </TableRow>
 
