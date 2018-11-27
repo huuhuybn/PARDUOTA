@@ -6,6 +6,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.LocationManager;
 import android.net.Uri;
 
 import android.os.AsyncTask;
@@ -171,7 +172,7 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
 
                                     RetrofitRequest apiService =
-                                            RetrofitClient.getClient().create(RetrofitRequest.class);
+                                            RetrofitClient.getClient(LoginActivity.this).create(RetrofitRequest.class);
 
                                     apiService.loginWithFacebook(user.optString("first_name") + " " + user.optString("last_name"), user.optString("id"), FACEBOOK).enqueue(new Callback<Login>() {
                                         @Override
@@ -297,14 +298,12 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
 
             RetrofitRequest apiService =
-                    RetrofitClient.getClient().create(RetrofitRequest.class);
+                    RetrofitClient.getClient(LoginActivity.this).create(RetrofitRequest.class);
 
             apiService.loginViaEmail(email, password).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     hideLoading();
-
-
                     if (response.code() == 200) {
                         // login success
                         try {

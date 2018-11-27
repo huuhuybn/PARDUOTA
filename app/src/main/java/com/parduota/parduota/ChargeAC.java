@@ -67,7 +67,7 @@ public class ChargeAC extends MActivity implements Constant, Callback<Charge> {
 
         showLoading();
         RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(ChargeAC.this).create(RetrofitRequest.class);
 
         apiService.getChargeList(RetrofitRequest.PRE_TOKEN + token, page).enqueue(this);
 
@@ -117,7 +117,7 @@ public class ChargeAC extends MActivity implements Constant, Callback<Charge> {
                         if (Constant.isDEBUG) Log.e("PAGE", page + "");
 
                         RetrofitRequest apiService =
-                                RetrofitClient.getClient().create(RetrofitRequest.class);
+                                RetrofitClient.getClient(ChargeAC.this).create(RetrofitRequest.class);
 
                         apiService.getChargeList(RetrofitRequest.PRE_TOKEN + token, page).enqueue(chargeCallback);
 

@@ -40,50 +40,77 @@
     </RadioGroup>
 
 
-    <TableLayout android:id="@+id/expandLayout" android:visibility="gone">
+    <TableLayout
+        android:id="@+id/expandLayout"
+        android:visibility="gone">
 
-    <TableRow>
+        <TableRow>
 
-        <EditText
-            android:id="@+id/et_width"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_cm"
-            android:hint="@string/width"
-            android:imeOptions="actionNext"
-            android:inputType="number" />
+            <TextView
+                android:layout_weight="1"
+                android:text="@string/width" />
 
-        <EditText
-            android:id="@+id/et_height"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_cm"
-            android:hint="@string/height"
-            android:imeOptions="actionNext"
-            android:inputType="number" />
+            <TextView
+                android:layout_weight="1"
+                android:text="@string/height" />
 
-    </TableRow>
+        </TableRow>
 
-    <TableRow>
+        <TableRow>
+
+            <EditText
+                android:id="@+id/et_width"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_cm"
+                android:hint="@string/width"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/et_height"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_cm"
+                android:hint="@string/height"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+        </TableRow>
 
 
-        <EditText
-            android:id="@+id/et_weight"
-            android:layout_weight="1"
+        <TableRow>
 
-            android:drawableLeft="@drawable/ic_kg"
-            android:hint="@string/weight"
-            android:imeOptions="actionNext"
-            android:inputType="number" />
+            <TextView
+                android:layout_weight="1"
+                android:text="@string/weight" />
 
-        <EditText
-            android:id="@+id/length"
+            <TextView
+                android:layout_weight="1"
+                android:text="@string/length" />
 
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_cm"
-            android:hint="@string/length"
-            android:imeOptions="actionNext"
-            android:inputType="number" />
+        </TableRow>
 
-    </TableRow>
+        <TableRow>
+
+
+            <EditText
+                android:id="@+id/et_weight"
+                android:layout_weight="1"
+
+                android:drawableLeft="@drawable/ic_kg"
+                android:hint="@string/weight"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/length"
+
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_cm"
+                android:hint="@string/length"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+
+        </TableRow>
 
     </TableLayout>
 

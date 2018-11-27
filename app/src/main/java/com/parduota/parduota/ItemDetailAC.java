@@ -121,7 +121,7 @@ public class ItemDetailAC extends MActivity implements Constant {
 
         if (itemID > 0) {
             showLoading();
-            RetrofitRequest retrofitRequest = RetrofitClient.getClient().create(RetrofitRequest.class);
+            RetrofitRequest retrofitRequest = RetrofitClient.getClient(ItemDetailAC.this).create(RetrofitRequest.class);
 
             String token = sharePrefManager.getAccessToken();
 
@@ -252,9 +252,15 @@ public class ItemDetailAC extends MActivity implements Constant {
                 uploadItem.setShipping_type_custom(shipping_type);
                 uploadItem.setPhotoArr(photoArr);
 
+                uploadItem.setWidth(tvWidth.getText().toString().trim());
+                uploadItem.setHeight(tvHeight.getText().toString().trim());
+                uploadItem.setLength(tvLength.getText().toString().trim());
+                uploadItem.setWeight(tvWeight.getText().toString().trim());
+
                 uploadItem.setUpdate(true);
 
-                Log.e("ABC", new Gson().toJson(photoArr));
+                if (Constant.isDEBUG)
+                    Log.e("ABC", new Gson().toJson(photoArr));
 
 
                 intent.putExtra(DATA, new Gson().toJson(uploadItem));

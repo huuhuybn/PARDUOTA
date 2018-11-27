@@ -72,7 +72,7 @@ public class OrderAC extends MActivity implements Constant, Callback<Order> {
         showLoading();
 
         RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(OrderAC.this).create(RetrofitRequest.class);
         orderCallback = this;
         apiService.getOrderList(page_, RetrofitRequest.PRE_TOKEN + token).enqueue(this);
         RecyclerView lv_list = findViewById(R.id.lv_list);
@@ -96,7 +96,7 @@ public class OrderAC extends MActivity implements Constant, Callback<Order> {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 page_++;
                 RetrofitRequest apiService =
-                        RetrofitClient.getClient().create(RetrofitRequest.class);
+                        RetrofitClient.getClient(OrderAC.this).create(RetrofitRequest.class);
                 apiService.getOrderList(page_, RetrofitRequest.PRE_TOKEN + token).enqueue(orderCallback);
 
             }

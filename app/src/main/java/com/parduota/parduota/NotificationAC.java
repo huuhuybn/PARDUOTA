@@ -152,7 +152,7 @@ public class NotificationAC extends MActivity implements Constant {
     public void getNotification(int page) {
         hideLoading();
         RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(NotificationAC.this).create(RetrofitRequest.class);
 
         String locale = sharePrefManager.getLocale();
 

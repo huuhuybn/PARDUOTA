@@ -47,14 +47,4 @@ public abstract class MFragment extends Fragment {
     }
 
 
-    public void showLoading(){
-        MActivity mActivity = (MActivity) getActivity();
-        (mActivity).showLoading();
-    }
-    public void hideLoading(){
-        MActivity mActivity = (MActivity) getActivity();
-        (mActivity).hideLoading();
-    }
-
-
 }

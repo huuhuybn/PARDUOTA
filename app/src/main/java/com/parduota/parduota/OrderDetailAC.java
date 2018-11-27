@@ -136,7 +136,7 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
 
 
         RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(OrderDetailAC.this).create(RetrofitRequest.class);
 
         Call<List<MessageResponse>> call = apiService.getOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderID);
         call.enqueue(new Callback<List<MessageResponse>>() {
@@ -144,7 +144,6 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
             public void onResponse(Call<List<MessageResponse>> call, Response<List<MessageResponse>> response) {
                 hideLoading();
                 try {
-
                     messageResponses.addAll(response.body());
                     messageAdapter = new MessageAdapter(OrderDetailAC.this, messageResponses);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(OrderDetailAC.this);
@@ -176,7 +175,7 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
                 showLoading();
 
                 RetrofitRequest apiService =
-                        RetrofitClient.getClient().create(RetrofitRequest.class);
+                        RetrofitClient.getClient(OrderDetailAC.this).create(RetrofitRequest.class);
 
                 Call<JsonObject> call_ = apiService.sendOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderDetail.getId(), text);
                 call_.enqueue(new Callback<JsonObject>() {
@@ -185,7 +184,7 @@ public class OrderDetailAC extends MActivity implements Constant, FutureCallback
                         et_chat.setText("");
 
                         RetrofitRequest apiService =
-                                RetrofitClient.getClient().create(RetrofitRequest.class);
+                                RetrofitClient.getClient(OrderDetailAC.this).create(RetrofitRequest.class);
 
                         Call<List<MessageResponse>> callNew = apiService.getOrderMessage(RetrofitRequest.PRE_TOKEN + token, orderDetail.getId());
 

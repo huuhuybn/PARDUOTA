@@ -91,7 +91,7 @@ public class AddOrderAC extends MActivity implements Callback<OrderResponse> {
 
                 showLoading();
                 RetrofitRequest apiService =
-                        RetrofitClient.getClient().create(RetrofitRequest.class);
+                        RetrofitClient.getClient(AddOrderAC.this).create(RetrofitRequest.class);
 
 
                 apiService.addNewOrder(RetrofitRequest.PRE_TOKEN + token, title, ebayId, des).enqueue(this);

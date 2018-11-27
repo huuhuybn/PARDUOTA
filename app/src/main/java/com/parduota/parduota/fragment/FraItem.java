@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.parduota.parduota.LoginActivity;
 import com.parduota.parduota.R;
 import com.parduota.parduota.abtract.MFragment;
@@ -43,8 +45,6 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
 
     private View progress_bar;
 
-    private View view;
-
     private View no_item;
 
     //private SwipeRefreshLayout swipeRefreshLayout;
@@ -71,7 +71,6 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
     protected void initView(View view) {
 
         int TYPE = (getArguments()).getInt(DATA);
-
 
         no_item = view.findViewById(R.id.tv_no_item);
 
@@ -152,9 +151,10 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
 
         int page = 0;
         RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(getActivity()).create(RetrofitRequest.class);
 
         apiService.getItemByType(RetrofitRequest.PRE_TOKEN + token, type, page).enqueue(this);
+
     }
 
 
@@ -168,7 +168,9 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
 
     @Override
     public void onResponse(Call<Item> call, Response<Item> response) {
+
         progress_bar.setVisibility(View.GONE);
+
 
         Item result = response.body();
         if (result.getError() != null) {
@@ -180,9 +182,11 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
                 return;
             }
         }
-        //Log.e("DATA", new Gson().toJson(result));
-        if (result.getData() != null & result.getData().size() > 0) {
 
+        if (Constant.isDEBUG)
+            Log.e("DATA", new Gson().toJson(result));
+
+        if (result.getData() != null & result.getData().size() > 0) {
             Collections.reverse(result.getData());
             no_item.setVisibility(View.GONE);
             if (result.getData().size() < 5) {
@@ -200,7 +204,8 @@ public class FraItem extends MFragment implements Callback<Item>, Constant {
 
     @Override
     public void onFailure(Call<Item> call, Throwable t) {
-        hideLoading();
+
+        if (Constant.isDEBUG) Log.e("onFailure",t.getMessage());
 
     }
 

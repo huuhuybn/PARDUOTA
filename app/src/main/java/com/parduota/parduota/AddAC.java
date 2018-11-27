@@ -358,11 +358,13 @@ public class AddAC extends MActivity implements Constant {
             FraAddDimension fraAddDimension = ((FraAddDimension) mFragment);
 
 
-            boolean isChariyy = fraAddDimension.getCbSellForCharity().isChecked();
+            boolean isCharity = fraAddDimension.getCbSellForCharity().isChecked();
             String weight = fraAddDimension.getEtWeight().getText().toString().trim();
             String width = fraAddDimension.getEtWidth().getText().toString().trim();
             String height = fraAddDimension.getEtHeight().getText().toString().trim();
             String length = fraAddDimension.getLength().getText().toString().trim();
+
+
             RadioGroup shippingType = fraAddDimension.getRgShipping();
 
             int radioButtonID = shippingType.getCheckedRadioButtonId();
@@ -371,7 +373,8 @@ public class AddAC extends MActivity implements Constant {
 
             String shipping_type = null;
 
-            Log.e("ID", " " + idx);
+            if (Constant.isDEBUG)
+                Log.e("ID", " " + idx);
             if (idx == 0) {
                 //local_pickup | freight |kg_and_dimentions
                 shipping_type = "local_pickup";
@@ -381,15 +384,36 @@ public class AddAC extends MActivity implements Constant {
             }
             if (idx == 2) {
                 shipping_type = "kg_and_dimentions";
+
+                if (weight.trim().matches("")) {
+                    fraAddDimension.getEtWeight().setError(getString(R.string.notify_empty));
+                    return;
+                }
+                if (width.trim().matches("")) {
+
+                    fraAddDimension.getEtWidth().setError(getString(R.string.notify_empty));
+                    return;
+                }
+                if (height.trim().matches("")) {
+
+                    fraAddDimension.getEtHeight().setError(getString(R.string.notify_empty));
+                    return;
+                }
+                if (length.trim().matches("")) {
+
+                    fraAddDimension.getLength().setError(getString(R.string.notify_empty));
+                    return;
+                }
+                uploadItem.setWeight(weight);
+                uploadItem.setWidth(width);
+                uploadItem.setHeight(height);
+                uploadItem.setLength(length);
             }
 
             uploadItem.setShipping_type(shipping_type);
-            uploadItem.setWeight(weight);
-            uploadItem.setWidth(width);
-            uploadItem.setHeight(height);
-            uploadItem.setLength(length);
 
-            if (isChariyy) {
+
+            if (isCharity) {
                 uploadItem.setSell_for_charity("1");
 
             } else {

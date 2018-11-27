@@ -88,6 +88,10 @@ public class FraAddDimension extends MFragment implements Constant {
                     break;
                 case KG_AND_DIMENSION:
                     rgShipping.check(R.id.rb_kg_dimension);
+                    etHeight.setText(uploadItem.getHeight());
+                    etLength.setText(uploadItem.getLength());
+                    etWeight.setText(uploadItem.getWeight());
+                    etWidth.setText(uploadItem.getWidth());
                     break;
             }
         }

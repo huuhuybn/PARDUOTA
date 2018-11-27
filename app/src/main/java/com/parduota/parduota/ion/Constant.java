@@ -157,7 +157,7 @@ public interface Constant {
     String COMMING_MESSAGE = "coming_message";
     String ERROR = "error";
 
-    boolean isDEBUG = false;
+    boolean isDEBUG = true;
     String TYPE = "type";
     String ANDROID = "android";
 
@@ -177,7 +177,7 @@ public interface Constant {
 
     String TOKEN_EXPIRED = "token_expired";
 
-    //String BASE_URL = "http://dev.ductranxuan.com/";
+    //String BASE_URL = "https://dev.parduota.com/";
 
 
     String BASE_URL = "https://www.parduota.com/";
@@ -191,6 +191,7 @@ public interface Constant {
     String URL_LOGIN = BASE_URL + "api/auth/login";
 
     String URL_GET_NOTIFY = BASE_URL + "api/get_notification";
+
     String URL_LOGIN_FACEBOOK = BASE_URL + "api/auth/login_social";
 
     String URL_GET_ITEM_BY_STATUS = BASE_URL + "api/get_item_by_status/";

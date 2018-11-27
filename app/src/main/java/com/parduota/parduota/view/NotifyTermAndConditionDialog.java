@@ -56,7 +56,7 @@ public class NotifyTermAndConditionDialog extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         final RetrofitRequest apiService =
-                RetrofitClient.getClient().create(RetrofitRequest.class);
+                RetrofitClient.getClient(getActivity()).create(RetrofitRequest.class);
 
 
         apiService.getTermAndCondition().enqueue(new Callback<JsonObject>() {
@@ -87,7 +87,7 @@ public class NotifyTermAndConditionDialog extends DialogFragment {
                 btnAccept.setEnabled(false);
 
                 RetrofitRequest apiService =
-                        RetrofitClient.getClient().create(RetrofitRequest.class);
+                        RetrofitClient.getClient(getActivity()).create(RetrofitRequest.class);
                 String token = SharePrefManager.getInstance(getContext()).getAccessToken();
                 apiService.acceptTermAndCondition(RetrofitRequest.PRE_TOKEN + token).enqueue(new Callback<JsonObject>() {
                     @Override

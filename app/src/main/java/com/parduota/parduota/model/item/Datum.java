@@ -124,9 +124,7 @@ public class Datum {
     @SerializedName("categories")
     @Expose
     private List<Category> categories = null;
-    @SerializedName("user")
-    @Expose
-    private List<User> user = null;
+
     @SerializedName("media")
     @Expose
     private List<Medium> media = null;
@@ -259,9 +257,6 @@ public class Datum {
         this.categories = categories;
     }
 
-    public void setUser(List<User> user) {
-        this.user = user;
-    }
 
     public void setMedia(List<Medium> media) {
         this.media = media;
@@ -395,9 +390,6 @@ public class Datum {
         return categories;
     }
 
-    public List<User> getUser() {
-        return user;
-    }
 
     public List<Medium> getMedia() {
         return media;
