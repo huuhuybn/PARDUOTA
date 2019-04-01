@@ -115,7 +115,9 @@ public class AddAC extends MActivity implements Constant {
                 if (id > -1) {
                     arrayIds.add("" + id);
                 }
-                Log.e("IDDD", id + " ");
+
+                if (Constant.isDEBUG)
+                    Log.e("IDDD", id + " ");
             }
         };
 
@@ -435,7 +437,7 @@ public class AddAC extends MActivity implements Constant {
             boolean isLoadAll = true;
             if (files.size() > 0)
                 for (int i = 0; i < files.size(); i++) {
-                    if (files.get(i).getWidth() == 0) {
+                    if (files.get(i).getMediaType() == 0) {
                         isLoadAll = false;
                         break;
                     }
@@ -447,7 +449,13 @@ public class AddAC extends MActivity implements Constant {
             showLoading();
 
             if (uploadItem.isUpdate()) {
-                if (Constant.isDEBUG) Log.e("OBJECT UPDATE", new Gson().toJson(uploadItem));
+                if (Constant.isDEBUG) {
+                    Log.e("OBJECT UPDATE", new Gson().toJson(uploadItem));
+
+                }
+
+                uploadItem.setStatus(Constant.SAVE);
+
                 ION.postFormDataWithToken(this, Constant.URL_UPDATE_ITEM + uploadItem.getId(), sharePrefManager.getAccessToken(), ION.addItem(uploadItem), new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {

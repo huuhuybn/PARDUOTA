@@ -83,19 +83,19 @@ public class NotificationAC extends MActivity implements Constant {
             public void onClick(Datum datum) {
 
                 Log.e("TYPE", datum.getType() + "");
-                Log.e("ID",datum.getId()+"");
+                Log.e("ID", datum.getId() + "");
 
                 switch (datum.getType()) {
 
                     case TYPE_REJECT_ITEM:
                         Intent intentReject = new Intent(getApplicationContext(), ItemDetailAC.class);
-                        intentReject.putExtra(ID,datum.getMetaData().getId());
+                        intentReject.putExtra(ID, datum.getMetaData().getId());
                         startActivity(intentReject);
                         break;
 
                     case TYPE_UPDATE_ITEM:
                         Intent intent = new Intent(getApplicationContext(), ItemDetailAC.class);
-                        intent.putExtra(ID,datum.getMetaData().getId());
+                        intent.putExtra(ID, datum.getMetaData().getId());
                         startActivity(intent);
                         break;
 
@@ -118,9 +118,14 @@ public class NotificationAC extends MActivity implements Constant {
 
                     case TYPE_ACTIVE_ITEM:
                         Intent intentActiveItem = new Intent(getApplicationContext(), ItemDetailAC.class);
-                        intentActiveItem.putExtra(ID,datum.getMetaData().getId());
+                        intentActiveItem.putExtra(ID, datum.getMetaData().getId());
                         startActivity(intentActiveItem);
                         break;
+
+                    default:
+                        Intent intentOther = new Intent(getApplicationContext(), ItemDetailAC.class);
+                        intentOther.putExtra(ID, datum.getMetaData().getId());
+                        startActivity(intentOther);
 
                 }
             }
@@ -132,7 +137,7 @@ public class NotificationAC extends MActivity implements Constant {
 
         RecyclerView lvList = findViewById(R.id.lv_list);
         data = new ArrayList<>();
-        
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         notificationAdapter = new NotificationAdapter(this, data, onNotificationClick);
         lvList.setAdapter(notificationAdapter);

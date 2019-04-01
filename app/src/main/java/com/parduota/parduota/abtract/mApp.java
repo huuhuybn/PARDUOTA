@@ -8,10 +8,11 @@ import android.support.multidex.MultiDexApplication;
 import android.util.Base64;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.koushikdutta.ion.Ion;
-
-import io.fabric.sdk.android.Fabric;
+import com.parduota.parduota.utils.MediaLoader;
+import com.yanzhenjie.album.Album;
+import com.yanzhenjie.album.AlbumConfig;
+import com.yanzhenjie.album.AlbumLoader;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -29,7 +30,6 @@ public class mApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
         // the following line is important
 
 
@@ -37,6 +37,10 @@ public class mApp extends MultiDexApplication {
 
 
         printHashKey(this);
+
+        Album.initialize(AlbumConfig.newBuilder(this).setAlbumLoader(new MediaLoader())
+
+                .build());
 
     }
 

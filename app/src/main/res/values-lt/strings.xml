@@ -650,7 +650,7 @@
         <item>Central African Republic.</item>
         <item>Congo.</item>
         <item>Switzerland.</item>
-        <item>Cote d'Ivoire.</item>
+        <item>Cote d\'Ivoire.</item>
         <item>Cook Islands.</item>
         <item>Chile.</item>
         <item>Cameroon.</item>
@@ -725,12 +725,12 @@
         <item>Kiribati.</item>
         <item>Comoros.</item>
         <item>Saint Kitts and Nevis.</item>
-        <item>Democratic People's Republic of Korea.</item>
+        <item>Democratic People\'s Republic of Korea.</item>
         <item>Republic of Korea.</item>
         <item>Kuwait.</item>
         <item>Cayman Islands.</item>
         <item>Kazakhstan.</item>
-        <item>Lao People's Democratic Republic.</item>
+        <item>Lao People\'s Democratic Republic.</item>
         <item>Lebanon.</item>
         <item>Saint Lucia.</item>
         <item>Liechtenstein.</item>
@@ -791,9 +791,6 @@
         <item>Palau.</item>
         <item>Paraguay.</item>
         <item>Qatar.</item>
-        <item>NOTE : Guernsey was defined in eBay list previously but they are not defined in ISO 3166. This country will remain on eBay country list for backward compatibility.</item>
-        <item>NOTE: Jan Mayen was defined in eBay list previously but they are not defined in ISO 3166. This country will remain on eBay country list for backward compatibility.</item>
-        <item>NOTE: Jersey was defined in eBay list previously but they are not defined in ISO 3166. This country will remain on eBay country list for backward compatibility.</item>
         <item>Reunion.</item>
         <item>Romania.</item>
         <item>Serbia</item>
@@ -836,7 +833,6 @@
         <item>Tanzania, United Republic of.</item>
         <item>Ukraine.</item>
         <item>Uganda.</item>
-        <item>NOTE: United States Minor Outlying Islands was defined in the eBay list previously but is no longer a viable option. This country will remain on eBay country list for backward compatibility. Use 'US' instead.</item>
         <item>United States.</item>
         <item>Uruguay.</item>
         <item>Uzbekistan.</item>
@@ -851,7 +847,6 @@
         <item>Samoa.</item>
         <item>Yemen.</item>
         <item>Mayotte.</item>
-        <item>No longer in use. See RS for Serbia and ME for Montenegro.</item>
         <item>South Africa.</item>
         <item>Zambia.</item>
         <item>Zimbabwe.</item>

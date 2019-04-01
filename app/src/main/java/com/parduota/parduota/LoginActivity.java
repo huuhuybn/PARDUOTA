@@ -385,9 +385,7 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
                                 } catch (Exception ignored) {
 
-
                                 }
-
                             }
                         });
                         try {
@@ -397,7 +395,6 @@ public class LoginActivity extends MActivity implements LoaderCallbacks<Cursor> 
 
                             showToast(e.toString());
                         }
-
 
                     }
 

@@ -14,6 +14,7 @@ import com.parduota.parduota.ion.Constant;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -23,8 +24,13 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
@@ -32,15 +38,20 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.CertificatePinner;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
+import okhttp3.TlsVersion;
+import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
     private static final String BASE_URL = Constant.BASE_URL;
-    private static Retrofit retrofit = null;
 
+    public static Retrofit retrofit;
 
     public static Retrofit getClient(Context context) {
 
@@ -50,9 +61,58 @@ public class RetrofitClient {
 
         if (retrofit == null) {
 
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .sslSocketFactory(buildSslSocketFactory(context))
+
+            KeyStore trusted = null;
+            try {
+                trusted = KeyStore.getInstance("BKS");
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            }
+
+            // Get the raw resource, which contains the keystore with
+            // your trusted certificates (root and any intermediate certs)
+            InputStream in = context.getResources().openRawResource(R.raw.severkeystore);
+            try {
+                // Initialize the keystore with the provided trusted certificates
+                // Also provide the password of the keystore
+                try {
+                    trusted.load(in, "mysecret".toCharArray());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (CertificateException e) {
+                    e.printStackTrace();
+                }
+            } finally {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            CustomTrustManager customTrustManager = null;
+            try {
+                customTrustManager = new CustomTrustManager(trusted);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (KeyStoreException e) {
+                e.printStackTrace();
+            }
+
+            ConnectionSpec spec = new
+                    ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .cipherSuites(
+                            CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                            CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
                     .build();
+
+            OkHttpClient client = new OkHttpClient.Builder().sslSocketFactory(buildSslSocketFactory(context), customTrustManager)
+                    .connectionSpecs(Collections.singletonList(spec))
+                    .build();
+
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL).client(client)
@@ -61,13 +121,14 @@ public class RetrofitClient {
         }
         return retrofit;
 
+
     }
 
     private static SSLSocketFactory buildSslSocketFactory(Context context) {
+
         // Add support for self-signed (local) SSL certificates
         // Based on http://developer.android.com/training/articles/security-ssl.html#UnknownCa
         try {
-
             // Load CAs from an InputStream
             // (could be from a resource or ByteArrayInputStream or ...)
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -100,10 +161,9 @@ public class RetrofitClient {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("ABC",e.getMessage());
+            Log.e("ABC", e.getMessage());
         }
         return null;
-
     }
 
 

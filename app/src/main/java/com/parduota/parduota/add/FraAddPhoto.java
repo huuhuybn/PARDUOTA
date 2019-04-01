@@ -78,25 +78,24 @@ public class FraAddPhoto extends MFragment {
             public void onClick(View view) {
                 Album.image(getActivity()) // Image selection.
                         .multipleChoice()
-                        .requestCode(999)
                         .camera(true)
                         .columnCount(3)
                         .selectCount(12)
-                        .checkedList(mAlbumFiles) // Show the filtered files, but they are not available.
+                        .checkedList(mAlbumFiles)// Show the filtered files, but they are not available.
                         .onResult(new Action<ArrayList<AlbumFile>>() {
                             @Override
-                            public void onAction(int requestCode, @NonNull ArrayList<AlbumFile> result) {
+                            public void onAction(@NonNull ArrayList<AlbumFile> result) {
                                 tvNotifyAddImage.setVisibility(View.GONE);
                                 mAlbumFiles.addAll(result);
+
+
                                 uploadPhotoAdapter.notifyDataSetChanged();
                                 numberUpload = result.size();
-
-                                //Log.e("ALBUM",new Gson().toJson(mAlbumFiles));
                             }
                         })
                         .onCancel(new Action<String>() {
                             @Override
-                            public void onAction(int requestCode, @NonNull String result) {
+                            public void onAction(@NonNull String result) {
                             }
                         })
                         .start();
@@ -120,6 +119,7 @@ public class FraAddPhoto extends MFragment {
                 if (Constant.isDEBUG)
                     Log.e("AAAAAAAAA", new Gson().toJson(mAlbumFiles));
             }
+
         }
 
     }

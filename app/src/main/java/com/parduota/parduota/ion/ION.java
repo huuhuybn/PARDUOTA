@@ -264,15 +264,23 @@ public class ION implements Constant {
 
             ArrayList<String> arrayList = new ArrayList<>();
             for (int i = 0; i < files.size(); i++) {
-                arrayList.add(files.get(i).getWidth() + "");
+                arrayList.add(files.get(i).getMediaType() + "");
             }
 
-            String arrPhoto = arrayList.toString();
+            String arrPhoto = arrayList.toString().trim();
+
+            if (Constant.isDEBUG) Log.e("AAA",arrPhoto);
             arrPhoto = arrPhoto.substring(1, arrPhoto.length() - 1);
+
+            if (Constant.isDEBUG) Log.e("AAA",arrPhoto);
+            arrPhoto = arrPhoto.replaceAll(" ", "");
             params.put(MEDIA, Collections.singletonList(arrPhoto));
+
+            if (Constant.isDEBUG)
             Log.e("VVV", arrPhoto);
 
         } catch (Exception e) {
+
 
         }
         params.put(CONDITION, Collections.singletonList(uploadItem.getCondition()));

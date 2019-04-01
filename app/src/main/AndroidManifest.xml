@@ -246,10 +246,6 @@
             android:label="@string/title_activity_buy_credit_ac"
             android:theme="@style/AppTheme" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="ce92394065ad0169d513d987cbe058eb366a21c3" />
-
         <activity
             android:name=".ChatAC"
             android:configChanges="orientation|keyboardHidden|screenSize"

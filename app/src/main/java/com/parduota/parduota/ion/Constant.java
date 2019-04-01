@@ -136,6 +136,8 @@ public interface Constant {
 //    <!--'type_noti_27' => ':user: You need buy credit for service charge ebay item',-->
 //    <!--'type_noti_28' => ':user: All item is cancel',-->
 
+
+
     int TYPE_UPDATE_ITEM = 1;
     int TYPE_REJECT_ITEM = 6;
     int TYPE_MESSAGE_ORDER = 19;
@@ -157,7 +159,7 @@ public interface Constant {
     String COMMING_MESSAGE = "coming_message";
     String ERROR = "error";
 
-    boolean isDEBUG = true;
+    boolean isDEBUG = false;
     String TYPE = "type";
     String ANDROID = "android";
 
@@ -277,5 +279,8 @@ public interface Constant {
     String URL_ACCECPT_TERM = BASE_URL + "api/term_accept";
     String URL_GET_ITEM_DETAIL = BASE_URL + "api/get_item/";
 
+
+    String SAVE = "save";
+    String URL_DELETE_PHOTO = BASE_URL + "api/media/delete/" ;
 
 }

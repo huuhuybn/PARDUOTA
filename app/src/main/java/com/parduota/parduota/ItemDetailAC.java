@@ -186,7 +186,7 @@ public class ItemDetailAC extends MActivity implements Constant {
                             AlbumFile album = new AlbumFile();
                             album.setThumbPath(Constant.PHOTO_URL + response.body().getMedia().get(i).getLink());
                             album.setPath(Constant.PHOTO_URL + response.body().getMedia().get(i).getLink());
-                            album.setWidth(response.body().getMedia().get(i).getId());
+                            album.setMediaType(response.body().getMedia().get(i).getId());
                             photoArr.add(album);
                         }
                     }

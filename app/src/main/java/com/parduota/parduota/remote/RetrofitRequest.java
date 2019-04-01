@@ -15,7 +15,9 @@ import com.parduota.parduota.model.updateitem.ItemResponse;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -75,5 +77,10 @@ public interface RetrofitRequest {
     Call<Charge> getChargeList(@Header(AUTHORIZATION) String token, @Query("page") int page);
 
     @GET("/api/get_item/{id}")
-    Call<ItemResponse> getItemDetail(@Header(AUTHORIZATION) String token,@Path("id") int itemID);
+    Call<ItemResponse> getItemDetail(@Header(AUTHORIZATION) String token, @Path("id") int itemID);
+
+
+    @HTTP(method = "DELETE", path = "/api/media/delete/{id}")
+    Call<JsonObject> delPhoto(@Header(AUTHORIZATION) String token, @Path("id") int photoID);
+
 }
